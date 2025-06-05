@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "rewrites": [],
+  "redirects": [],
+  "headers": [],
+  "env": {
+    "NEXTAUTH_URL": "NEXTAUTH_URL_PRODUCTION",
+    "NEXTAUTH_SECRET": "@nextauth_secret_production",
+    "GOOGLE_CLIENT_ID": "@google_client_id_production",
+    "GOOGLE_CLIENT_SECRET": "@google_client_secret_production",
+    "LINKEDIN_CLIENT_ID": "@linkedin_client_id_production",
+    "LINKEDIN_CLIENT_SECRET": "@linkedin_client_secret_production"
+  },
+  "github": {
+    "silent": true
+  }
+}
