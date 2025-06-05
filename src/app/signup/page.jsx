@@ -3,9 +3,7 @@
 import React, { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Layout from '@/components/Layout';
-import Slider from '@/components/Slider';
-import SignupForm from '@/components/SignupForm';
+import SignUp from '@/components/SignUp'; // Updated import
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 const SignupPage = () => {
@@ -32,11 +30,7 @@ const SignupPage = () => {
   }
 
   // If unauthenticated and not loading, show the signup form
-  return (
-    <Layout leftContent={<Slider />}>
-      <SignupForm />
-    </Layout>
-  );
+  return <SignUp />; // Updated component
 };
 
 export default SignupPage;
