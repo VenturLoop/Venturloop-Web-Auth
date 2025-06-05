@@ -17,12 +17,15 @@ const AuthForm = () => {
   const handleSignIn = async (provider, credentials = {}) => {
     setLoadingProvider(provider);
     try {
-      const result = await signIn(provider, { ...credentials, redirect: false });
+      const result = await signIn(provider, {
+        ...credentials,
+        redirect: false,
+      });
       if (result?.error) {
         toast.error(
           result.error === 'CredentialsSignin'
             ? 'Invalid email or password'
-            : `Sign-in failed: ${result.error}`
+            : `Sign-in failed: ${result.error}`,
         );
       } else if (result?.ok) {
         toast.success('Signed in successfully!');
@@ -79,13 +82,13 @@ const AuthForm = () => {
             src={
               session.user.image ||
               `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                session.user.name || session.user.email || 'User'
+                session.user.name || session.user.email || 'User',
               )}&background=random&color=fff&size=96`
             }
             alt="User avatar"
             width={96}
             height={96}
-            className="rounded-full mx-auto mb-4 border-2 border-blue-500 shadow-sm"
+            className="rounded-full mx-auto mb-4 border-2 border-indigo-500 shadow-sm"
           />
           <h2 className="text-xl font-semibold text-gray-700 mb-2">
             Welcome, {session.user.name || session.user.email}!
@@ -94,14 +97,16 @@ const AuthForm = () => {
           <button
             onClick={handleSignOut}
             disabled={loadingProvider === 'signOut'}
-            className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
           >
             {loadingProvider === 'signOut' ? <LoadingSpinner /> : 'Sign Out'}
           </button>
         </div>
       ) : (
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold text-center text-gray-800">Sign In</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-800">
+            Sign In
+          </h2>
 
           <form onSubmit={handleCredentialsSignIn} className="space-y-4">
             <div>
@@ -120,7 +125,7 @@ const AuthForm = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loadingProvider === 'credentials'}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-50"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-50"
               />
             </div>
 
@@ -140,14 +145,14 @@ const AuthForm = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loadingProvider === 'credentials'}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-50"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-50"
               />
             </div>
 
             <button
               type="submit"
               disabled={loadingProvider === 'credentials'}
-              className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
             >
               {loadingProvider === 'credentials' ? (
                 <LoadingSpinner />
@@ -157,12 +162,14 @@ const AuthForm = () => {
             </button>
           </form>
 
-          <div className="relative my-4">
+          <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              <span className="px-2 bg-white text-gray-500">
+                Or continue with
+              </span>
             </div>
           </div>
 
@@ -170,7 +177,7 @@ const AuthForm = () => {
             <button
               onClick={() => handleSignIn('google')}
               disabled={loadingProvider === 'google'}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
             >
               {loadingProvider === 'google' ? (
                 <LoadingSpinner />
@@ -205,7 +212,7 @@ const AuthForm = () => {
             <button
               onClick={() => handleSignIn('linkedin')}
               disabled={loadingProvider === 'linkedin'}
-              className="w-full bg-sky-600 hover:bg-sky-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
             >
               {loadingProvider === 'linkedin' ? (
                 <LoadingSpinner />
@@ -224,12 +231,12 @@ const AuthForm = () => {
               )}
             </button>
           </div>
-          <div className="mt-6 text-center">
+          <div className="mt-8 text-center">
             <p className="text-sm text-gray-600">
               Don&apos;t have an account?{' '}
               <button
                 onClick={() => router.push('/signup')}
-                className="font-medium text-blue-600 hover:text-blue-500"
+                className="font-medium text-indigo-600 hover:text-indigo-500"
               >
                 Sign Up
               </button>

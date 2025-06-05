@@ -22,7 +22,13 @@ const OtpPageContent = () => {
 const OtpVerifyPage = () => {
   return (
     // Wrap the component that uses useSearchParams with Suspense
-    <Suspense fallback={<div className="flex h-screen w-screen justify-center items-center"><LoadingSpinner /></div>}>
+    <Suspense
+      fallback={
+        <div className="flex h-screen w-screen justify-center items-center">
+          <LoadingSpinner />
+        </div>
+      }
+    >
       <OtpPageContent />
     </Suspense>
   );

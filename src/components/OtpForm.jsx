@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types'; // Added for prop validation
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import LoadingSpinner from './LoadingSpinner';
@@ -53,18 +54,28 @@ const OtpForm = ({ email }) => {
 
   if (!email) {
     // Render nothing or a loading indicator while redirecting
-    return <div className="flex justify-center items-center p-10"><LoadingSpinner /></div>;
+    return (
+      <div className="flex justify-center items-center p-10">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (
     <div className="w-full max-w-md p-6 sm:p-8 bg-white shadow-xl rounded-lg border border-gray-200">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Verify Your Email</h2>
+      <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
+        Verify Your Email
+      </h2>
       <p className="text-center text-gray-600 mb-6">
-        An OTP has been sent to <span className="font-medium">{email}</span>. Please enter it below.
+        An OTP has been sent to <span className="font-medium">{email}</span>.
+        Please enter it below.
       </p>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="otp" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="otp"
+            className="block text-sm font-medium text-gray-700"
+          >
             One-Time Password (OTP)
           </label>
           <input
@@ -72,7 +83,9 @@ const OtpForm = ({ email }) => {
             name="otp"
             type="text"
             value={otp}
-            onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))} // Allow only digits, max 6
+            onChange={(e) =>
+              setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))
+            } // Allow only digits, max 6
             maxLength="6"
             required
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -89,19 +102,23 @@ const OtpForm = ({ email }) => {
           {isLoading ? <LoadingSpinner /> : 'Verify OTP'}
         </button>
       </form>
-       <p className="mt-4 text-center text-sm text-gray-500">
+      <p className="mt-4 text-center text-sm text-gray-500">
         Didn&apos;t receive OTP?{' '}
         <button
-            // TODO: Implement resend OTP logic here
-            onClick={() => toast.error('Resend OTP not implemented yet.')}
-            className="font-medium text-blue-600 hover:text-blue-500"
-            disabled={isLoading}
+          // TODO: Implement resend OTP logic here
+          onClick={() => toast.error('Resend OTP not implemented yet.')}
+          className="font-medium text-blue-600 hover:text-blue-500"
+          disabled={isLoading}
         >
-            Resend OTP
+          Resend OTP
         </button>
-        </p>
+      </p>
     </div>
   );
+};
+
+OtpForm.propTypes = {
+  email: PropTypes.string.isRequired,
 };
 
 export default OtpForm;

@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from 'next/font/google';
+import PropTypes from 'prop-types'; // Added for prop validation
 import './globals.css';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Providers from '@/components/Providers'; // Corrected import path
@@ -41,3 +42,7 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+RootLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+};

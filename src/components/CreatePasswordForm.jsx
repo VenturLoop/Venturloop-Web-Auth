@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types'; // Added for prop validation
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import LoadingSpinner from './LoadingSpinner';
@@ -50,7 +51,10 @@ const CreatePasswordForm = ({ email }) => {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        toast.success(data.message || 'Password created successfully! Registration complete.');
+        toast.success(
+          data.message ||
+            'Password created successfully! Registration complete.',
+        );
         // In a real app, you might want to sign the user in here automatically
         // For now, redirecting to add basic details or login.
         router.push(`/add-basic-details?email=${encodeURIComponent(email)}`);
@@ -68,12 +72,18 @@ const CreatePasswordForm = ({ email }) => {
   };
 
   if (!email) {
-    return <div className="flex justify-center items-center p-10"><LoadingSpinner /></div>;
+    return (
+      <div className="flex justify-center items-center p-10">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (
     <div className="w-full max-w-md p-6 sm:p-8 bg-white shadow-xl rounded-lg border border-gray-200">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Create Your Password</h2>
+      <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
+        Create Your Password
+      </h2>
       <p className="text-center text-gray-600 mb-6">
         Setting password for <span className="font-medium">{email}</span>.
       </p>
@@ -92,7 +102,7 @@ const CreatePasswordForm = ({ email }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             placeholder="Enter your password"
             disabled={isLoading}
           />
@@ -111,7 +121,7 @@ const CreatePasswordForm = ({ email }) => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             placeholder="Confirm your password"
             disabled={isLoading}
           />
@@ -120,13 +130,17 @@ const CreatePasswordForm = ({ email }) => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md disabled:bg-green-400"
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md disabled:bg-indigo-400"
         >
           {isLoading ? <LoadingSpinner /> : 'Create Password & Register'}
         </button>
       </form>
     </div>
   );
+};
+
+CreatePasswordForm.propTypes = {
+  email: PropTypes.string.isRequired,
 };
 
 export default CreatePasswordForm;

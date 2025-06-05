@@ -4,7 +4,8 @@ import LinkedInProvider from 'next-auth/providers/linkedin';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 // Initialize in-memory stores if they don't exist
-if (!global.otpStore) { // Though primarily used in other routes, good to have consistency
+if (!global.otpStore) {
+  // Though primarily used in other routes, good to have consistency
   global.otpStore = {};
 }
 if (!global.userStore) {
@@ -19,18 +20,22 @@ export const authOptions = {
         email: { label: 'Email', type: 'email', placeholder: 'your@email.com' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
+        // req is unused
         // userStore is guaranteed to be initialized by the top-level check
         if (!credentials || !credentials.email || !credentials.password) {
           return null; // Or throw an error
         }
 
-        const user = global.userStore.find(u => u.email === credentials.email);
+        const user = global.userStore.find(
+          (u) => u.email === credentials.email,
+        );
 
         if (user) {
           // "Compare" the provided password with the stored "hashed" password
           // This is a mock comparison. In a real app, use bcrypt.compareSync()
-          const isPasswordValid = (user.hashedPassword === 'hashed_' + credentials.password);
+          const isPasswordValid =
+            user.hashedPassword === 'hashed_' + credentials.password;
 
           if (isPasswordValid) {
             // Return user object that NextAuth expects
@@ -55,7 +60,8 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account, profile, isNewUser }) {
+    async jwt({ token, user, account }) {
+      // profile and isNewUser (param) are unused
       // Ensure userStore is initialized (already done at top-level, but good for safety)
       if (!global.userStore) global.userStore = [];
 
@@ -67,8 +73,13 @@ export const authOptions = {
         token.picture = user.image; // Social image
 
         // Check if this is a new social user
-        if (account && (account.provider === 'google' || account.provider === 'linkedin')) {
-          let existingUser = global.userStore.find(u => u.email === user.email);
+        if (
+          account &&
+          (account.provider === 'google' || account.provider === 'linkedin')
+        ) {
+          let existingUser = global.userStore.find(
+            (u) => u.email === user.email,
+          );
           if (!existingUser) {
             const newSocialUser = {
               id: user.id, // Use ID from provider
@@ -90,46 +101,57 @@ export const authOptions = {
           } else {
             // User exists in store (could be social or credential)
             // Update image if social login provides a new one
-            if (account && (account.provider === 'google' || account.provider === 'linkedin')) {
-                 existingUser.profileImageUrl = user.image || existingUser.profileImageUrl;
+            if (
+              account &&
+              (account.provider === 'google' || account.provider === 'linkedin')
+            ) {
+              existingUser.profileImageUrl =
+                user.image || existingUser.profileImageUrl;
             }
             token.profileImageUrl = existingUser.profileImageUrl;
             // isNewUser will be set based on isNewSocialUser flag from DB below
           }
         } else if (account && account.provider === 'credentials') {
-           // For credential users, user object comes from authorize function
-           // We need to ensure token.id is set correctly from this user object
-           // and other fields are populated from what authorize returns.
-           const dbUser = global.userStore.find(u => u.email === user.email); // user.email should be reliable
-           if (dbUser) {
-             token.id = dbUser.id;
-             token.profileImageUrl = dbUser.profileImageUrl;
-             // isNewUser will be set based on isNewSocialUser flag from DB below
-           }
+          // For credential users, user object comes from authorize function
+          // We need to ensure token.id is set correctly from this user object
+          // and other fields are populated from what authorize returns.
+          const dbUser = global.userStore.find((u) => u.email === user.email); // user.email should be reliable
+          if (dbUser) {
+            token.id = dbUser.id;
+            token.profileImageUrl = dbUser.profileImageUrl;
+            // isNewUser will be set based on isNewSocialUser flag from DB below
+          }
         }
       }
 
       // After user processing, decisively set isNewUser based on the current state in userStore
       // This covers all cases: new social, existing social, credential user.
-      const currentUserFromStore = global.userStore.find(u => u.email === token.email);
+      const currentUserFromStore = global.userStore.find(
+        (u) => u.email === token.email,
+      );
       if (currentUserFromStore) {
         token.isNewUser = !!currentUserFromStore.isNewSocialUser;
         // Also ensure token.id is from store if not already set by new social user branch
         if (!token.id) token.id = currentUserFromStore.id;
         // Ensure latest profile image is on token
         token.picture = currentUserFromStore.profileImageUrl || token.picture; // Prioritize our stored image
-        token.profileImageUrl = currentUserFromStore.profileImageUrl || token.picture;
+        token.profileImageUrl =
+          currentUserFromStore.profileImageUrl || token.picture;
       } else if (!account) {
         // This case handles JWT refreshes for users already authenticated, not during initial sign-in.
         // token.email should exist from previous session.
         // No specific 'user' object or 'account' object here.
         // We need to ensure token.isNewUser is still correctly reflecting the DB state.
-        const refreshedUserFromStore = global.userStore.find(u => u.email === token.email);
+        const refreshedUserFromStore = global.userStore.find(
+          (u) => u.email === token.email,
+        );
         if (refreshedUserFromStore) {
-            token.isNewUser = !!refreshedUserFromStore.isNewSocialUser;
-            token.id = refreshedUserFromStore.id;
-            token.picture = refreshedUserFromStore.profileImageUrl || token.picture;
-            token.profileImageUrl = refreshedUserFromStore.profileImageUrl || token.picture;
+          token.isNewUser = !!refreshedUserFromStore.isNewSocialUser;
+          token.id = refreshedUserFromStore.id;
+          token.picture =
+            refreshedUserFromStore.profileImageUrl || token.picture;
+          token.profileImageUrl =
+            refreshedUserFromStore.profileImageUrl || token.picture;
         }
       }
       // token.sub will also be set by NextAuth to user.id
