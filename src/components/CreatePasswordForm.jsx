@@ -50,7 +50,10 @@ const CreatePasswordForm = ({ email }) => {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        toast.success(data.message || 'Password created successfully! Registration complete.');
+        toast.success(
+          data.message ||
+            'Password created successfully! Registration complete.',
+        );
         // In a real app, you might want to sign the user in here automatically
         // For now, redirecting to add basic details or login.
         router.push(`/add-basic-details?email=${encodeURIComponent(email)}`);
@@ -68,12 +71,18 @@ const CreatePasswordForm = ({ email }) => {
   };
 
   if (!email) {
-    return <div className="flex justify-center items-center p-10"><LoadingSpinner /></div>;
+    return (
+      <div className="flex justify-center items-center p-10">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (
     <div className="w-full max-w-md p-6 sm:p-8 bg-white shadow-xl rounded-lg border border-gray-200">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Create Your Password</h2>
+      <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
+        Create Your Password
+      </h2>
       <p className="text-center text-gray-600 mb-6">
         Setting password for <span className="font-medium">{email}</span>.
       </p>

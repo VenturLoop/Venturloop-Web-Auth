@@ -12,12 +12,18 @@ export async function POST(request) {
     const { email, name } = await request.json();
 
     if (!email || !name) {
-      return NextResponse.json({ message: 'Email and name are required' }, { status: 400 });
+      return NextResponse.json(
+        { message: 'Email and name are required' },
+        { status: 400 },
+      );
     }
 
     // Basic email validation
     if (!/\S+@\S+\.\S+/.test(email)) {
-      return NextResponse.json({ message: 'Invalid email format' }, { status: 400 });
+      return NextResponse.json(
+        { message: 'Invalid email format' },
+        { status: 400 },
+      );
     }
 
     // Generate a 6-digit OTP
@@ -30,10 +36,16 @@ export async function POST(request) {
     // Log OTP to console for testing (simulates email sending)
     console.log(`OTP for ${email} (User: ${name}): ${otp}`);
 
-    return NextResponse.json({ success: true, message: 'OTP sent successfully. Please check your console (simulated email).' });
-
+    return NextResponse.json({
+      success: true,
+      message:
+        'OTP sent successfully. Please check your console (simulated email).',
+    });
   } catch (error) {
     console.error('Error in send-otp:', error);
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { message: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }

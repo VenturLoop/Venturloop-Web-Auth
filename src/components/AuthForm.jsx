@@ -17,12 +17,15 @@ const AuthForm = () => {
   const handleSignIn = async (provider, credentials = {}) => {
     setLoadingProvider(provider);
     try {
-      const result = await signIn(provider, { ...credentials, redirect: false });
+      const result = await signIn(provider, {
+        ...credentials,
+        redirect: false,
+      });
       if (result?.error) {
         toast.error(
           result.error === 'CredentialsSignin'
             ? 'Invalid email or password'
-            : `Sign-in failed: ${result.error}`
+            : `Sign-in failed: ${result.error}`,
         );
       } else if (result?.ok) {
         toast.success('Signed in successfully!');
@@ -79,7 +82,7 @@ const AuthForm = () => {
             src={
               session.user.image ||
               `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                session.user.name || session.user.email || 'User'
+                session.user.name || session.user.email || 'User',
               )}&background=random&color=fff&size=96`
             }
             alt="User avatar"
@@ -101,7 +104,9 @@ const AuthForm = () => {
         </div>
       ) : (
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold text-center text-gray-800">Sign In</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-800">
+            Sign In
+          </h2>
 
           <form onSubmit={handleCredentialsSignIn} className="space-y-4">
             <div>
@@ -162,7 +167,9 @@ const AuthForm = () => {
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              <span className="px-2 bg-white text-gray-500">
+                Or continue with
+              </span>
             </div>
           </div>
 

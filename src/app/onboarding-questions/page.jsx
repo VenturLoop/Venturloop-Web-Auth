@@ -22,7 +22,8 @@ const OnboardingQuestionsPage = () => {
 
   if (status === 'unauthenticated') {
     router.replace('/login'); // Redirect to login if not authenticated
-    return ( // Render null or a loading spinner while redirecting
+    return (
+      // Render null or a loading spinner while redirecting
       <div className="flex h-screen w-screen justify-center items-center">
         <LoadingSpinner />
       </div>
