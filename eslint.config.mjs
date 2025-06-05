@@ -4,8 +4,7 @@ import tseslint from 'typescript-eslint';
 import reactPlugin from 'eslint-plugin-react'; // Import the plugin itself
 import pluginReactConfig from 'eslint-plugin-react/configs/recommended.js';
 import nextPlugin from '@next/eslint-plugin-next';
-import prettierPlugin from 'eslint-plugin-prettier';
-import prettierConfig from 'eslint-config-prettier';
+
 
 export default [
   {
@@ -16,7 +15,6 @@ export default [
   {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
     plugins: {
-      prettier: prettierPlugin,
       '@next/next': nextPlugin,
       react: reactPlugin, // Register the React plugin
     },
@@ -40,8 +38,6 @@ export default [
       ...pluginReactConfig.rules, // Apply React recommended rules (this should still work)
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs['core-web-vitals'].rules,
-      ...prettierConfig.rules, // Disables ESLint rules that conflict with Prettier
-      'prettier/prettier': 'error', // Enables the Prettier rule
       'react/react-in-jsx-scope': 'off', // Not needed with React 17+ new JSX transform
     },
   },
@@ -81,7 +77,6 @@ export default [
   {
     files: ['**/*.{js,jsx,mjs,cjs}'],
     plugins: {
-      prettier: prettierPlugin,
       '@next/next': nextPlugin,
       react: reactPlugin,
     },
@@ -95,8 +90,6 @@ export default [
       ...pluginReactConfig.rules,
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs['core-web-vitals'].rules,
-      ...prettierConfig.rules,
-      'prettier/prettier': 'error',
       'react/react-in-jsx-scope': 'off',
     },
   },
@@ -112,7 +105,6 @@ export default [
     rules: {
       // Merge custom rules or overrides for TS/TSX files
       ...(config.rules || {}), // Base rules from tseslint config object
-      'prettier/prettier': 'error', // Ensure prettier runs on TS files too
       'react/react-in-jsx-scope': 'off',
       // Add any TS-specific overrides here, e.g.
       // '@typescript-eslint/no-explicit-any': 'warn',
