@@ -60,7 +60,6 @@ const SignupForm = () => {
         toast.error(`Sign-up with ${provider} failed: ${result.error}`);
       } else if (result?.ok) {
         toast.success(`Signed up with ${provider} successfully!`);
-        // router.push('/'); // Or wherever you want to redirect after social signup
       }
     } catch (error) {
       toast.error('An unexpected error occurred during sign-up.');
@@ -93,7 +92,7 @@ const SignupForm = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             disabled={isEmailLoading}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-50"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-50"
           />
         </div>
         <div>
@@ -112,13 +111,13 @@ const SignupForm = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isEmailLoading}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-50"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-50"
           />
         </div>
         <button
           type="submit"
           disabled={isEmailLoading || loadingProvider}
-          className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md disabled:bg-green-400"
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md disabled:bg-indigo-400"
         >
           {isEmailLoading ? <LoadingSpinner /> : 'Sign up with Email'}
         </button>
@@ -137,7 +136,7 @@ const SignupForm = () => {
         <button
           onClick={() => handleSocialSignup('google')}
           disabled={loadingProvider === 'google'}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
+          className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
         >
           {loadingProvider === 'google' ? (
             <LoadingSpinner />
@@ -172,7 +171,7 @@ const SignupForm = () => {
         <button
           onClick={() => handleSocialSignup('linkedin')}
           disabled={loadingProvider === 'linkedin'}
-          className="w-full bg-sky-600 hover:bg-sky-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
         >
           {loadingProvider === 'linkedin' ? (
             <LoadingSpinner />
@@ -197,7 +196,7 @@ const SignupForm = () => {
           Already have an account?{' '}
           <Link
             href="/login"
-            className="font-medium text-blue-600 hover:text-blue-500"
+            className="font-medium text-indigo-600 hover:text-indigo-500"
           >
             Sign In
           </Link>

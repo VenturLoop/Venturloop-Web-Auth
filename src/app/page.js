@@ -63,13 +63,13 @@ export default function HomePage() {
               alt="User avatar"
               width={64}
               height={64}
-              className="rounded-full mx-auto mb-6 border-4 border-blue-500 shadow-md"
+              className="rounded-full mx-auto mb-6 border-4 border-indigo-500 shadow-md"
               priority
             />
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
               Welcome back,
             </h1>
-            <p className="text-xl font-medium text-blue-600 mb-4">
+            <p className="text-xl font-medium text-indigo-600 mb-4">
               {session.user?.name || session.user?.email}!
             </p>
             <p className="text-sm text-gray-600 mb-8">
@@ -79,7 +79,7 @@ export default function HomePage() {
             <button
               onClick={handleSignOut}
               disabled={isSigningOut}
-              className="w-full bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-md hover:shadow-lg text-lg"
+              className="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 flex items-center justify-center shadow-md hover:shadow-lg text-lg"
             >
               {isSigningOut ? <LoadingSpinner /> : 'Sign Out'}
             </button>

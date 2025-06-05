@@ -20,7 +20,8 @@ export const authOptions = {
         email: { label: 'Email', type: 'email', placeholder: 'your@email.com' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
+        // req is unused
         // userStore is guaranteed to be initialized by the top-level check
         if (!credentials || !credentials.email || !credentials.password) {
           return null; // Or throw an error
@@ -59,7 +60,8 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account, profile, isNewUser }) {
+    async jwt({ token, user, account }) {
+      // profile and isNewUser (param) are unused
       // Ensure userStore is initialized (already done at top-level, but good for safety)
       if (!global.userStore) global.userStore = [];
 

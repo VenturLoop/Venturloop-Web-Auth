@@ -38,7 +38,7 @@ const PostOnboardingContent = () => {
       <div className="space-y-4 mb-10">
         <a
           href="#" // Placeholder link
-          className="flex items-center justify-center w-full bg-black text-white font-medium py-3 px-4 rounded-lg hover:bg-gray-800 transition duration-150 shadow-md"
+          className="flex items-center justify-center w-full bg-black text-white font-medium py-3 px-4 rounded-lg hover:bg-gray-800 transition duration-150 shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
           aria-label="Download on the App Store"
         >
           {/* <FaApple className="w-6 h-6 mr-2" /> Replace with actual icon */}
@@ -48,7 +48,7 @@ const PostOnboardingContent = () => {
         </a>
         <a
           href="#" // Placeholder link
-          className="flex items-center justify-center w-full bg-gray-700 text-white font-medium py-3 px-4 rounded-lg hover:bg-gray-600 transition duration-150 shadow-md"
+          className="flex items-center justify-center w-full bg-gray-700 text-white font-medium py-3 px-4 rounded-lg hover:bg-gray-600 transition duration-150 shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
           aria-label="Get it on Google Play"
         >
           {/* <FaGooglePlay className="w-5 h-5 mr-2" /> Replace with actual icon */}
@@ -65,7 +65,7 @@ const PostOnboardingContent = () => {
 
       <button
         onClick={() => router.push('/')}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-150 shadow-lg hover:shadow-xl text-lg"
+        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 shadow-lg hover:shadow-xl text-lg"
       >
         Continue to Web
       </button>

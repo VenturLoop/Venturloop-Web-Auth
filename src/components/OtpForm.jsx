@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types'; // Added for prop validation
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import LoadingSpinner from './LoadingSpinner';
@@ -114,6 +115,10 @@ const OtpForm = ({ email }) => {
       </p>
     </div>
   );
+};
+
+OtpForm.propTypes = {
+  email: PropTypes.string.isRequired,
 };
 
 export default OtpForm;
