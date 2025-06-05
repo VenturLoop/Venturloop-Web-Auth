@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useSession, update } from 'next-auth/react'; // update is not directly used here but good to know it exists
+import { useSession } from 'next-auth/react'; // update import removed
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import LoadingSpinner from './LoadingSpinner';
@@ -46,14 +46,7 @@ const BasicDetailsForm = () => {
       setIsLoading(false);
       return;
     }
-    if (profileImageUrl && !profileImageUrl.startsWith('http')) {
-      // Very basic URL validation
-      // setError('Please enter a valid Profile Image URL.');
-      // toast.error('Please enter a valid Profile Image URL.');
-      // setIsLoading(false);
-      // return;
-      // Allowing relative paths for now, or could be more robust
-    }
+    // Commented out profileImageUrl validation has been removed.
 
     try {
       const response = await fetch('/api/user/update-details', {
@@ -117,7 +110,7 @@ const BasicDetailsForm = () => {
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             placeholder="San Francisco, USA"
             disabled={isLoading}
           />
@@ -135,7 +128,7 @@ const BasicDetailsForm = () => {
             type="date"
             value={birthdate}
             onChange={(e) => setBirthdate(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             disabled={isLoading}
           />
         </div>
@@ -152,7 +145,7 @@ const BasicDetailsForm = () => {
             type="url"
             value={profileImageUrl}
             onChange={(e) => setProfileImageUrl(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             placeholder="https://example.com/image.png"
             disabled={isLoading}
           />
@@ -161,7 +154,7 @@ const BasicDetailsForm = () => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md disabled:bg-blue-400"
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md disabled:bg-indigo-400"
         >
           {isLoading ? <LoadingSpinner /> : 'Save & Continue'}
         </button>
@@ -169,7 +162,7 @@ const BasicDetailsForm = () => {
           type="button"
           onClick={() => router.push('/onboarding-questions')}
           disabled={isLoading}
-          className="w-full mt-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
+          className="w-full mt-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
         >
           Skip for Now
         </button>

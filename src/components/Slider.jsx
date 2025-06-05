@@ -86,31 +86,6 @@ const Slider = () => {
           </SwiperSlide>
         ))}
       </Swiper>
-      {/* Custom Swiper Styles (can be moved to globals.css or a CSS module if preferred) */}
-      <style jsx global>{`
-        .swiper-button-next,
-        .swiper-button-prev {
-          color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
-          transition: color 0.3s ease;
-        }
-        .swiper-button-next:hover,
-        .swiper-button-prev:hover {
-          color: #ffffff; /* Solid white on hover */
-        }
-        .swiper-pagination-bullet {
-          background: rgba(255, 255, 255, 0.5);
-          width: 10px;
-          height: 10px;
-          opacity: 1; /* Tailwind might interfere, ensure opacity is 1 */
-          transition:
-            background-color 0.3s ease,
-            transform 0.3s ease;
-        }
-        .swiper-pagination-bullet-active {
-          background: #ffffff;
-          transform: scale(1.2);
-        }
-      `}</style>
     </div>
   );
 };

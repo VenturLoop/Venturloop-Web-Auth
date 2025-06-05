@@ -9,7 +9,7 @@ import BasicDetailsForm from '@/components/BasicDetailsForm';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 const AddBasicDetailsPage = () => {
-  const { data: session, status } = useSession();
+  const { status } = useSession(); // session data not directly used
   const router = useRouter();
 
   if (status === 'loading') {

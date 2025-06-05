@@ -104,7 +104,7 @@ const OnboardingQuestionsForm = () => {
               rows="3"
               value={answers[q.id]}
               onChange={(e) => handleInputChange(q.id, e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Your answer..."
               disabled={isLoading}
             />
@@ -115,7 +115,7 @@ const OnboardingQuestionsForm = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full sm:w-auto flex-grow bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md disabled:bg-blue-400"
+            className="w-full sm:w-auto flex-grow bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md disabled:bg-indigo-400"
           >
             {isLoading ? <LoadingSpinner /> : 'Save & Continue'}
           </button>
@@ -123,7 +123,7 @@ const OnboardingQuestionsForm = () => {
             type="button"
             onClick={handleSkip}
             disabled={isLoading}
-            className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
+            className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
           >
             Skip for Now
           </button>

@@ -9,7 +9,7 @@ import OnboardingQuestionsForm from '@/components/OnboardingQuestionsForm';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 const OnboardingQuestionsPage = () => {
-  const { data: session, status } = useSession();
+  const { status } = useSession(); // session data not directly used
   const router = useRouter();
 
   if (status === 'loading') {
