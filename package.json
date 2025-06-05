@@ -10,6 +10,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@vercel/speed-insights": "^1.2.0",
     "next": "15.3.3",
     "next-auth": "^4.24.11",
     "react": "^19.0.0",
@@ -19,11 +20,11 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9.28.0",
     "eslint-config-next": "^15.3.3",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.1",
-    "prettier": "^3.5.3"
+    "prettier": "^3.5.3",
+    "tailwindcss": "^4"
   }
 }
