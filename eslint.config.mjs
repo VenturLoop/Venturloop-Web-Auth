@@ -137,7 +137,12 @@ export default [
   },
   // Configuration for non-API server-side code if any (e.g. next.config.mjs itself)
   {
-    files: ['next.config.mjs', 'postcss.config.mjs', '*.config.js'], // Add other server-side JS/MJS files if any
+    files: [
+      'next.config.mjs',
+      'postcss.config.mjs',
+      'tailwind.config.js',
+      '*.config.js',
+    ], // Add other server-side JS/MJS files if any
     languageOptions: {
       globals: {
         ...globals.node,

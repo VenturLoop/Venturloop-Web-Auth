@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: {
-    default: 'Venturloop Auth Portal', // Default title
+    default: 'Venturloop Auth Portal', // Default  title
     template: '%s | Venturloop Auth', // Template for page-specific titles
   },
   description:
