@@ -5,23 +5,32 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import LoadingSpinner from './LoadingSpinner';
+import { useRouter } from 'next/navigation';
 
 const AuthForm = () => {
+  const router = useRouter();
   const { data: session, status } = useSession();
   const [loadingProvider, setLoadingProvider] = useState(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleSignIn = async (provider) => {
+  const handleSignIn = async (provider, credentials = {}) => {
     setLoadingProvider(provider);
     try {
-      const result = await signIn(provider, { redirect: false });
+      const result = await signIn(provider, { ...credentials, redirect: false });
       if (result?.error) {
         toast.error(
           result.error === 'CredentialsSignin'
-            ? 'Invalid credentials'
+            ? 'Invalid email or password'
             : `Sign-in failed: ${result.error}`
         );
       } else if (result?.ok) {
         toast.success('Signed in successfully!');
+        // Clear form fields on successful credential sign in
+        if (provider === 'credentials') {
+          setEmail('');
+          setPassword('');
+        }
       }
     } catch (error) {
       toast.error('An unexpected error occurred during sign-in.');
@@ -29,6 +38,15 @@ const AuthForm = () => {
     } finally {
       setLoadingProvider(null);
     }
+  };
+
+  const handleCredentialsSignIn = (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      toast.error('Please enter both email and password.');
+      return;
+    }
+    handleSignIn('credentials', { email, password });
   };
 
   const handleSignOut = async () => {
@@ -84,6 +102,70 @@ const AuthForm = () => {
       ) : (
         <div className="space-y-6">
           <h2 className="text-3xl font-bold text-center text-gray-800">Sign In</h2>
+
+          <form onSubmit={handleCredentialsSignIn} className="space-y-4">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email address
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loadingProvider === 'credentials'}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-50"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loadingProvider === 'credentials'}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-50"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loadingProvider === 'credentials'}
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-150 flex items-center justify-center shadow-sm hover:shadow-md"
+            >
+              {loadingProvider === 'credentials' ? (
+                <LoadingSpinner />
+              ) : (
+                'Sign in with Email'
+              )}
+            </button>
+          </form>
+
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+            </div>
+          </div>
+
           <div className="space-y-4">
             <button
               onClick={() => handleSignIn('google')}
@@ -142,9 +224,17 @@ const AuthForm = () => {
               )}
             </button>
           </div>
-          <p className="text-center text-sm text-gray-500">
-            Choose your preferred provider to continue.
-          </p>
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
+              Don&apos;t have an account?{' '}
+              <button
+                onClick={() => router.push('/signup')}
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
+                Sign Up
+              </button>
+            </p>
+          </div>
         </div>
       )}
     </div>
