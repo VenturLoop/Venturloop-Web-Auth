@@ -14,11 +14,17 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (status === 'authenticated') {
-      router.replace('/'); // Redirect to home if already logged in
+      if (session?.user?.isNewUser) {
+        router.replace('/add-basic-details'); // Redirect new users to add details
+      } else {
+        router.replace('/'); // Redirect existing users to home
+      }
     }
   }, [session, status, router]);
 
-  if (status === 'loading' || status === 'authenticated') {
+  if (status === 'loading' || (status === 'authenticated' && !router.asPath.includes('/add-basic-details'))) {
+    // The check for asPath is a bit of a hack to prevent flicker if already redirecting to add-basic-details
+    // A more robust solution might involve a dedicated loading page or state management
     // Show a loading spinner while checking session or if redirecting
     return (
       <div className="h-screen flex items-center justify-center bg-gray-50">
