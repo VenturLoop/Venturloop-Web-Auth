@@ -7,11 +7,6 @@ import AuthForm from '@/components/AuthForm';
 import Slider from '@/components/Slider';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
-export const metadata = {
-  title: 'Sign In / Sign Up',
-  description:
-    'Access your Venturloop account or create a new one. Sign in with Google or LinkedIn.',
-};
 
 const LoginPage = () => {
   const { data: session, status } = useSession();
