@@ -21,7 +21,13 @@ const CreatePasswordPageContent = () => {
 
 const CreatePasswordPage = () => {
   return (
-    <Suspense fallback={<div className="flex h-screen w-screen justify-center items-center"><LoadingSpinner /></div>}>
+    <Suspense
+      fallback={
+        <div className="flex h-screen w-screen justify-center items-center">
+          <LoadingSpinner />
+        </div>
+      }
+    >
       <CreatePasswordPageContent />
     </Suspense>
   );

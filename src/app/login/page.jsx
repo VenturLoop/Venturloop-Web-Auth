@@ -7,7 +7,6 @@ import AuthForm from '@/components/AuthForm';
 import Slider from '@/components/Slider';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
-
 const LoginPage = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -22,7 +21,11 @@ const LoginPage = () => {
     }
   }, [session, status, router]);
 
-  if (status === 'loading' || (status === 'authenticated' && !router.asPath.includes('/add-basic-details'))) {
+  if (
+    status === 'loading' ||
+    (status === 'authenticated' &&
+      !router.asPath.includes('/add-basic-details'))
+  ) {
     // The check for asPath is a bit of a hack to prevent flicker if already redirecting to add-basic-details
     // A more robust solution might involve a dedicated loading page or state management
     // Show a loading spinner while checking session or if redirecting
