@@ -17,6 +17,7 @@ const PostOnboardingPage = () => {
       <div className="flex h-screen w-screen justify-center items-center">
         <LoadingSpinner />
       </div>
+      
     );
   }
 
