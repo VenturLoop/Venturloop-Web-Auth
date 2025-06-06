@@ -1,11 +1,9 @@
 'use client';
 
-import React, { Suspense } from 'react';
-import Layout from '@/components/Layout';
+import React from 'react';
 import Slider from '@/components/Slider';
 import CreatePasswordForm from '@/components/CreatePasswordForm';
 import { useSearchParams } from 'next/navigation';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import SpliteScreen from '@/components/SpliteScreen';
 
 // Wrapper component for Suspense boundary

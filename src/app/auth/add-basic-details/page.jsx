@@ -3,8 +3,7 @@
 import React from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Layout from '@/components/Layout';
-import Slider from '@/components/Slider';
+
 import BasicDetailsForm from '@/components/BasicDetailsForm';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import SpliteScreen from '@/components/SpliteScreen';
