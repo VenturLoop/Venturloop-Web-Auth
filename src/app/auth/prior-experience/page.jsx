@@ -2,109 +2,106 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import SpliteScreen from '@/components/SpliteScreen'; // Corrected path
+import SpliteScreen from '@/components/SpliteScreen';
 
 const PriorExperiencePage = () => {
   const router = useRouter();
-  const [selectedExperience, setSelectedExperience] = useState('');
+  const [selectedOption, setSelectedOption] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const experiences = [
-    { id: 'student', label: 'Student / No Professional Experience' },
-    { id: 'entry-level', label: 'Entry-level (0-2 years)' },
-    { id: 'mid-level', label: 'Mid-level (2-5 years)' },
-    { id: 'senior-level', label: 'Senior-level (5-10 years)' },
-    { id: 'expert-level', label: 'Expert / Lead (10+ years)' },
-    { id: 'founder', label: 'Previous Founder / Entrepreneur' },
+  const options = [
+    'Sold a startup',
+    'Founded/Co-founded a company',
+    'Worked in a startup',
+    'Previous startup failed',
+    'No Prior startup experience',
   ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedExperience) {
-      setError('Please select your experience level.');
+    if (!selectedOption) {
+      setError('Please select your startup experience to proceed.');
       return;
     }
     setIsLoading(true);
     setError(null);
     try {
-      // Replace with your actual API call logic
-      // await updateUserExperience({ experience: selectedExperience });
-      console.log('Selected experience:', selectedExperience);
-      router.push('/auth/intrests'); // Navigate to the next step
+      console.log('Selected option:', selectedOption);
+      router.push('/auth/equity-expectation');
     } catch (err) {
       console.error('Failed to save experience:', err);
-      setError(
-        err.message || 'An error occurred while saving your experience.'
-      );
+      setError('Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
   const sliderData = {
-    imageSrc: '/image/community_splash_screen.png', // Example image, replace as needed
-    title: 'Your Experience Level',
+    imageSrc: '/image/community_splash_screen.png',
+    title: 'Any Prior Startup Experience',
     description:
-      'Sharing your experience helps us tailor your journey and find relevant connections.',
+      'Your previous exposure to startups helps us tailor opportunities that match your journey.',
   };
 
   return (
-    <SpliteScreen data={sliderData}>
-      <div className="w-full max-w-lg px-4 py-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">
-          What&apos;s Your Experience Level?
-        </h2>
-        <p className="text-gray-600 mb-8 text-center">
-          Let us know about your professional background.
-        </p>
+    <SpliteScreen xlScreenSize={false} data={sliderData}>
+      <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">
+        Any Prior Startup Experience
+      </h2>
+      <p className="text-gray-600 mb-8 text-center">
+        Select the option that best describes your startup background.
+      </p>
 
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mb-6 text-sm">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
-            {experiences.map((experience) => (
-              <button
-                key={experience.id}
-                type="button"
-                onClick={() => setSelectedExperience(experience.id)}
-                className={`w-full text-left px-6 py-4 rounded-lg border-2 transition-all duration-150 ease-in-out
-                                ${
-                                  selectedExperience === experience.id
-                                    ? 'bg-blue-500 border-blue-600 text-white shadow-lg scale-105'
-                                    : 'bg-white border-gray-300 hover:border-blue-400 hover:bg-blue-50 text-gray-700'
-                                }
-                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50`}
-              >
-                <span className="font-medium">{experience.label}</span>
-              </button>
-            ))}
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading || !selectedExperience}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                           transition duration-150 ease-in-out shadow-md hover:shadow-lg
-                           disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? 'Saving...' : 'Continue'}
-          </button>
-        </form>
-         <div className="mt-8 text-center">
-          <button
-            onClick={() => router.back()}
-            className="text-sm text-gray-600 hover:text-gray-800 hover:underline"
-          >
-            &larr; Go Back
-          </button>
+      {error && (
+        <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded-md mb-6 text-sm text-center">
+          {error}
         </div>
-      </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-10">
+        <div className="space-y-6">
+          {options.map((option, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => setSelectedOption(option)}
+              className={`w-full flex items-center gap-4 px-6 py-2 rounded-xl border-2 transition-all duration-150 ease-in-out
+                ${
+                  selectedOption === option
+                    ? 'bg-[#c5e2ff] border-[#2983DC] text-[#2983DC] shadow-md scale-[1.02]'
+                    : 'bg-white border-gray-300 text-gray-800 hover:border-[#2983DC] hover:bg-blue-50'
+                }
+                focus:outline-none focus:ring-2 focus:ring-[#2983DC]/50 text-base font-medium`}
+            >
+              <span
+                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center
+                  ${
+                    selectedOption === option
+                      ? 'border-white bg-white'
+                      : 'border-gray-400'
+                  }`}
+              >
+                {selectedOption === option && (
+                  <span className="w-2.5 h-2.5 bg-[#2983DC] rounded-full" />
+                )}
+              </span>
+              {option}
+            </button>
+          ))}
+        </div>
+
+        <button
+          type="submit"
+          disabled={isLoading || !selectedOption}
+          className="w-full bg-[#2983DC] mt-6 hover:bg-[#2270BE] text-white font-semibold py-3 px-6 rounded-lg
+            focus:outline-none focus:ring-2 focus:ring-[#2983DC] focus:ring-offset-2
+            transition duration-150 ease-in-out shadow-md hover:shadow-lg
+            disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? 'Saving...' : 'Continue'}
+        </button>
+      </form>
     </SpliteScreen>
   );
 };

@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import PropTypes from 'prop-types';
 
 const OtpInput = ({ otp, setOtp, isLoading }) => {
   const inputsRef = useRef([]);
@@ -40,12 +39,6 @@ const OtpInput = ({ otp, setOtp, isLoading }) => {
       ))}
     </div>
   );
-};
-
-OtpInput.propTypes = {
-  otp: PropTypes.array.isRequired,
-  setOtp: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
 };
 
 export default OtpInput;

@@ -1,192 +1,174 @@
 'use client';
 
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import SpliteScreen from '@/components/SpliteScreen'; // Corrected path
 
-// Helper component for individual pricing plans
-const PricingCard = ({ plan, selectedPlan, onSelectPlan }) => {
-  const isSelected = plan.id === selectedPlan;
-  return (
-    <button
-      type="button"
-      onClick={() => onSelectPlan(plan.id)}
-      className={`w-full text-left p-6 rounded-xl border-2 transition-all duration-150 ease-in-out transform hover:scale-105
-                  ${
-                    isSelected
-                      ? 'bg-indigo-600 border-indigo-700 text-white shadow-2xl scale-105 ring-4 ring-indigo-400 ring-offset-2'
-                      : 'bg-white border-gray-200 hover:border-indigo-400 hover:shadow-lg'
-                  }
-                  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75`}
-    >
-      <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
-      <p className={`text-3xl font-bold mb-1 ${isSelected ? 'text-yellow-300' : 'text-indigo-600'}`}>
-        {plan.price}
-        <span className={`text-sm font-normal ${isSelected ? 'text-indigo-200' : 'text-gray-500'}`}>{plan.billingCycle}</span>
-      </p>
-      <p className={`text-sm mb-4 ${isSelected ? 'text-indigo-100' : 'text-gray-600'}`}>{plan.description}</p>
-      <ul className="space-y-2 text-sm">
-        {plan.features.map((feature, index) => (
-          <li key={index} className="flex items-center">
-            <svg
-              className={`w-4 h-4 mr-2 ${isSelected ? 'text-yellow-300' : 'text-indigo-500'}`}
-              fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
-            </svg>
-            {feature}
-          </li>
-        ))}
-      </ul>
-      {plan.badge && (
-        <div className="mt-4">
-          <span className="bg-yellow-400 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">{plan.badge}</span>
-        </div>
-      )}
-    </button>
-  );
-};
-
-PricingCard.propTypes = {
-  plan: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.string.isRequired,
-    billingCycle: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    features: PropTypes.arrayOf(PropTypes.string).isRequired,
-    badge: PropTypes.string,
-  }).isRequired,
-  selectedPlan: PropTypes.string.isRequired,
-  onSelectPlan: PropTypes.func.isRequired,
-};
+const plans = [
+  {
+    id: 'free',
+    name: 'Free',
+    price: '$0',
+    billingCycle: '',
+    description: 'Try it risk-free, no commitment.',
+    features: [
+      'Feature label goes here',
+      'Feature label goes here',
+      'Feature label goes here',
+      'Feature label goes here',
+    ],
+    highlight: false,
+  },
+  {
+    id: 'founder',
+    name: "Founder's Pass",
+    price: '$49',
+    billingCycle: '/lifetime',
+    description: 'Lifetime access to premium features.',
+    features: [
+      'Feature label goes here',
+      'Feature label goes here',
+      'Feature label goes here',
+      'Feature label goes here',
+    ],
+    highlight: true,
+  },
+];
 
 const FounderScreenPage = () => {
   const router = useRouter();
-  const [selectedPlanId, setSelectedPlanId] = useState('standard'); // Default selection
+  const [selectedPlan, setSelectedPlan] = useState('founder');
+  const [billingCycle, setBillingCycle] = useState('yearly'); // Default selected tab
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const pricingPlans = [
-    {
-      id: 'basic',
-      name: 'Basic Connect',
-      price: '$0',
-      billingCycle: '/month',
-      description: 'For individuals getting started and exploring.',
-      features: ['Access to community forum', 'Limited profile visibility', 'Basic matchmaking'],
-      badge: null,
-    },
-    {
-      id: 'standard',
-      name: 'Founder Standard',
-      price: '$29',
-      billingCycle: '/month',
-      description: 'For active founders seeking co-founders and resources.',
-      features: [
-        'Full profile visibility',
-        'Advanced matchmaking',
-        'Access to exclusive events',
-        'Priority support',
-      ],
-      badge: 'Most Popular',
-    },
-    {
-      id: 'premium',
-      name: 'Founder Pro',
-      price: '$79',
-      billingCycle: '/month',
-      description: 'For serious founders needing premium tools and support.',
-      features: [
-        'All Standard features',
-        'Dedicated account manager',
-        'Access to investor network',
-        'Premium analytics',
-        'Early access to new features',
-      ],
-      badge: null,
-    },
-  ];
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedPlanId) {
-      setError('Please select a pricing plan.');
+    if (!selectedPlan) {
+      setError('Please select a plan to continue.');
       return;
     }
     setIsLoading(true);
-    setError(null);
     try {
-      // Replace with your actual API call logic
-      // await updateUserPricingPlan({ planId: selectedPlanId });
-      console.log('Selected plan ID:', selectedPlanId);
-      router.push('/auth/post-onboarding'); // Navigate to the next step
+      console.log('Selected Plan:', selectedPlan);
+      router.push('/auth/post-onboarding');
     } catch (err) {
-      console.error('Failed to save pricing plan:', err);
-      setError(
-        err.message || 'An error occurred while saving your plan choice.'
-      );
+      console.error('Error saving plan:', err);
+      setError('An error occurred while processing.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const sliderData = {
-    imageSrc: '/image/Cofounder_splash_screen.png', // Replace with a relevant image
-    title: 'Choose Your Founder Plan',
-    description:
-      'Select a plan that aligns with your goals and unlocks the full potential of our platform.',
-  };
-
   return (
-    <SpliteScreen data={sliderData}>
-      <div className="w-full max-w-2xl px-4 py-8"> {/* Increased max-width for pricing cards */}
-        <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">
-          Unlock Your Potential
-        </h2>
-        <p className="text-gray-600 mb-8 text-center">
-          Choose the plan that&apos;s right for your journey.
-        </p>
-
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mb-6 text-sm text-center">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {pricingPlans.map((plan) => (
-              <PricingCard
-                key={plan.id}
-                plan={plan}
-                selectedPlan={selectedPlanId}
-                onSelectPlan={setSelectedPlanId}
-              />
-            ))}
-          </div>
-
+    <div className="min-h-screen bg-[#d7e4ff] flex flex-col items-center justify-center px-4 py-12">
+      <div className="text-center mb-6">
+        <h2 className="text-4xl font-bold text-gray-800 mb-2">Transparent Pricing</h2>
+        <p className="text-gray-600 text-sm">Pricing built for people just like you.</p>
+        <div className="inline-flex mt-4 rounded-full bg-gray-200 p-1">
           <button
-            type="submit"
-            disabled={isLoading || !selectedPlanId}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 px-6 rounded-lg
-                           focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
-                           transition duration-150 ease-in-out shadow-xl hover:shadow-2xl
-                           disabled:opacity-60 disabled:cursor-not-allowed text-lg"
+            type="button"
+            onClick={() => setBillingCycle('yearly')}
+            className={`px-4 py-1 rounded-full text-sm font-medium transition ${
+              billingCycle === 'yearly' ? 'bg-white shadow text-indigo-600' : 'text-gray-500'
+            }`}
           >
-            {isLoading ? 'Processing...' : `Continue with ${pricingPlans.find(p => p.id === selectedPlanId)?.name || ''}`}
+            Yearly
           </button>
-        </form>
-        <div className="mt-10 text-center">
           <button
-            onClick={() => router.back()}
-            className="text-sm text-gray-600 hover:text-gray-800 hover:underline"
+            type="button"
+            onClick={() => setBillingCycle('monthly')}
+            className={`px-4 py-1 rounded-full text-sm font-medium transition ${
+              billingCycle === 'monthly' ? 'bg-white shadow text-indigo-600' : 'text-gray-500'
+            }`}
           >
-            &larr; Go Back
+            Monthly
           </button>
         </div>
       </div>
-    </SpliteScreen>
+
+      <form onSubmit={handleSubmit} className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        {plans.map((plan) => (
+          <div
+            key={plan.id}
+            onClick={() => setSelectedPlan(plan.id)}
+            className={`relative cursor-pointer rounded-2xl p-6 border transition-all duration-300 shadow-sm ${
+              plan.highlight
+                ? 'bg-indigo-600 text-white border-indigo-700 shadow-2xl scale-[1.02]'
+                : 'bg-white border-gray-200 hover:shadow-lg'
+            }`}
+          >
+            {plan.highlight && (
+              <div className="absolute top-4 right-4">
+                <span className="text-xs bg-white text-indigo-600 font-semibold px-3 py-1 rounded-full shadow-sm">
+                  Recommended
+                </span>
+              </div>
+            )}
+
+            <h3 className={`text-2xl font-bold mb-2 ${plan.highlight ? 'text-white' : 'text-gray-800'}`}>
+              {plan.name}
+            </h3>
+            <p className={`text-4xl font-extrabold mb-1 ${plan.highlight ? 'text-yellow-300' : 'text-indigo-600'}`}>
+              {plan.price}
+              <span className={`text-sm font-medium ml-1 ${plan.highlight ? 'text-indigo-200' : 'text-gray-500'}`}>
+                {plan.billingCycle}
+              </span>
+            </p>
+            <p className={`text-sm mb-4 ${plan.highlight ? 'text-indigo-100' : 'text-gray-500'}`}>
+              {plan.description}
+            </p>
+            <ul className="space-y-2 text-sm">
+              {plan.features.map((feature, index) => (
+                <li key={index} className="flex items-center">
+                  <svg
+                    className={`w-4 h-4 mr-2 ${
+                      plan.highlight ? 'text-yellow-300' : 'text-indigo-500'
+                    }`}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+
+            {/* 🖼️ Add Illustration Image Here */}
+            {plan.highlight && (
+              <div className="mt-6 flex justify-end">
+                {/* Replace with actual image */}
+                {/* <img src="/path-to-your-illustration.jpg" alt="Illustration" className="w-24 h-auto" /> */}
+                {/* Example: */}
+                {/* <img src="/image/founder_character.png" alt="Founder's Illustration" className="w-28 h-auto" /> */}
+                {/* OR use uploaded image: */}
+                {/* <img src="/uploads/3fede415-edba-4f29-9008-7d06d8a07722.jpg" alt="Illustration" className="w-28 h-auto" /> */}
+              </div>
+            )}
+          </div>
+        ))}
+
+        <div className="md:col-span-2 mt-6">
+          {error && (
+            <div className="text-center text-red-600 text-sm mb-4">{error}</div>
+          )}
+          <button
+            type="button"
+             onClick={() => {
+            router.push(`/auth/post-onboarding`);
+          }}
+            disabled={isLoading}
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl text-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? 'Processing...' : `Continue with ${plans.find((p) => p.id === selectedPlan)?.name}`}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 

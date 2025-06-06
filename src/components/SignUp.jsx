@@ -48,7 +48,7 @@ export default function Signup() {
       <button
         onClick={() => handleSocialSignup('linkedin')}
         disabled={loadingProvider === 'linkedin' || isEmailLoading}
-        className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2983DC] transition duration-150 flex items-center justify-center shadow-sm mb-4 disabled:opacity-70"
+        className="w-full border border-gray-300 hover:bg-gray-50 text-gray-800 font-medium py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2983DC] transition duration-150 flex items-center justify-center shadow-sm mb-4 disabled:opacity-70"
       >
         {loadingProvider === 'linkedin' ? (
           <LoadingSpinner size="small" />
@@ -64,14 +64,14 @@ export default function Signup() {
             </svg>
             Continue with LinkedIn
           </>
-        )}
+        )} 
       </button>
 
       {/* Google Button */}
       <button
         onClick={() => handleSocialSignup('google')}
         disabled={loadingProvider === 'google' || isEmailLoading}
-        className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 flex items-center justify-center shadow-sm disabled:opacity-70"
+        className="w-full border border-gray-300 hover:bg-gray-50 text-gray-800 font-medium py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 flex items-center justify-center shadow-sm disabled:opacity-70"
       >
         {loadingProvider === 'google' ? (
           <LoadingSpinner size="small" />

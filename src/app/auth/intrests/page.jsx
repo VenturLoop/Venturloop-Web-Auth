@@ -2,33 +2,76 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import SpliteScreen from '@/components/SpliteScreen'; // Corrected path
+import SpliteScreen from '@/components/SpliteScreen';
 
 const InterestsPage = () => {
   const router = useRouter();
   const [selectedInterests, setSelectedInterests] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const interestsOptions = [
-    { id: 'technology', label: 'Technology (AI, SaaS, Web3)' },
-    { id: 'healthcare', label: 'Healthcare & Biotech' },
-    { id: 'ecommerce', label: 'E-commerce & Retail' },
-    { id: 'education', label: 'Education & EdTech' },
-    { id: 'finance', label: 'Finance & FinTech' },
-    { id: 'sustainability', label: 'Sustainability & GreenTech' },
-    { id: 'media', label: 'Media & Entertainment' },
-    { id: 'social', label: 'Social Impact & Non-profit' },
-    { id: 'travel', label: 'Travel & Hospitality' },
-    { id: 'gaming', label: 'Gaming & eSports' },
+    'AI/ML',
+    'AR/VR',
+    'Advertising',
+    'Agritech',
+    'Analysis',
+    'AudioTech',
+    'Auto Tech',
+    'BioTech',
+    'ClimateTech/CleanTech',
+    'Cloud Infrastructure',
+    'ConstructionTech',
+    'Creator/Passion Economy',
+    'Data Services',
+    'DeepTech',
+    'Developer Tools',
+        "AgriTech",
+    "CleanTech",
+    "LegalTech",
+    "GovTech",
+    "ClimateTech",
+    "SportsTech",
+    "MarTech",
+    "PropTech",
+    "Marketplace Building",
+    "Community-led Growth",
+    "Cold Outreach Expert",
+    "Email Marketing",
+    "Conversion Rate Optimization",
+    "Landing Page Expert",
+    "UI Performance Optimization",
+    "Accessibility Expert",
+    "Localization Specialist",
+    "Translation",
+    "Investor Relations",
+    "Startup Advisor",
+    "Startup Consultant",
+    "Startup Generalist",
+    "Serial Entrepreneur",
+    "Startup Evangelist",
+    "Early Stage Specialist",
+    "Incubator Coach",
+    "Accelerator Lead",
+    "Leadership",
+    "Public Speaking",
+    "Pitching",
+    "Negotiation",
+    "Problem Solving",
+    "Time Management",
+    "Critical Thinking",
+    "Storytelling",
+    "Resilience",
+    "Empathy"
   ];
 
-  const handleInterestToggle = (interestId) => {
-    setSelectedInterests((prevInterests) =>
-      prevInterests.includes(interestId)
-        ? prevInterests.filter((id) => id !== interestId)
-        : [...prevInterests, interestId]
-    );
+  const handleToggleInterest = (interest) => {
+    if (selectedInterests.includes(interest)) {
+      setSelectedInterests((prev) => prev.filter((item) => item !== interest));
+    } else if (selectedInterests.length >=nt 0) {
+      setSelectedInterests((prev) => [...prev, interest]);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -37,94 +80,89 @@ const InterestsPage = () => {
       setError('Please select at least one interest.');
       return;
     }
-    // Allow selection of up to 3 interests
-    if (selectedInterests.length > 3) {
-      setError('You can select up to 3 interests.');
-      return;
-    }
     setIsLoading(true);
     setError(null);
+
     try {
-      // Replace with your actual API call logic
-      // await updateUserInterests({ interests: selectedInterests });
       console.log('Selected interests:', selectedInterests);
-      router.push('/auth/skillset'); // Navigate to the next step
+      router.push('/auth/commitments');
     } catch (err) {
-      console.error('Failed to save interests:', err);
-      setError(
-        err.message || 'An error occurred while saving your interests.'
-      );
+      setError(err.message || 'Something went wrong.');
     } finally {
       setIsLoading(false);
     }
   };
 
+  const filteredInterests = interestsOptions.filter((interest) =>
+    interest.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const sliderData = {
-    imageSrc: '/image/Cofounder_splash_screen.png', // Example image, replace as needed
+    imageSrc: '/image/Cofounder_splash_screen.png',
     title: 'Share Your Interests',
     description:
       'Let us know what areas you are passionate about. This helps in finding like-minded individuals and projects.',
   };
 
   return (
-    <SpliteScreen data={sliderData}>
-      <div className="w-full max-w-lg px-4 py-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">
-          What Are Your Interests?
-        </h2>
-        <p className="text-gray-600 mb-6 text-center">
-          Select up to 3 areas you&apos;re most interested in.
-        </p>
+    <SpliteScreen xlScreenSize={true} data={sliderData}>
+      <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">
+        What Are Your Interests?
+      </h2>
+      <p className="text-gray-600 mb-4 text-center">
+        Select industries you&apos;re most interested in.
+      </p>
 
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mb-6 text-sm">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {interestsOptions.map((interest) => (
-              <button
-                key={interest.id}
-                type="button"
-                onClick={() => handleInterestToggle(interest.id)}
-                className={`w-full text-left px-5 py-3.5 rounded-lg border-2 transition-all duration-150 ease-in-out text-sm
-                                ${
-                                  selectedInterests.includes(interest.id)
-                                    ? 'bg-purple-500 border-purple-600 text-white shadow-lg ring-2 ring-purple-400 ring-offset-1'
-                                    : 'bg-white border-gray-300 hover:border-purple-400 hover:bg-purple-50 text-gray-700'
-                                }
-                                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50`}
-              >
-                <span className="font-medium">{interest.label}</span>
-              </button>
-            ))}
-          </div>
-          <p className="text-xs text-gray-500 text-center mt-1">
-            You have selected {selectedInterests.length} of 3 interests.
-          </p>
-
-          <button
-            type="submit"
-            disabled={isLoading || selectedInterests.length === 0 || selectedInterests.length > 3}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg
-                           focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
-                           transition duration-150 ease-in-out shadow-md hover:shadow-lg
-                           disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? 'Saving...' : 'Continue'}
-          </button>
-        </form>
-        <div className="mt-8 text-center">
-          <button
-            onClick={() => router.back()}
-            className="text-sm text-gray-600 hover:text-gray-800 hover:underline"
-          >
-            &larr; Go Back
-          </button>
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mb-4 text-sm">
+          {error}
         </div>
-      </div>
+      )}
+
+      <input
+        type="text"
+        placeholder="Search interests..."
+        value={searchQuery}
+        autoFocus
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="w-full px-4 py-3 mb-6 border border-gray-300 rounded-full shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-h-[420px] overflow-y-auto pr-1">
+          {filteredInterests.length > 0 ? (
+            filteredInterests.map((interest, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => handleToggleInterest(interest)}
+                className={`text-left px-4 py-2 rounded-full border-2 text-xs sm:text-sm transition
+                  ${
+                    selectedInterests.includes(interest)
+                      ? 'bg-[#9fcefc] border-[#2983DC] text-black shadow ring-2 ring-[#2983DC]'
+                      : 'bg-white border-gray-300 hover:border-[#2983DC] hover:bg-white text-gray-700'
+                  }`}
+              >
+                {interest}
+              </button>
+            ))
+          ) : (
+            <p className="col-span-full text-sm text-center text-gray-400">
+              No interests found.
+            </p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          disabled={isLoading || selectedInterests.length === 0}
+          className="w-full bg-[#2983DC] hover:bg-[#2472c1] text-white font-semibold py-3 px-6 rounded-lg
+            focus:outline-none focus:ring-2 focus:ring-[#2983DC] focus:ring-offset-2
+            transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? 'Saving...' : 'Continue'}
+        </button>
+      </form>
     </SpliteScreen>
   );
 };
