@@ -1,9 +1,9 @@
 'use client';
 
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen'; // Corrected path
-import { updateUserPricingPlan } from '@/utils/AuthApis'; // Assuming this API utility exists
 
 // Helper component for individual pricing plans
 const PricingCard = ({ plan, selectedPlan, onSelectPlan }) => {
@@ -47,6 +47,19 @@ const PricingCard = ({ plan, selectedPlan, onSelectPlan }) => {
   );
 };
 
+PricingCard.propTypes = {
+  plan: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.string.isRequired,
+    billingCycle: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    features: PropTypes.arrayOf(PropTypes.string).isRequired,
+    badge: PropTypes.string,
+  }).isRequired,
+  selectedPlan: PropTypes.string.isRequired,
+  onSelectPlan: PropTypes.func.isRequired,
+};
 
 const FounderScreenPage = () => {
   const router = useRouter();

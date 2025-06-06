@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen'; // Corrected path
-import { updateUserCommitments } from '@/utils/AuthApis'; // Assuming this API utility exists
 
 const CommitmentsPage = () => {
   const router = useRouter();
