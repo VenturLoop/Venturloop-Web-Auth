@@ -1,6 +1,7 @@
 "use client"; // if using Next.js 13+ with app directory
 
 import { createContext, useReducer, useContext } from "react";
+import PropTypes from "prop-types";
 
 // Initial state
 const initialState = {
@@ -48,6 +49,10 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 // Custom hook to use context
