@@ -16,7 +16,7 @@ const CreatePasswordForm = ({ email }) => {
   useEffect(() => {
     if (!email) {
       toast.error('Email not provided. Redirecting to signup.');
-      router.replace('/signup');
+      router.replace('/auth/signup');
     }
   }, [email, router]);
 

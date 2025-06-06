@@ -235,7 +235,7 @@ const AuthForm = () => {
             <p className="text-sm text-gray-600">
               Don&apos;t have an account?{' '}
               <button
-                onClick={() => router.push('/signup')}
+                onClick={() => router.push('/auth/signup')}
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
                 Sign Up
