@@ -28,7 +28,8 @@ export default function SpliteScreen({ data, children }) {
 
         {/* Right Column: Children */}
         <div className="w-full md:w-1/2 lg:w-2/5 xl:w-1/2 flex flex-col justify-center items-center p-6 sm:p-8 md:p-12 overflow-y-auto">
-          <div className="w-full max-w-md">{children}</div>
+          {/* This is the updated line */}
+          <div className="w-full">{children}</div>
         </div>
       </div>
     </>
