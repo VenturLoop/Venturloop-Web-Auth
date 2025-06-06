@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react'; // Ensure React is imported
 import Layout from '@/components/Layout';
 import Slider from '@/components/Slider';
 import CreatePasswordForm from '@/components/CreatePasswordForm';
@@ -21,7 +21,9 @@ const CreatePasswordPageContent = () => {
 const CreatePasswordPage = () => {
   return (
     <Layout leftContent={<Slider />}>
-      <CreatePasswordPageContent />
+      <Suspense fallback={<p>Loading page...</p>}>
+        <CreatePasswordPageContent />
+      </Suspense>
     </Layout>
   );
 };

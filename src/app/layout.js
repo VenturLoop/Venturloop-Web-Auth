@@ -22,11 +22,15 @@ export const metadata = {
   },
   description:
     'Secure and seamless authentication for Venturloop applications. Sign in or create an account to continue.', // Slightly more detailed description
-  viewport: 'width=device-width, initial-scale=1',
   icons: {
     icon: '/favicon.ico', // Assuming favicon.ico is in public folder
   },
   // Add more metadata as needed: openGraph, twitter, etc.
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }) {
