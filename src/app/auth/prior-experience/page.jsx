@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen'; // Corrected path
-import { updateUserExperience } from '@/utils/AuthApis'; // Assuming this API utility exists
 
 const PriorExperiencePage = () => {
   const router = useRouter();

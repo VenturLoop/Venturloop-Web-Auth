@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen'; // Corrected path
-import { updateUserSkills } from '@/utils/AuthApis'; // Assuming this API utility exists
 
 const SkillsetPage = () => {
   const router = useRouter();
