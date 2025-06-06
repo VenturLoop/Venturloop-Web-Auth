@@ -1,7 +1,6 @@
 // components/layouts/AuthLayout.jsx
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { Toaster } from 'react-hot-toast';
 
 export default function SpliteScreen({ data, children }) {

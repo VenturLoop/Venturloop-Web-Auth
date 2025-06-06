@@ -84,10 +84,7 @@ const OtpForm = ({ email }) => {
 
       <form
         onSubmit={() => {
-          // handleSubmit()
-          router.push(
-            `/auth/create-password?email=${encodeURIComponent(email)}`,
-          );
+          handleSubmit()
         }}
         className="space-y-6 w-full"
       >
