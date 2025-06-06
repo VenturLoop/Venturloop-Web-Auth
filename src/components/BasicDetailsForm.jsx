@@ -16,16 +16,16 @@ const BasicDetailsForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (status === 'authenticated' && session?.user) {
-      // Pre-fill form if data already exists (e.g. from social or previous submission)
-      setLocation(session.user.location || '');
-      setBirthdate(session.user.birthdate || ''); // Assuming birthdate is directly on user, might need parsing if stored differently
-      setProfileImageUrl(session.user.image || ''); // session.user.image should be up-to-date
-    } else if (status === 'unauthenticated') {
-      router.replace('/login');
-    }
-  }, [session, status, router]);
+  // useEffect(() => {
+  //   if (status === 'authenticated' && session?.user) {
+  //     // Pre-fill form if data already exists (e.g. from social or previous submission)
+  //     setLocation(session.user.location || '');
+  //     setBirthdate(session.user.birthdate || ''); // Assuming birthdate is directly on user, might need parsing if stored differently
+  //     setProfileImageUrl(session.user.image || ''); // session.user.image should be up-to-date
+  //   } else if (status === 'unauthenticated') {
+  //     router.replace('/login');
+  //   }
+  // }, [session, status, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

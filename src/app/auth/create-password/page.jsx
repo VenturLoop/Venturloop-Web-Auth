@@ -6,6 +6,7 @@ import Slider from '@/components/Slider';
 import CreatePasswordForm from '@/components/CreatePasswordForm';
 import { useSearchParams } from 'next/navigation';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import SpliteScreen from '@/components/SpliteScreen';
 
 // Wrapper component for Suspense boundary
 const CreatePasswordPageContent = () => {
@@ -19,17 +20,16 @@ const CreatePasswordPageContent = () => {
   );
 };
 
+const spliteScreenData = {
+  imageSrc: '/image/ai_splash_screen.png', // You can customize this image path
+  title: 'OTP Verification',
+  description: 'Enter the OTP sent to your email to verify your account.',
+};
 const CreatePasswordPage = () => {
   return (
-    <Suspense
-      fallback={
-        <div className="flex h-screen w-screen justify-center items-center">
-          <LoadingSpinner />
-        </div>
-      }
-    >
+    <SpliteScreen data={spliteScreenData}>
       <CreatePasswordPageContent />
-    </Suspense>
+    </SpliteScreen>
   );
 };
 

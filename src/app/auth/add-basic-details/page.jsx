@@ -7,11 +7,12 @@ import Layout from '@/components/Layout';
 import Slider from '@/components/Slider';
 import BasicDetailsForm from '@/components/BasicDetailsForm';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import SpliteScreen from '@/components/SpliteScreen';
 
 const AddBasicDetailsPage = () => {
   const { status } = useSession(); // session data not directly used
   const router = useRouter();
-
+// 
   if (status === 'loading') {
     return (
       <div className="flex h-screen w-screen justify-center items-center">
@@ -30,11 +31,18 @@ const AddBasicDetailsPage = () => {
     );
   }
 
+  const spliteScreenData = {
+  imageSrc: '/image/add_basic_details.png', // Customize the image path
+  title: 'Complete Your Profile',
+  description: 'Please provide your basic details to complete your account setup.',
+};
+
+
   // If authenticated, render the form within the layout
   return (
-    <Layout leftContent={<Slider />}>
+    <SpliteScreen data={spliteScreenData}>
       <BasicDetailsForm />
-    </Layout>
+    </SpliteScreen>
   );
 };
 

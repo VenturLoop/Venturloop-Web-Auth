@@ -27,15 +27,9 @@ const OtpPageContent = () => {
 };
 
 const OtpVerifyPage = () => (
-  <Suspense
-    fallback={
-      <div className="flex h-screen w-screen justify-center items-center bg-white">
-        <LoadingSpinner />
-      </div>
-    }
-  >
+    <SpliteScreen data={spliteScreenData}>
     <OtpPageContent />
-  </Suspense>
+    </SpliteScreen>
 );
 
 export default OtpVerifyPage;
