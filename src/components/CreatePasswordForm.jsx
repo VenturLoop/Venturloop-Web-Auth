@@ -90,12 +90,7 @@ const CreatePasswordForm = ({ email }) => {
       </p>
 
       <form
-        onSubmit={() => {
-          // handleSubmit()
-          router.push(
-            `/auth/add-basic-details?email=${encodeURIComponent(email)}`,
-          );
-        }}
+        onSubmit={handleSubmit}
         className="space-y-5"
       >
         {/* Password Field */}

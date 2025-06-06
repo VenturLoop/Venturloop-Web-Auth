@@ -76,7 +76,7 @@ const OtpForm = ({ email }) => {
           Verify Your Email
         </h2>
         <p className="mt-2 text-sm text-gray-800 font-medium">
-          We've sent a 6-digit code to{' '}
+          We&apos;ve sent a 6-digit code to{' '}
           <span className="font-medium">{email}</span>. Enter it below to
           continue.
         </p>
@@ -110,7 +110,7 @@ const OtpForm = ({ email }) => {
       </form>
 
       <div className="mt-6 font-medium text-center text-sm text-gray-700">
-        Didn't receive the OTP?{' '}
+        Didn&apos;t receive the OTP?{' '}
         <button
           type="button"
           disabled={isLoading}

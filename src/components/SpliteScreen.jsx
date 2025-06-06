@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { Toaster } from 'react-hot-toast';
+import PropTypes from 'prop-types';
 
 export default function SpliteScreen({ data, children }) {
   return (
@@ -33,3 +34,12 @@ export default function SpliteScreen({ data, children }) {
     </>
   );
 }
+
+SpliteScreen.propTypes = {
+  data: PropTypes.shape({
+    imageSrc: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+  }).isRequired,
+  children: PropTypes.node.isRequired,
+};
