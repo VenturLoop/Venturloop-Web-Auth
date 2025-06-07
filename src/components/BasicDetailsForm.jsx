@@ -42,7 +42,7 @@ export const uploadProfileImage = async (file) => {
 };
 
 const BasicDetailsForm = ({ email }) => {
-  const { data: session, status, update: updateSession } = useSession(); // get update function
+  const { update: updateSession } = useSession(); // get update function
   const router = useRouter();
 
   const [location, setLocation] = useState('');

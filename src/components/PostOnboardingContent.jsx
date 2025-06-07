@@ -1,13 +1,13 @@
 'use client';
 
 import React from 'react';
-import { useSession } from 'next-auth/react';
+// import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FaGooglePlay } from 'react-icons/fa';
 import { BsCheckCircle } from 'react-icons/bs';
 
 const PostOnboardingContent = () => {
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
   const router = useRouter();
 
   // Optional: Redirect if unauthenticated

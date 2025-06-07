@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function HomePage() {
-  const { data: session, status } = useSession();
+  const {  status } = useSession();
   const router = useRouter();
   // const [isSigningOut, setIsSigningOut] = useState(false);
 

@@ -1,14 +1,14 @@
 'use client';
 
 import React from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+// import { useSession } from 'next-auth/react';
+// import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen';
 import PostOnboardingContent from '@/components/PostOnboardingContent';
 
 const PostOnboardingPage = () => {
-  const { status } = useSession();
-  const router = useRouter();
+  // const { status } = useSession();
+  // const router = useRouter();
 
   // Slider/left side content for SpliteScreen
   const sliderData = {
