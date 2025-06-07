@@ -7,7 +7,8 @@ import { toast } from 'react-hot-toast';
 import LoadingSpinner from './LoadingSpinner';
 import SpliteScreen from './SpliteScreen';
 import { FaMapMarkerAlt } from 'react-icons/fa';
-
+import { createAccount } from '@/utils/AuthApis';
+import { useAppContext } from '@/context/AppContext';
 
 // Your upload function
 export const uploadProfileImage = async (file) => {
@@ -41,9 +42,9 @@ export const uploadProfileImage = async (file) => {
   }
 };
 
-const BasicDetailsForm = ({ email }) => {
-  const { update: updateSession } = useSession(); // get update function
+const BasicDetailsForm = ({ name, email, password }) => {
   const router = useRouter();
+  const { userData, setUserData } = useAppContext();
 
   const [location, setLocation] = useState('');
   const [birthdate, setBirthdate] = useState('');
@@ -71,6 +72,12 @@ const BasicDetailsForm = ({ email }) => {
 
     setIsLoading(false);
   };
+
+  console.log('Sending to createAccount:', {
+    name: name || userData?.name,
+    email: email || userData?.email,
+    password: password || userData?.password,
+  });
 
   const handleUseCurrentLocation = () => {
     setGeoError('');
@@ -126,48 +133,54 @@ const BasicDetailsForm = ({ email }) => {
     setError('');
     setIsLoading(true);
 
-    if (!location && !birthdate && !profileImageUrl) {
-      toast.success('Skipping basic details for now.');
-      router.push('/onboarding-questions');
+    const finalName = name || userData?.name;
+    const finalEmail = email || userData?.email;
+    const finalPassword = password || userData?.password;
+
+    if (!finalName || !finalEmail || !finalPassword) {
+      toast.error('Name, email, and password are required.');
+      setError('Name, email, and password are required.');
       setIsLoading(false);
       return;
     }
 
-    // Basic validation (optional, can be more complex)
+    if (!location && !birthdate && !profileImageUrl) {
+      toast.success('Skipping basic details for now.');
+      console.log(location, birthdate, profileImageUrl);
+      router.push('/auth/skillset');
+      return;
+    }
+
     if (birthdate && new Date(birthdate) > new Date()) {
       setError('Birthdate cannot be in the future.');
       toast.error('Birthdate cannot be in the future.');
       setIsLoading(false);
       return;
     }
-    // Commented out profileImageUrl validation has been removed.
 
     try {
-      const response = await fetch('/api/user/update-details', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ location, birthdate, profileImageUrl }),
+      const response = await createAccount({
+        name: name || userData?.name,
+        email: email || userData?.email,
+        password: password || userData?.password,
+        birthdate,
+        location,
+        profileImageUrl,
       });
-      const data = await response.json();
+      console.log('response', response);
+      if (response?.success) {
+        setUserData((prev) => ({ ...prev, _id: response?.user?.id }));
 
-      if (response.ok && data.success) {
-        toast.success(data.message || 'Details updated successfully!');
-
-        // Manually trigger a session update if profileImageUrl changed
-        // This helps reflect the new image in the UI immediately if it's part of the session
-        await updateSession({ profileImageUrl }); // Send only the changed part or refetch all
-
-        router.push('/auth/onboarding-questions');
+        toast.success('Account created successfully!');
+        router.push('/auth/skillset');
       } else {
-        setError(data.message || 'Failed to update details. Please try again.');
-        toast.error(
-          data.message || 'Failed to update details. Please try again.',
-        );
+        setError(response?.message || 'Signup failed');
+        toast.error(response?.message || 'Signup failed');
       }
     } catch (err) {
-      console.error('Update details error:', err);
-      setError('An unexpected error occurred. Please try again.');
-      toast.error('An unexpected error occurred. Please try again.');
+      console.error('Signup error:', err);
+      setError('An unexpected error occurred.');
+      toast.error('An unexpected error occurred.');
     } finally {
       setIsLoading(false);
     }
@@ -229,7 +242,6 @@ const BasicDetailsForm = ({ email }) => {
 
             {/* Upload Area */}
             <div className="text-center mt-4">
-              
               <input
                 type="file"
                 accept="image/*"
@@ -262,7 +274,7 @@ const BasicDetailsForm = ({ email }) => {
             >
               Location{' '}
               <span className="text-xs text-gray-500">
-                (e.g., City, Country)
+                (e.g., City, State, Country)
               </span>
             </label>
 
@@ -289,7 +301,8 @@ const BasicDetailsForm = ({ email }) => {
               disabled={isLocationLoading}
               className="text-base text-[#2983DC] hover:text-indigo-800 font-medium transition disabled:opacity-50"
             >
-              📍 {isLocationLoading ? 'Detecting...' : 'Use My Current Location'}
+              📍{' '}
+              {isLocationLoading ? 'Detecting...' : 'Use My Current Location'}
             </button>
           </div>
 
@@ -319,11 +332,7 @@ const BasicDetailsForm = ({ email }) => {
 
           {/* Submit Button */}
           <button
-            // type="submit"
-            type="button"
-            onClick={() => {
-              router.push(`/auth/skillset`);
-            }}
+            type="submit"
             disabled={isLoading}
             className="w-full bg-[#2983DC] mt-4 hover:bg-[#2472c1] text-white font-semibold py-3 text-lg px-4 rounded-md shadow transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#2983DC] focus:ring-offset-2 disabled:bg-[#98c3e7]"
           >

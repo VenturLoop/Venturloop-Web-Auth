@@ -1,10 +1,12 @@
 'use client';
 
 import React from 'react';
+import { useSearchParams } from 'next/navigation';
 import OtpForm from '@/components/OtpForm';
 
 const OtpVerifyPage = () => {
-  const email = 'teteatharva@gmail.com';
+  const searchParams = useSearchParams();
+  const email = searchParams.get('email');
 
   return <OtpForm email={email} />;
 };

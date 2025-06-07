@@ -1,54 +1,59 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen';
-
+import { getListData } from '@/utils/AuthApis';
+import { useAppContext } from '@/context/AppContext';
+const initialSkillsOptions = [
+  'Web Developer',
+  'App Developer',
+  'Frontend Developer',
+  'Backend Developer',
+  'Full Stack Developer',
+  'Mobile Developer',
+  'iOS Developer',
+  'Android Developer',
+  'React Developer',
+  'React Native Developer',
+  'Node.js Developer',
+  'Python Developer',
+  'Java Developer',
+  'C++ Developer',
+  'Software Engineer',
+  'Game Developer',
+  'AR/VR Developer',
+  'Unity Developer',
+  'Web Developer',
+  'App Developer',
+  'Frontend Developer',
+  'Backend Developer',
+  'Full Stack Developer',
+  'Mobile Developer',
+  'iOS Developer',
+  'Android Developer',
+  'React Developer',
+  'React Native Developer',
+  'Node.js Developer',
+  'Python Developer',
+  'Java Developer',
+  'C++ Developer',
+  'Software Engineer',
+  'Game Developer',
+  'AR/VR Developer',
+  'Unity Developer',
+];
 const SkillsetPage = () => {
+  const { userData, setUserData } = useAppContext();
+
   const router = useRouter();
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const skillsOptions = [
-    'Web Developer',
-    'App Developer',
-    'Frontend Developer',
-    'Backend Developer',
-    'Full Stack Developer',
-    'Mobile Developer',
-    'iOS Developer',
-    'Android Developer',
-    'React Developer',
-    'React Native Developer',
-    'Node.js Developer',
-    'Python Developer',
-    'Java Developer',
-    'C++ Developer',
-    'Software Engineer',
-    'Game Developer',
-    'AR/VR Developer',
-    'Unity Developer',
-    'Web Developer',
-    'App Developer',
-    'Frontend Developer',
-    'Backend Developer',
-    'Full Stack Developer',
-    'Mobile Developer',
-    'iOS Developer',
-    'Android Developer',
-    'React Developer',
-    'React Native Developer',
-    'Node.js Developer',
-    'Python Developer',
-    'Java Developer',
-    'C++ Developer',
-    'Software Engineer',
-    'Game Developer',
-    'AR/VR Developer',
-    'Unity Developer',
-  ];
+  const [skillsOptions, setSkillsOptions] = useState(
+    initialSkillsOptions || [],
+  );
 
   const filteredSkills = skillsOptions.filter((skill) =>
     skill.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -60,6 +65,14 @@ const SkillsetPage = () => {
     );
   };
 
+  useEffect(() => {
+    const getListSkillData = async () => {
+      const result = await getListData('skillSet');
+      setSkillsOptions(result?.data);
+    };
+    getListSkillData();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (selectedSkills.length === 0)
@@ -69,15 +82,25 @@ const SkillsetPage = () => {
 
     setIsLoading(true);
     setError(null);
+
     try {
+      // ✅ Update global userData with selected skills
+      setUserData((prev) => ({ ...prev, skillSet: selectedSkills }));
+
       console.log('Selected skills:', selectedSkills);
-      router.push('/auth/founder-screen');
+      router.push('/auth/intrests');
     } catch (err) {
       setError(err.message || 'Something went wrong.');
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (userData.skillSet && userData.skillSet.length > 0) {
+      setSelectedSkills(userData.skillSet);
+    }
+  }, [userData]);
 
   const sliderData = {
     imageSrc: '/image/ai_splash_screen.png',
@@ -141,8 +164,7 @@ const SkillsetPage = () => {
         </div>
 
         <button
-          type="button"
-          onClick={() => router.push('/auth/intrests')}
+          type="submit"
           disabled={isLoading || selectedSkills.length === 0}
           className="w-full bg-[#2983DC] hover:bg-[#2983DC] text-lg text-white font-semibold py-3 px-6 rounded-lg
               focus:outline-none focus:ring-2 focus:ring-[#2983DC] focus:ring-offset-2

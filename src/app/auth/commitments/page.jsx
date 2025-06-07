@@ -3,8 +3,11 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen';
+import { useAppContext } from '@/context/AppContext';
 
 const CommitmentsPage = () => {
+     const { userData, setUserData } = useAppContext();
+  
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -18,24 +21,34 @@ const CommitmentsPage = () => {
     'No Preference',
   ];
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedOption) {
-      setError('Please select your commitment level to continue.');
-      return;
-    }
-    setIsLoading(true);
-    setError(null);
-    try {
-      console.log('Selected commitment:', selectedOption);
-      router.push('/auth/prior-experience');
-    } catch (err) {
-      console.error('Failed to save commitment:', err);
-      setError('Something went wrong. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!selectedOption) {
+    setError('Please select your commitment level to continue.');
+    return;
+  }
+
+  setIsLoading(true);
+  setError(null);
+
+  try {
+    // ✅ Save commitment to global userData
+    setUserData((prev) => ({
+      ...prev,
+      commitment: selectedOption,
+    }));
+
+    console.log('Selected commitment:', selectedOption);
+    router.push('/auth/prior-experience');
+  } catch (err) {
+    console.error('Failed to save commitment:', err);
+    setError('Something went wrong. Please try again.');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const sliderData = {
     imageSrc: '/image/ai_splash_screen.png',

@@ -3,8 +3,11 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen';
+import { useAppContext } from '@/context/AppContext';
 
 const PriorExperiencePage = () => {
+  const { userData, setUserData } = useAppContext();
+
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -24,9 +27,14 @@ const PriorExperiencePage = () => {
       setError('Please select your startup experience to proceed.');
       return;
     }
+
     setIsLoading(true);
     setError(null);
     try {
+      setUserData((prev) => ({
+        ...prev,
+        priorStartupExperience: selectedOption,
+      }));
       console.log('Selected option:', selectedOption);
       router.push('/auth/equity-expectation');
     } catch (err) {

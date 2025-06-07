@@ -5,8 +5,12 @@ import Link from 'next/link';
 import SpliteScreen from './SpliteScreen';
 import LoadingSpinner from './LoadingSpinner';
 import { useRouter } from 'next/navigation';
+import { signInwithEmail } from '@/utils/AuthApis';
+import { useAppContext } from '@/context/AppContext';
 
 export default function Signup() {
+  const { setUserData } = useAppContext();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [loadingProvider, setLoadingProvider] = useState('');
@@ -26,13 +30,26 @@ export default function Signup() {
     setTimeout(() => setLoadingProvider(''), 1500); // simulate delay
   };
 
-  const handleEmailSignup = (e) => {
+  const handleEmailSignup = async (e) => {
     e.preventDefault();
     setIsEmailLoading(true);
-    setTimeout(() => {
+
+    try {
+      const response = await signInwithEmail({ name, email });
+
+      if (response?.success) {
+        setUserData((prev) => ({ ...prev, name: name, email: email }));
+        // Optional: Store email or response in localStorage or context
+        router.push(`/auth/otp-verify?email=${encodeURIComponent(email)}`); // Redirect to OTP verify page
+      } else {
+        alert(response?.message || 'Failed to send OTP');
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      alert('Something went wrong while sending OTP');
+    } finally {
       setIsEmailLoading(false);
-      router.push('/auth/otp-verify'); // redirect to next step
-    }, 1500); // simulate delay
+    }
   };
 
   return (
@@ -64,7 +81,7 @@ export default function Signup() {
             </svg>
             Continue with LinkedIn
           </>
-        )} 
+        )}
       </button>
 
       {/* Google Button */}

@@ -1,107 +1,98 @@
 export const signInwithEmail = async (formData) => {
   try {
     const res = await fetch(
-      "https://venturloopbackend-v-1-0-9.onrender.com/auth/verify-email",
+      'https://venturloopbackend-v-1-0-9.onrender.com/auth/verify-email',
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
         }),
-      }
+      },
     );
 
     const data = await res.json();
-
     return data;
   } catch (e) {
     console.log(e);
+    throw new Error('API call failed');
   }
 };
 
 export const sendTokenToBackend = async (idToken) => {
   try {
     const response = await fetch(
-      "https://venturloopbackend-v-1-0-9.onrender.com/auth/google-signup",
+      'https://venturloopbackend-v-1-0-9.onrender.com/auth/google-signup',
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ idToken }),
-      }
+      },
     );
 
     const data = await response.json();
-    console.log("Backend Response:", data);
+    console.log('Backend Response:', data);
   } catch (error) {
-    console.error("Error sending token to backend:", error);
+    console.error('Error sending token to backend:', error);
   }
 };
 
-// 2 Verify OTP
-export const SentOPT = async (email, verificationCode) => {
+export const SentOPT = async ({ email, verificationCode }) => {
   try {
     const res = await fetch(
-      "https://venturloopbackend-v-1-0-9.onrender.com/auth/send-otp",
+      'https://venturloopbackend-v-1-0-9.onrender.com/auth/send-otp',
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, verificationCode }),
-      }
+      },
     );
-
-    const data = await res.json();
-
-    return data;
+    return await res.json();
   } catch (e) {
     console.log(e);
+    return { success: false, message: 'Server error.' };
   }
 };
 
-// 3 Resent Verify OTP
 export const ResentOPT = async (email) => {
   try {
     const res = await fetch(
-      "https://venturloopbackend-v-1-0-9.onrender.com/auth/resend",
+      'https://venturloopbackend-v-1-0-9.onrender.com/auth/resend',
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
-      }
+      },
     );
-
-    const data = await res.json();
-
-    return data;
+    return await res.json();
   } catch (e) {
     console.log(e);
+    return { success: false, message: 'Server error.' };
   }
 };
 
 // 4 Sign Up
-export const createAccount = async (
+export const createAccount = async ({
   name,
   email,
   password,
   birthday,
   location,
-  profilePhoto
-) => {
+  profilePhoto,
+}) => {
+  console.log(name, email, password, birthday, location, profilePhoto);
   try {
     const res = await fetch(
-      "https://venturloopbackend-v-1-0-9.onrender.com/auth/signup",
+      'https://venturloopbackend-v-1-0-9.onrender.com/auth/signup',
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: name,
@@ -111,7 +102,7 @@ export const createAccount = async (
           location: location,
           profilePhoto: profilePhoto,
         }),
-      }
+      },
     );
 
     const data = await res.json();
@@ -126,19 +117,19 @@ export const createAccount = async (
 export const userLogin = async (email, password) => {
   try {
     const res = await fetch(
-      "https://venturloopbackend-v-1-0-9.onrender.com/auth/login",
+      'https://venturloopbackend-v-1-0-9.onrender.com/auth/login',
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-      }
+      },
     );
     const data = await res.json();
     return data;
   } catch (error) {
-    console.log("Error while updating Item: " + error);
+    console.log('Error while updating Item: ' + error);
   }
 };
 
@@ -146,19 +137,19 @@ export const userLogin = async (email, password) => {
 export const ForgotPassword = async (email) => {
   try {
     const res = await fetch(
-      "https://venturloopbackend-v-1-0-9.onrender.com/auth/forgot",
+      'https://venturloopbackend-v-1-0-9.onrender.com/auth/forgot',
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email }),
-      }
+      },
     );
     const data = await res.json();
     return data;
   } catch (error) {
-    console.log("Error while updating Item: " + error);
+    console.log('Error while updating Item: ' + error);
   }
 };
 
@@ -166,19 +157,19 @@ export const ForgotPassword = async (email) => {
 export const ConfirmPassword = async (email, newPassword) => {
   try {
     const res = await fetch(
-      "https://venturloopbackend-v-1-0-9.onrender.com/auth/confirm",
+      'https://venturloopbackend-v-1-0-9.onrender.com/auth/confirm',
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email: email, newPassword: newPassword }),
-      }
+      },
     );
     const data = await res.json();
     return data;
   } catch (error) {
-    console.log("Error while updating Item: " + error);
+    console.log('Error while updating Item: ' + error);
   }
 };
 
@@ -186,19 +177,19 @@ export const ConfirmPassword = async (email, newPassword) => {
 export const DeleteUserAccount = async (userId) => {
   try {
     const res = await fetch(
-      "https://venturloopbackend-v-1-0-9.onrender.com/auth/delete",
+      'https://venturloopbackend-v-1-0-9.onrender.com/auth/delete',
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ userId }),
-      }
+      },
     );
     const data = await res.json();
     return data;
   } catch (error) {
-    console.log("Error while updating Item: " + error);
+    console.log('Error while updating Item: ' + error);
   }
 };
 
@@ -210,16 +201,16 @@ export const submitProfileApi = async ({
   priorStartupExperience,
   commitmentLevel,
   equityExpectation,
-  status = "",
+  status = '',
   profilePhoto,
 }) => {
   try {
     const res = await fetch(
       `https://venturloopbackend-v-1-0-9.onrender.com/auth/user/${userId}`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           skillSet,
@@ -230,20 +221,20 @@ export const submitProfileApi = async ({
           status,
           profilePhoto,
         }),
-      }
+      },
     );
 
     if (!res.ok) {
       // Log the response from the backend to get error details
       const errorData = await res.json();
-      console.error("Backend error:", errorData.message);
+      console.error('Backend error:', errorData.message);
       throw new Error(`Error saving user profile: ${errorData.message}`);
     }
 
     const data = await res.json();
     return data;
   } catch (error) {
-    console.error("Error during API call:", error);
+    console.error('Error during API call:', error);
     throw error;
   }
 };
@@ -253,6 +244,25 @@ export const getUserDataProfile = async (userId) => {
   try {
     const res = await fetch(
       `https://venturloopbackend-v-1-0-9.onrender.com/api/user/${userId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log('Error while updating Item: ' + error);
+  }
+};
+
+
+export const getListData = async (title) => {
+  try {
+    const res = await fetch(
+      `https://venturloopbackend-v-1-0-9.onrender.com/admin/get_list_data/${title}`,
       {
         method: "GET",
         headers: {
@@ -266,5 +276,3 @@ export const getUserDataProfile = async (userId) => {
     console.log("Error while updating Item: " + error);
   }
 };
-
-

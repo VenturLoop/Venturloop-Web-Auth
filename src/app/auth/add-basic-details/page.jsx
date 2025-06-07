@@ -5,34 +5,16 @@ import React from 'react';
 // import { useRouter } from 'next/navigation';
 
 import BasicDetailsForm from '@/components/BasicDetailsForm';
-
+import { useSearchParams } from 'next/navigation';
 
 const AddBasicDetailsPage = () => {
-  // const { status } = useSession(); // session data not directly used
-  // const router = useRouter();
-  const email = 'teteatharva@gmail.com';
+  const searchParams = useSearchParams();
 
-  //
-  // if (status === 'loading') {
-  //   return (
-  //     <div className="flex h-screen w-screen justify-center items-center">
-  //       <LoadingSpinner />
-  //     </div>
-  //   );
-  // }
+  const name = searchParams.get('name');
+  const email = searchParams.get('email');
+  const password = searchParams.get('password');
 
-  // if (status === 'unauthenticated') {
-  //   router.replace('/login'); // Redirect to login if not authenticated
-  //   return (
-  //     // Render null or a loading spinner while redirecting
-  //     <div className="flex h-screen w-screen justify-center items-center">
-  //       <LoadingSpinner />
-  //     </div>
-  //   );
-  // }
-
-  // If authenticated, render the form within the layout
-  return <BasicDetailsForm email={email} />;
+  return <BasicDetailsForm name={name} email={email} password={password} />;
 };
 
 export default AddBasicDetailsPage;

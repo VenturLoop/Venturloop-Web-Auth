@@ -1,17 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen';
+import { useAppContext } from '@/context/AppContext';
+import { getListData } from '@/utils/AuthApis';
 
 const InterestsPage = () => {
+   const { userData, setUserData } = useAppContext();
+
   const router = useRouter();
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const interestsOptions = [
+  const initailInterestsOptions = [
     'AI/ML', 'AR/VR', 'Advertising', 'Agritech', 'Analysis', 'AudioTech', 'Auto Tech',
     'BioTech', 'ClimateTech/CleanTech', 'Cloud Infrastructure', 'ConstructionTech',
     'Creator/Passion Economy', 'Data Services', 'DeepTech', 'Developer Tools',
@@ -25,6 +28,8 @@ const InterestsPage = () => {
     'Public Speaking', 'Pitching', 'Negotiation', 'Problem Solving', 'Time Management',
     'Critical Thinking', 'Storytelling', 'Resilience', 'Empathy',
   ];
+  const [interestsOptions, setInterestsOptions] = useState(initailInterestsOptions || [])
+
 
   const handleToggleInterest = (interest) => {
     setSelectedInterests((prev) =>
@@ -34,29 +39,47 @@ const InterestsPage = () => {
     );
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (selectedInterests.length === 0) {
-      setError('Please select at least one interest.');
-      return;
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (selectedInterests.length === 0) {
+    setError('Please select at least one interest.');
+    return;
+  }
 
-    setIsLoading(true);
-    setError(null);
+  setIsLoading(true);
+  setError(null);
 
-    try {
-      console.log('Selected interests:', selectedInterests);
-      router.push('/auth/commitments');
-    } catch (err) {
-      setError(err.message || 'Something went wrong.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  try {
+    // ✅ Save interests in global userData
+    setUserData((prev) => ({ ...prev, industries: selectedInterests }));
+
+    console.log('Selected interests:', selectedInterests);
+    router.push('/auth/commitments');
+  } catch (err) {
+    setError(err.message || 'Something went wrong.');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const filteredInterests = interestsOptions.filter((interest) =>
     interest.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  useEffect(() => {
+  if (userData.industries?.length > 0) {
+    setSelectedInterests(userData.industries);
+  }
+}, [userData]);
+
+  useEffect(() => {
+    const getListIndustrutyData = async () => {
+      const result = await getListData('industries');
+      setInterestsOptions(result?.data);
+    };
+    getListIndustrutyData();
+  }, []);
 
   const sliderData = {
     imageSrc: '/image/Cofounder_splash_screen.png',

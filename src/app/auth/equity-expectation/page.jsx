@@ -3,8 +3,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen';
+import { useAppContext } from '@/context/AppContext';
+import { submitProfileApi } from '@/utils/AuthApis';
 
 const EquityExpectationPage = () => {
+  const { userData, setUserData } = useAppContext();
+
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState('');
   const [range, setRange] = useState({ min: '', max: '' });
@@ -20,6 +24,7 @@ const EquityExpectationPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!selectedOption) {
       setError('Please select an option.');
       return;
@@ -46,7 +51,19 @@ const EquityExpectationPage = () => {
           ? 'Fully Negotiable'
           : 'Equal Split';
 
-      console.log('Selected commitment:', equityExpectation);
+      // Call submitProfileApi with values from context
+      const response = await submitProfileApi({
+        userId: userData?._id, // Ensure userData includes _id
+        skillSet: userData.skillSet,
+        industries: userData.industries,
+        priorStartupExperience: userData.priorStartupExperience,
+        commitmentLevel: userData.commitmentLevel,
+        equityExpectation,
+        status: userData.status || '',
+        profilePhoto: userData.profilePhoto,
+      });
+
+      console.log('Profile submitted successfully:', response);
       router.push('/auth/post-onboarding');
     } catch (err) {
       console.error('Error saving preference:', err);

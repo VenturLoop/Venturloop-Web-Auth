@@ -5,10 +5,12 @@ import React from 'react';
 // import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen';
 import PostOnboardingContent from '@/components/PostOnboardingContent';
+import { useAppContext } from '@/context/AppContext';
 
 const PostOnboardingPage = () => {
   // const { status } = useSession();
   // const router = useRouter();
+   const { userData, setUserData } = useAppContext();
 
   // Slider/left side content for SpliteScreen
   const sliderData = {
