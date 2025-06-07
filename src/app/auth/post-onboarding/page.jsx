@@ -5,7 +5,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen';
 import PostOnboardingContent from '@/components/PostOnboardingContent';
-import LoadingSpinner from '@/components/LoadingSpinner';
 
 const PostOnboardingPage = () => {
   const { status } = useSession();

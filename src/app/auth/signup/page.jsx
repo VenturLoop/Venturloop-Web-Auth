@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import SignUp from '@/components/SignUp'; // Updated import
-import LoadingSpinner from '@/components/LoadingSpinner';
 
 const SignupPage = () => {
   const { data: session, status } = useSession();

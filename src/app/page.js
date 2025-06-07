@@ -3,8 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Toaster, toast } from 'react-hot-toast';
-import Image from 'next/image';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function HomePage() {

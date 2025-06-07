@@ -5,8 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 import BasicDetailsForm from '@/components/BasicDetailsForm';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import SpliteScreen from '@/components/SpliteScreen';
+
 
 const AddBasicDetailsPage = () => {
   const { status } = useSession(); // session data not directly used

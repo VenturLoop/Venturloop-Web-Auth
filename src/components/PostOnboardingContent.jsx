@@ -5,7 +5,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FaGooglePlay } from 'react-icons/fa';
 import { BsCheckCircle } from 'react-icons/bs';
-import LoadingSpinner from './LoadingSpinner';
 
 const PostOnboardingContent = () => {
   const { data: session, status } = useSession();
