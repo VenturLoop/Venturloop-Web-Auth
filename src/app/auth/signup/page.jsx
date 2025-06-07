@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
+// import { useSession } from 'next-auth/react';
+// import { useRouter } from 'next/navigation';
 import SignUp from '@/components/SignUp'; // Updated import
 
 const SignupPage = () => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  // const { data: session, status } = useSession();
+  // const router = useRouter();
 
   // useEffect(() => { 
   //   if (status === 'authenticated') {

@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function HomePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [isSigningOut, setIsSigningOut] = useState(false);
+  // const [isSigningOut, setIsSigningOut] = useState(false);
 
   // Redirect unauthenticated users
   useEffect(() => {

@@ -1,15 +1,15 @@
 'use client';
 
 import React from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+// import { useSession } from 'next-auth/react';
+// import { useRouter } from 'next/navigation';
 
 import BasicDetailsForm from '@/components/BasicDetailsForm';
 
 
 const AddBasicDetailsPage = () => {
-  const { status } = useSession(); // session data not directly used
-  const router = useRouter();
+  // const { status } = useSession(); // session data not directly used
+  // const router = useRouter();
   const email = 'teteatharva@gmail.com';
 
   //
