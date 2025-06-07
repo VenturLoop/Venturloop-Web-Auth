@@ -12,66 +12,26 @@ const InterestsPage = () => {
   const [error, setError] = useState(null);
 
   const interestsOptions = [
-    'AI/ML',
-    'AR/VR',
-    'Advertising',
-    'Agritech',
-    'Analysis',
-    'AudioTech',
-    'Auto Tech',
-    'BioTech',
-    'ClimateTech/CleanTech',
-    'Cloud Infrastructure',
-    'ConstructionTech',
-    'Creator/Passion Economy',
-    'Data Services',
-    'DeepTech',
-    'Developer Tools',
-        "AgriTech",
-    "CleanTech",
-    "LegalTech",
-    "GovTech",
-    "ClimateTech",
-    "SportsTech",
-    "MarTech",
-    "PropTech",
-    "Marketplace Building",
-    "Community-led Growth",
-    "Cold Outreach Expert",
-    "Email Marketing",
-    "Conversion Rate Optimization",
-    "Landing Page Expert",
-    "UI Performance Optimization",
-    "Accessibility Expert",
-    "Localization Specialist",
-    "Translation",
-    "Investor Relations",
-    "Startup Advisor",
-    "Startup Consultant",
-    "Startup Generalist",
-    "Serial Entrepreneur",
-    "Startup Evangelist",
-    "Early Stage Specialist",
-    "Incubator Coach",
-    "Accelerator Lead",
-    "Leadership",
-    "Public Speaking",
-    "Pitching",
-    "Negotiation",
-    "Problem Solving",
-    "Time Management",
-    "Critical Thinking",
-    "Storytelling",
-    "Resilience",
-    "Empathy"
+    'AI/ML', 'AR/VR', 'Advertising', 'Agritech', 'Analysis', 'AudioTech', 'Auto Tech',
+    'BioTech', 'ClimateTech/CleanTech', 'Cloud Infrastructure', 'ConstructionTech',
+    'Creator/Passion Economy', 'Data Services', 'DeepTech', 'Developer Tools',
+    'AgriTech', 'CleanTech', 'LegalTech', 'GovTech', 'ClimateTech', 'SportsTech',
+    'MarTech', 'PropTech', 'Marketplace Building', 'Community-led Growth',
+    'Cold Outreach Expert', 'Email Marketing', 'Conversion Rate Optimization',
+    'Landing Page Expert', 'UI Performance Optimization', 'Accessibility Expert',
+    'Localization Specialist', 'Translation', 'Investor Relations', 'Startup Advisor',
+    'Startup Consultant', 'Startup Generalist', 'Serial Entrepreneur', 'Startup Evangelist',
+    'Early Stage Specialist', 'Incubator Coach', 'Accelerator Lead', 'Leadership',
+    'Public Speaking', 'Pitching', 'Negotiation', 'Problem Solving', 'Time Management',
+    'Critical Thinking', 'Storytelling', 'Resilience', 'Empathy',
   ];
 
   const handleToggleInterest = (interest) => {
-    if (selectedInterests.includes(interest)) {
-      setSelectedInterests((prev) => prev.filter((item) => item !== interest));
-    } else if (selectedInterests.length >=nt 0) {
-      setSelectedInterests((prev) => [...prev, interest]);
-    }
+    setSelectedInterests((prev) =>
+      prev.includes(interest)
+        ? prev.filter((item) => item !== interest)
+        : [...prev, interest]
+    );
   };
 
   const handleSubmit = async (e) => {
@@ -80,6 +40,7 @@ const InterestsPage = () => {
       setError('Please select at least one interest.');
       return;
     }
+
     setIsLoading(true);
     setError(null);
 
