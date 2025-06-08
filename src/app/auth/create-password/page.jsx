@@ -1,15 +1,17 @@
+// src/app/auth/create-password/page.jsx
 'use client';
 
-import React from 'react';
-
-import CreatePasswordForm from '@/components/CreatePasswordForm';
-import { useSearchParams } from 'next/navigation';
+import React, { Suspense } from 'react';
+import CreatePasswordContent from './CreatePasswordContent';
+// Using a simple fallback, replace with <LoadingSpinner /> if available and preferred
+const SimpleLoadingFallback = () => <div className="flex justify-center items-center h-screen w-screen"><p>Loading...</p></div>;
 
 const CreatePasswordPage = () => {
-  const searchParams = useSearchParams();
-  const email = searchParams.get('email');
-
-  return <CreatePasswordForm email={email} />;
+  return (
+    <Suspense fallback={<SimpleLoadingFallback />}>
+      <CreatePasswordContent />
+    </Suspense>
+  );
 };
 
 export default CreatePasswordPage;

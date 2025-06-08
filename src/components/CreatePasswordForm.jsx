@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
+import PropTypes from 'prop-types';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import LoadingSpinner from './LoadingSpinner';
 import SpliteScreen from './SpliteScreen';
@@ -145,6 +146,10 @@ const CreatePasswordForm = ({ email }) => {
       </form>
     </SpliteScreen>
   );
+};
+
+CreatePasswordForm.propTypes = {
+  email: PropTypes.string.isRequired,
 };
 
 export default CreatePasswordForm;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Toaster } from 'react-hot-toast';
+import PropTypes from 'prop-types';
 
 const Layout = ({ children, leftContent }) => {
   return (
@@ -39,6 +40,11 @@ const Layout = ({ children, leftContent }) => {
 
 Layout.defaultProps = {
   leftContent: null, // Or a default component/element if you prefer
+};
+
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+  leftContent: PropTypes.node.isRequired,
 };
 
 export default Layout;

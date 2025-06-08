@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import LoadingSpinner from './LoadingSpinner';
@@ -122,6 +123,10 @@ const OtpForm = ({ email }) => {
       </div>
     </SpliteScreen>
   );
+};
+
+OtpForm.propTypes = {
+  email: PropTypes.string.isRequired,
 };
 
 export default OtpForm;

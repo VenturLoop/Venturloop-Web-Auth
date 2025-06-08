@@ -2,7 +2,9 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { toast } from 'react-hot-toast';
+import PropTypes from 'prop-types';
 import LoadingSpinner from './LoadingSpinner';
 import SpliteScreen from './SpliteScreen';
 import { FaMapMarkerAlt } from 'react-icons/fa';
@@ -36,9 +38,9 @@ export const uploadProfileImage = async (file) => {
       fileId: data.fileId,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Upload error:', error.message);
-    return { success: false, error: error.message };
+  } catch ({ message }) {
+    console.error('Upload error:', message);
+    return { success: false, error: message };
   }
 };
 
@@ -105,8 +107,9 @@ const BasicDetailsForm = ({ name, email, password }) => {
           const country = data?.address?.country || '';
 
           setIsLocationLoading(`${city}, ${country}`);
-        } catch (error) {
-          console.log(error)
+          
+        } catch { // Removed unused 'error' variable
+          
           setGeoError('Failed to retrieve location. Try again.');
         } finally {
           setIsLocationLoading(false);
@@ -221,7 +224,9 @@ const BasicDetailsForm = ({ name, email, password }) => {
                 <Image
                   src={profileImageUrl}
                   alt="Profile"
-                  className="w-28 h-28 rounded-full object-cover border border-gray-500 shadow-md"
+                  width={112} // w-28 is 7rem which is 112px (assuming 1rem = 16px)
+                  height={112} // h-28 is 7rem which is 112px
+                  className="rounded-full object-cover border border-gray-500 shadow-md"
                 />
               </div>
             ) : (
@@ -343,6 +348,12 @@ const BasicDetailsForm = ({ name, email, password }) => {
       </div>
     </SpliteScreen>
   );
+};
+
+BasicDetailsForm.propTypes = {
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
 };
 
 export default BasicDetailsForm;

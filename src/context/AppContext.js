@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 
 const AppContext = createContext();
 
@@ -44,6 +45,10 @@ export const AppProvider = ({ children }) => {
       {children}
     </AppContext.Provider>
   );
+};
+
+AppProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export const useAppContext = () => useContext(AppContext);

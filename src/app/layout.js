@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from 'next/font/google';
+import PropTypes from 'prop-types';
 import './globals.css';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Providers from '@/components/Providers';
@@ -22,10 +23,16 @@ export const metadata = {
   },
   description:
     'Secure and seamless authentication for Venturloop applications. Sign in or create an account to continue.',
-  viewport: 'width=device-width, initial-scale=1',
+  // viewport removed from here
   icons: {
     icon: '/favicon.ico',
   },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({ children }) {
@@ -48,3 +55,7 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+RootLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+};
