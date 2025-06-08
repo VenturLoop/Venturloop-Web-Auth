@@ -5,24 +5,32 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'via.placeholder.com',
-        // port: '', // Not needed unless specific port
-        // pathname: '/account123/**', // If paths are specific
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ik.imagekit.io',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
+        pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'lh3.googleusercontent.com', // For Google avatars
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'media.licdn.com', // For LinkedIn avatars (example, verify actual hostname)
+        hostname: 'media.licdn.com',
+        pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'ui-avatars.com', // For fallback avatars
+        hostname: 'ui-avatars.com',
+        pathname: '/**',
       },
     ],
   },
