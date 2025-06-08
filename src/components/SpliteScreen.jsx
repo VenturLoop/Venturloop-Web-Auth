@@ -14,7 +14,7 @@ export default function SpliteScreen({
     <>
       <Toaster position="top-center" reverseOrder={false} />
 
-      <div className="flex flex-col md:flex-row w-screen bg-white">
+      <div className="flex flex-col md:flex-row w-full bg-white">
         {/* Left Column: Illustration */}
         <div className="hidden md:flex md:w-1/2 lg:w-3/5 xl:w-1/2 bg-white flex-col justify-center items-center p-8 text-center">
           {imageBig === true ? (
