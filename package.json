@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -22,20 +21,13 @@
     "swiper": "^11.2.8"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^15.3.3",
     "@tailwindcss/postcss": "^4",
-    "@typescript-eslint/eslint-plugin": "^8.33.1",
-    "@typescript-eslint/parser": "^8.33.1",
     "autoprefixer": "^10.4.21",
-    "eslint": "^9.28.0",
-    "eslint-config-next": "^15.3.3",
-    "eslint-plugin-react": "^7.37.5",
     "globals": "^16.2.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
     "postcss": "^8.5.4",
     "tailwindcss": "^4.1.8",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.33.1"
+    "typescript": "^5.8.3"
   }
 }
