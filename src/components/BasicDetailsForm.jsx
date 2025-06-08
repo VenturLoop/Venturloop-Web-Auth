@@ -10,6 +10,7 @@ import SpliteScreen from './SpliteScreen';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { createAccount } from '@/utils/AuthApis';
 import { useAppContext } from '@/context/AppContext';
+import Image from 'next/image';
 
 // Your upload function
 export const uploadProfileImage = async (file) => {
@@ -106,7 +107,9 @@ const BasicDetailsForm = ({ name, email, password }) => {
           const country = data?.address?.country || '';
 
           setIsLocationLoading(`${city}, ${country}`);
+          
         } catch { // Removed unused 'error' variable
+          
           setGeoError('Failed to retrieve location. Try again.');
         } finally {
           setIsLocationLoading(false);

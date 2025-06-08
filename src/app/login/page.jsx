@@ -84,6 +84,7 @@ const AuthForm = () => {
       await LogOut({ redirect: true, callbackUrl: '/login' });
     // eslint-disable-next-line no-unused-vars
     } catch (error) {
+      console.log(error)
       toast.dismiss();
       toast.error('Unexpected logout error.');
     } finally {
