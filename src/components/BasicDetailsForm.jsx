@@ -10,7 +10,6 @@ import SpliteScreen from './SpliteScreen';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { createAccount } from '@/utils/AuthApis';
 import { useAppContext } from '@/context/AppContext';
-import Image from 'next/image';
 
 // Your upload function
 export const uploadProfileImage = async (file) => {
