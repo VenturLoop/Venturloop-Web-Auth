@@ -1,1 +1,8 @@
 @import 'tailwindcss';
+
+/* Add default responsive image styles */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block; /* Optional: removes bottom space under images if they are inline */
+}
