@@ -8,6 +8,7 @@ import SpliteScreen from './SpliteScreen';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { createAccount } from '@/utils/AuthApis';
 import { useAppContext } from '@/context/AppContext';
+import Image from 'next/image';
 
 // Your upload function
 export const uploadProfileImage = async (file) => {
@@ -105,6 +106,7 @@ const BasicDetailsForm = ({ name, email, password }) => {
 
           setIsLocationLoading(`${city}, ${country}`);
         } catch (error) {
+          console.log(error)
           setGeoError('Failed to retrieve location. Try again.');
         } finally {
           setIsLocationLoading(false);
@@ -216,7 +218,7 @@ const BasicDetailsForm = ({ name, email, password }) => {
             {/* Profile Image Preview */}
             {profileImageUrl ? (
               <div className="flex justify-center">
-                <img
+                <Image
                   src={profileImageUrl}
                   alt="Profile"
                   className="w-28 h-28 rounded-full object-cover border border-gray-500 shadow-md"
