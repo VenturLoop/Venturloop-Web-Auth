@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { Toaster } from 'react-hot-toast';
+import PropTypes from 'prop-types';
 
 export default function SpliteScreen({
   data,
@@ -56,3 +57,20 @@ export default function SpliteScreen({
     </>
   );
 }
+
+SpliteScreen.propTypes = {
+  data: PropTypes.shape({
+    imageSrc: PropTypes.string.isRequired, // Made isRequired as it's directly accessed
+    title: PropTypes.string.isRequired,    // Made isRequired as it's directly accessed
+    description: PropTypes.string.isRequired, // Made isRequired as it's directly accessed
+  }).isRequired, // data object itself is required
+  imageBig: PropTypes.bool,
+  children: PropTypes.node.isRequired,
+  xlScreenSize: PropTypes.bool, // Changed from string to bool based on usage
+};
+
+// Optional: Add defaultProps for non-required props if necessary
+SpliteScreen.defaultProps = {
+  imageBig: false,
+  xlScreenSize: false,
+};

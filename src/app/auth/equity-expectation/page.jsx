@@ -7,7 +7,7 @@ import { useAppContext } from '@/context/AppContext';
 import { submitProfileApi } from '@/utils/AuthApis';
 
 const EquityExpectationPage = () => {
-  const { userData, setUserData } = useAppContext();
+  const { userData } = useAppContext();
 
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState('');

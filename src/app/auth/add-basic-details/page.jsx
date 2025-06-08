@@ -1,20 +1,17 @@
+// src/app/auth/add-basic-details/page.jsx
 'use client';
 
-import React from 'react';
-// import { useSession } from 'next-auth/react';
-// import { useRouter } from 'next/navigation';
-
-import BasicDetailsForm from '@/components/BasicDetailsForm';
-import { useSearchParams } from 'next/navigation';
+import React, { Suspense } from 'react';
+import AddBasicDetailsContent from './AddBasicDetailsContent';
+// Using a simple fallback, replace with <LoadingSpinner /> if available and preferred
+const SimpleLoadingFallback = () => <div className="flex justify-center items-center h-screen w-screen"><p>Loading...</p></div>;
 
 const AddBasicDetailsPage = () => {
-  const searchParams = useSearchParams();
-
-  const name = searchParams.get('name');
-  const email = searchParams.get('email');
-  const password = searchParams.get('password');
-
-  return <BasicDetailsForm name={name} email={email} password={password} />;
+  return (
+    <Suspense fallback={<SimpleLoadingFallback />}>
+      <AddBasicDetailsContent />
+    </Suspense>
+  );
 };
 
 export default AddBasicDetailsPage;

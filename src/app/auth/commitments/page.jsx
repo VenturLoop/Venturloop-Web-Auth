@@ -6,7 +6,7 @@ import SpliteScreen from '@/components/SpliteScreen';
 import { useAppContext } from '@/context/AppContext';
 
 const CommitmentsPage = () => {
-     const { userData, setUserData } = useAppContext();
+     const { setUserData } = useAppContext();
   
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState('');
