@@ -83,6 +83,7 @@ const AuthForm = () => {
     try {
       await LogOut({ redirect: true, callbackUrl: '/login' });
     } catch (error) {
+      console.log(error)
       toast.dismiss();
       toast.error('Unexpected logout error.');
     } finally {

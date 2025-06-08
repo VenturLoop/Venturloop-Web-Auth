@@ -10,7 +10,6 @@ import { useAppContext } from '@/context/AppContext';
 const PostOnboardingPage = () => {
   // const { status } = useSession();
   // const router = useRouter();
-   const { userData, setUserData } = useAppContext();
 
   // Slider/left side content for SpliteScreen
   const sliderData = {
