@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import './globals.css';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Providers from '@/components/Providers';
+import AuthGuard from '@/components/AuthGuard'; // Import AuthGuard
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -43,10 +44,12 @@ export default function RootLayout({ children }) {
       >
         <Navbar />
 
-        <Providers>
-          <main className="flex-1 w-full">
-            {children}
-          </main>
+        <Providers> {/* SessionProvider is inside Providers */}
+          <AuthGuard>
+            <main className="flex-1 w-full">
+              {children}
+            </main>
+          </AuthGuard>
           <SpeedInsights />
         </Providers>
 

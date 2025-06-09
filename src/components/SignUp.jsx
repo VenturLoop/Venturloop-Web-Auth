@@ -1,22 +1,34 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import SpliteScreen from './SpliteScreen';
 import LoadingSpinner from './LoadingSpinner';
 import { useRouter } from 'next/navigation';
 import { signInwithEmail } from '@/utils/AuthApis';
 import { useAppContext } from '@/context/AppContext';
+import { useSession, signIn as LogIn } from 'next-auth/react'; // Added
 
 export default function Signup() {
   const { setUserData } = useAppContext();
+  const { data: session, status } = useSession(); // Added
+  const router = useRouter(); // useRouter was already here
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [loadingProvider, setLoadingProvider] = useState('');
+  const [loadingProvider, setLoadingProvider] = useState(''); // Stores the provider name string
   const [isEmailLoading, setIsEmailLoading] = useState(false);
 
-  const router = useRouter();
+  // useEffect for redirection based on session status
+  useEffect(() => {
+    if (status === 'authenticated') {
+      if (session?.user?.isNewUser === true) {
+        router.push('/auth/add-basic-details');
+      } else {
+        router.push('/');
+      }
+    }
+  }, [status, session, router]);
 
   const data = {
     imageSrc: '/image/Cofounder_splash_screen.png',
@@ -27,7 +39,18 @@ export default function Signup() {
 
   const handleSocialSignup = async (provider) => {
     setLoadingProvider(provider);
-    setTimeout(() => setLoadingProvider(''), 1500); // simulate delay
+    try {
+      const result = await LogIn(provider, { redirect: false });
+      if (result?.error) {
+        alert(`Signup failed: ${result.error}`); // TODO: Replace with toast notification
+        setLoadingProvider(''); // Reset loading state on error
+      }
+      // On success, useEffect will handle redirection
+    } catch (error) {
+      alert('Unexpected signup error.'); // TODO: Replace with toast notification
+      console.error(error);
+      setLoadingProvider(''); // Reset loading state on error
+    }
   };
 
   const handleEmailSignup = async (e) => {
@@ -65,7 +88,7 @@ export default function Signup() {
       <button
         onClick={() => handleSocialSignup('linkedin')}
         disabled={loadingProvider === 'linkedin' || isEmailLoading}
-        className="w-full border border-gray-300 hover:bg-gray-50 text-gray-800 font-medium py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2983DC] transition duration-150 flex items-center justify-center shadow-sm mb-4 disabled:opacity-70"
+        className="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center shadow-sm mb-4 disabled:opacity-70 transition-colors duration-150"
       >
         {loadingProvider === 'linkedin' ? (
           <LoadingSpinner size="small" />
@@ -74,7 +97,7 @@ export default function Signup() {
             <svg
               className="w-5 h-5 mr-3"
               viewBox="0 0 24 24"
-              fill="#2983DC"
+              fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.127 2.062 2.062 0 0 1 0 4.127zM7.113 20.452H3.561V9h3.552v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
@@ -88,7 +111,7 @@ export default function Signup() {
       <button
         onClick={() => handleSocialSignup('google')}
         disabled={loadingProvider === 'google' || isEmailLoading}
-        className="w-full border border-gray-300 hover:bg-gray-50 text-gray-800 font-medium py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 flex items-center justify-center shadow-sm disabled:opacity-70"
+        className="w-full bg-white hover:bg-gray-100 text-gray-700 border border-gray-300 font-medium py-2.5 px-4 rounded-lg flex items-center justify-center shadow-sm disabled:opacity-70 transition-colors duration-150"
       >
         {loadingProvider === 'google' ? (
           <LoadingSpinner size="small" />

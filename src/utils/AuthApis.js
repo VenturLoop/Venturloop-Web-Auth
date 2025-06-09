@@ -276,3 +276,44 @@ export const getListData = async (title) => {
     console.log("Error while updating Item: " + error);
   }
 };
+
+export const updateUserDetailsAPI = async (details) => {
+  try {
+    const res = await fetch('/api/user/update-details', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(details),
+    });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({ message: 'Failed to parse error response' }));
+      throw new Error(errorData.message || `Error: ${res.status}`);
+    }
+    return await res.json();
+  } catch (error) {
+    console.error('Error in updateUserDetailsAPI:', error);
+    // Re-throw or return an error object structured consistently
+    throw error; // Propagate the error to be handled by the caller
+  }
+};
+
+export const saveOnboardingDataAPI = async (onboardingData) => {
+  try {
+    const res = await fetch('/api/user/save-onboarding', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(onboardingData),
+    });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({ message: 'Failed to parse error response' }));
+      throw new Error(errorData.message || `Error: ${res.status}`);
+    }
+    return await res.json();
+  } catch (error) {
+    console.error('Error in saveOnboardingDataAPI:', error);
+    throw error; // Propagate the error to be handled by the caller
+  }
+};

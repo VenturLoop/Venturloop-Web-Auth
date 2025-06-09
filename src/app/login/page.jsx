@@ -14,16 +14,20 @@ const AuthForm = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  const [loadingProvider, setLoadingProvider] = useState(null);
+  const [loadingProvider, setLoadingProvider] = useState(null); // Stores the provider name string
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (status === 'authenticated') {
-      router.push('https://venturloop.com');
+      if (session?.user?.isNewUser === true) {
+        router.push('/auth/add-basic-details');
+      } else {
+        router.push('/');
+      }
     }
-  }, [status, router]);
+  }, [status, session, router]);
 
   const handleLogIn = async (provider, credentials = {}) => {
     setLoadingProvider(provider);
@@ -143,13 +147,13 @@ const AuthForm = () => {
           <button
             onClick={() => handleLogIn('linkedin')}
             disabled={loadingProvider === 'linkedin'}
-            className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-4 rounded-lg flex items-center justify-center shadow-sm mb-4 disabled:opacity-70"
+            className="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center shadow-sm mb-4 disabled:opacity-70 transition-colors duration-150"
           >
             {loadingProvider === 'linkedin' ? (
               <LoadingSpinner size="small" />
             ) : (
               <>
-                <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="#2983DC" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.127 2.062 2.062 0 0 1 0 4.127zM7.113 20.452H3.561V9h3.552v11.452z" />
                 </svg>
                 Continue with LinkedIn
@@ -161,7 +165,7 @@ const AuthForm = () => {
           <button
             onClick={() => handleLogIn('google')}
             disabled={loadingProvider === 'google'}
-            className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-4 rounded-lg flex items-center justify-center shadow-sm disabled:opacity-70"
+            className="w-full bg-white hover:bg-gray-100 text-gray-700 border border-gray-300 font-medium py-2.5 px-4 rounded-lg flex items-center justify-center shadow-sm disabled:opacity-70 transition-colors duration-150"
           >
             {loadingProvider === 'google' ? (
               <LoadingSpinner size="small" />
