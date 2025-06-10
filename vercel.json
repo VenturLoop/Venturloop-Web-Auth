@@ -10,8 +10,8 @@
     "NEXTAUTH_SECRET": "3fs9hfKwZxM0g5zTlbvBaZYOzq2A0Rx9P1w1x/2u8tA=",
     "GOOGLE_CLIENT_ID": "892055512866-vjk3oq36ko3pms4q4m74mca07caa3bnb.apps.googleusercontent.com",
     "GOOGLE_CLIENT_SECRET": "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",
-    "LINKEDIN_CLIENT_ID": "86sjpuidgskr0j",
-    "LINKEDIN_CLIENT_SECRET": "WPL_AP1.vlrdfrLhvxb4T133.uuBH7w=="
+    "LINKEDIN_CLIENT_ID": "8672av69n53k4f",
+    "LINKEDIN_CLIENT_SECRET": "WPL_AP1.CQLZMNtSgvxJw3PI.S8uHwQ=="
   },
   "github": {
     "silent": true
