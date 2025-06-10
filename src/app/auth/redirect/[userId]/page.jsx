@@ -8,25 +8,20 @@ import { toast } from 'react-hot-toast'; // Added import
 const RedirectPage = () => {
   const router = useRouter();
   const params = useParams();
-  // console.log('[RedirectPage] URL params:', JSON.stringify(params, null, 2)); // Removed
   const userId = params?.userId;
-  // console.log('[RedirectPage] Extracted userId:', userId); // Removed
 
   useEffect(() => {
-    // console.log('[RedirectPage useEffect] Hook invoked. userId:', userId); // Removed
     if (userId) {
-      const targetPath = `/auth/add-basic-details?userId=${userId}`;
-      // console.log('[RedirectPage useEffect] userId present. Redirecting to:', targetPath); // Removed
       // The userId from the backend is present in the URL.
       // Token storage and validation would have been handled by NextAuth callbacks.
       // Now, redirect to addBasicDetails.
       // We can pass the userId if needed by the addBasicDetails page,
       // or it can also fetch it from the session.
-      router.replace(targetPath);
+      router.replace(`/auth/add-basic-details?userId=${userId}`);
     } else {
-      console.error('[RedirectPage useEffect] userId is missing. Toasting error and redirecting to /login.'); // Kept error
       // Handle missing userId in URL - maybe redirect to login or an error page
-      toast.error('Invalid redirect: User identifier not found. Please try logging in again.');
+      console.error('RedirectPage: userId is missing from URL parameters.');
+      toast.error('Invalid redirect: User identifier not found. Please try logging in again.'); // Added toast
       router.replace('/login'); // Or some error page
     }
   }, [userId, router]);
