@@ -34,6 +34,12 @@ const AuthForm = () => {
         case 'OAuthProcessingError':
           message = 'An unexpected error occurred during login. Please try again.';
           break;
+        case 'GoogleSignInProcessingError':
+          message = 'An error occurred while processing your Google sign-in. Please try again. If the problem persists, contact support.';
+          break;
+        case 'LinkedInSignInProcessingError':
+          message = 'An error occurred while processing your LinkedIn sign-in. Please try again. If the problem persists, contact support.';
+          break;
         case 'CredentialsLogin': // This error is usually caught by result.error from signIn
           message = 'Invalid email or password.'; // This case might be redundant if signIn handles it
           break;
