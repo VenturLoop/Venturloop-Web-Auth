@@ -24,6 +24,7 @@ export const signInwithEmail = async (formData) => {
 
 // Renamed and adapted from sendTokenToBackend
 export const handleGoogleSignIn = async (idToken) => {
+  // console.log('[AuthApis handleGoogleSignIn] Input idToken:', idToken ? idToken.substring(0, 20) + '...' : 'N/A'); // Removed
   try {
     const response = await fetch(
       'https://venturloopbackend-v-1-0-9.onrender.com/auth/google-signup',
@@ -37,14 +38,15 @@ export const handleGoogleSignIn = async (idToken) => {
     );
 
     const data = await response.json();
-    console.log('Backend Response (Google Sign-In):', data); // Keep or adjust logging as needed
+    // console.log('[AuthApis handleGoogleSignIn] Response status:', response.status); // Removed
+    // console.log('[AuthApis handleGoogleSignIn] Response data:', JSON.stringify(data, null, 2)); // Removed
     if (!response.ok) {
-      // Throw an error or return a specific error structure if the backend response is not OK
+      console.error('[AuthApis handleGoogleSignIn] Error: Google Sign-In failed with status:', response.status, 'Data:', data); // Kept error
       throw new Error(data.message || `Google Sign-In failed with status: ${response.status}`);
     }
     return data; // Return the parsed JSON response
   } catch (error) {
-    console.error('Error sending Google token to backend:', error);
+    console.error('[AuthApis handleGoogleSignIn] Caught error:', error.message, error); // Kept error, added message
     // Re-throw the error or return a structured error object
     // For consistency, let's re-throw if it's an operational error or return a specific structure
     throw error; // Or return { success: false, message: error.message || 'Error processing Google Sign-In' };
@@ -52,6 +54,7 @@ export const handleGoogleSignIn = async (idToken) => {
 };
 
 export const handleLinkedInSignIn = async (authCode, redirectUri) => {
+  // console.log('[AuthApis handleLinkedInSignIn] Input authCode:', authCode, 'redirectUri:', redirectUri); // Removed
   try {
     const response = await fetch('/api/auth/linkedin/exchange', {
       method: 'POST',
@@ -62,13 +65,15 @@ export const handleLinkedInSignIn = async (authCode, redirectUri) => {
     });
 
     const data = await response.json();
-    console.log('Backend Response (LinkedIn Sign-In from /api/auth/linkedin/exchange):', data);
+    // console.log('[AuthApis handleLinkedInSignIn] Response status from /api/auth/linkedin/exchange:', response.status); // Removed
+    // console.log('[AuthApis handleLinkedInSignIn] Response data from /api/auth/linkedin/exchange:', JSON.stringify(data, null, 2)); // Removed
     if (!response.ok) {
+      console.error('[AuthApis handleLinkedInSignIn] Error: LinkedIn Sign-In failed with status:', response.status, 'Data:', data); // Kept error
       throw new Error(data.message || `LinkedIn Sign-In failed with status: ${response.status}`);
     }
     return data;
   } catch (error) {
-    console.error('Error during LinkedIn Sign-In:', error);
+    console.error('[AuthApis handleLinkedInSignIn] Caught error:', error.message, error); // Kept error, added message
     // Re-throw or return a structured error
     throw error; // Or return { success: false, message: error.message || 'Error processing LinkedIn Sign-In' };
   }
