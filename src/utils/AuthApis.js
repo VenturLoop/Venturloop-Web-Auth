@@ -26,7 +26,7 @@ export const signInwithEmail = async (formData) => {
 export const handleGoogleSignIn = async (idToken) => {
   try {
     const response = await fetch(
-      'https://venturloopbackend-v-1-0-9.onrender.com/auth/google-signup',
+      'https://venturloopbackend-v-1-0-9.onrender.com/auth/app-google-signup',
       {
         method: 'POST',
         headers: {
