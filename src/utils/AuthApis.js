@@ -22,7 +22,8 @@ export const signInwithEmail = async (formData) => {
   }
 };
 
-export const sendTokenToBackend = async (idToken) => {
+// Renamed and adapted from sendTokenToBackend
+export const handleGoogleSignIn = async (idToken) => {
   try {
     const response = await fetch(
       'https://venturloopbackend-v-1-0-9.onrender.com/auth/google-signup',
@@ -36,9 +37,40 @@ export const sendTokenToBackend = async (idToken) => {
     );
 
     const data = await response.json();
-    console.log('Backend Response:', data);
+    console.log('Backend Response (Google Sign-In):', data); // Keep or adjust logging as needed
+    if (!response.ok) {
+      // Throw an error or return a specific error structure if the backend response is not OK
+      throw new Error(data.message || `Google Sign-In failed with status: ${response.status}`);
+    }
+    return data; // Return the parsed JSON response
   } catch (error) {
-    console.error('Error sending token to backend:', error);
+    console.error('Error sending Google token to backend:', error);
+    // Re-throw the error or return a structured error object
+    // For consistency, let's re-throw if it's an operational error or return a specific structure
+    throw error; // Or return { success: false, message: error.message || 'Error processing Google Sign-In' };
+  }
+};
+
+export const handleLinkedInSignIn = async (authCode, redirectUri) => {
+  try {
+    const response = await fetch('/api/auth/linkedin/exchange', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ authCode, redirectUri }),
+    });
+
+    const data = await response.json();
+    console.log('Backend Response (LinkedIn Sign-In from /api/auth/linkedin/exchange):', data);
+    if (!response.ok) {
+      throw new Error(data.message || `LinkedIn Sign-In failed with status: ${response.status}`);
+    }
+    return data;
+  } catch (error) {
+    console.error('Error during LinkedIn Sign-In:', error);
+    // Re-throw or return a structured error
+    throw error; // Or return { success: false, message: error.message || 'Error processing LinkedIn Sign-In' };
   }
 };
 
@@ -174,28 +206,36 @@ export const ConfirmPassword = async (email, newPassword) => {
 };
 
 // 9 Delete User
-export const DeleteUserAccount = async (userId) => {
+export const DeleteUserAccount = async (userId, token) => {
   try {
     const res = await fetch(
-      'https://venturloopbackend-v-1-0-9.onrender.com/auth/delete',
+      `https://venturloopbackend-v-1-0-9.onrender.com/auth/delete`, // Ensure this is the correct endpoint for delete
       {
-        method: 'POST',
+        method: 'POST', // Or 'DELETE' if appropriate for the backend
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify({ userId }), // Ensure body is correct, maybe just userId in URL and empty body for DELETE
       },
     );
+    // It's good practice to check response.ok here
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({ message: 'Failed to delete user and parse error response' }));
+      throw new Error(errorData.message || `Failed to delete user: ${res.status}`);
+    }
     const data = await res.json();
     return data;
   } catch (error) {
-    console.log('Error while updating Item: ' + error);
+    console.log('Error while deleting user account: ' + error);
+    throw error; // Re-throw for the caller to handle
   }
 };
 
 // 10
 export const submitProfileApi = async ({
   userId,
+  token, // Added token
   skillSet,
   industries,
   priorStartupExperience,
@@ -208,9 +248,10 @@ export const submitProfileApi = async ({
     const res = await fetch(
       `https://venturloopbackend-v-1-0-9.onrender.com/auth/user/${userId}`,
       {
-        method: 'POST',
+        method: 'POST', // Or 'PUT' if it's an update
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Added Authorization header
         },
         body: JSON.stringify({
           skillSet,
@@ -225,36 +266,42 @@ export const submitProfileApi = async ({
     );
 
     if (!res.ok) {
-      // Log the response from the backend to get error details
-      const errorData = await res.json();
-      console.error('Backend error:', errorData.message);
-      throw new Error(`Error saving user profile: ${errorData.message}`);
+      const errorData = await res.json().catch(() => ({ message: 'Failed to save profile and parse error response' }));
+      console.error('Backend error (submitProfileApi):', errorData.message || res.status);
+      throw new Error(`Error saving user profile: ${errorData.message || res.status}`);
     }
 
     const data = await res.json();
     return data;
   } catch (error) {
-    console.error('Error during API call:', error);
+    console.error('Error during API call (submitProfileApi):', error);
     throw error;
   }
 };
 
 // 11 Get user profile data from server
-export const getUserDataProfile = async (userId) => {
+export const getUserDataProfile = async (userId, token) => {
   try {
     const res = await fetch(
-      `https://venturloopbackend-v-1-0-9.onrender.com/api/user/${userId}`,
+      `https://venturloopbackend-v-1-0-9.onrender.com/api/user/${userId}`, // Verify this endpoint, might be /auth/user/
       {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Added Authorization header
         },
       },
     );
+    // It's good practice to check response.ok here
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({ message: 'Failed to get user profile and parse error response' }));
+      throw new Error(errorData.message || `Failed to get user profile: ${res.status}`);
+    }
     const data = await res.json();
     return data;
   } catch (error) {
-    console.log('Error while updating Item: ' + error);
+    console.log('Error while fetching user profile: ' + error);
+    throw error; // Re-throw for the caller to handle
   }
 };
 
