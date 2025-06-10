@@ -65,16 +65,8 @@ export const authOptions = {
   ],
   callbacks: {
     async jwt({ token, user, account, profile }) {
-      // console.log('[NextAuth JWT Callback] Invoked.'); // Basic invocation log can be kept if desired
       // Initial sign-in
       if (account && user) {
-        // console.log('[NextAuth JWT Callback] Initial sign-in context.');
-        // console.log('[NextAuth JWT Callback] Account:', JSON.stringify(account, null, 2)); // Removed
-        // console.log('[NextAuth JWT Callback] User:', JSON.stringify(user, null, 2)); // Removed
-        // if (profile) {
-        //   console.log('[NextAuth JWT Callback] Profile:', JSON.stringify(profile, null, 2)); // Removed
-        // }
-
         token.id = user.id; // Default NextAuth user id
         token.email = user.email;
         token.name = user.name;
@@ -88,69 +80,51 @@ export const authOptions = {
 
         try {
           if (account.provider === 'google') {
-            // console.log('[NextAuth JWT Callback] Processing Google sign-in.'); // Optional: keep for provider switch visibility
             if (account.id_token) {
-              // console.log('[NextAuth JWT Callback] Google idToken:', account.id_token); // Removed
               const backendResponse = await handleGoogleSignIn(account.id_token);
-              // console.log('[NextAuth JWT Callback] Backend Response (Google):', JSON.stringify(backendResponse, null, 2)); // Removed
               if (backendResponse && backendResponse.token && backendResponse.userId) {
                 token.customBackendToken = backendResponse.token;
                 token.customBackendUserId = backendResponse.userId;
                 token.requiresRedirectToAddBasicDetails = backendResponse.isNewUser || true;
-                // console.log('[NextAuth JWT Callback] Google sign-in successful, backend token stored in JWT.'); // Status log, can be kept or removed
+                console.log('Google sign-in successful, backend token stored in JWT.');
               } else {
-                console.error('[NextAuth JWT Callback] Google sign-in: Backend response missing token or userId.', backendResponse); // Kept error
-                token.error = "GoogleBackendError";
+                console.error('Google sign-in: Backend response missing token or userId', backendResponse);
+                token.error = "GoogleBackendError"; // Specific error
               }
             } else {
-              console.error('[NextAuth JWT Callback] Google sign-in: id_token missing from account object.'); // Kept error
+              console.error('Google sign-in: id_token missing from account object');
               token.error = "GoogleIdTokenMissing";
             }
           } else if (account.provider === 'linkedin') {
-            // console.log('[NextAuth JWT Callback] Processing LinkedIn sign-in.'); // Optional
             const linkedInRedirectUri = `${process.env.NEXTAUTH_URL}/api/auth/callback/linkedin`;
-            // console.log('[NextAuth JWT Callback] LinkedIn redirect URI:', linkedInRedirectUri); // Removed
             if (account.code) {
-              // console.log('[NextAuth JWT Callback] LinkedIn authCode:', account.code); // Removed
               const backendResponse = await handleLinkedInSignIn(account.code, linkedInRedirectUri);
-              // console.log('[NextAuth JWT Callback] Backend Response (LinkedIn):', JSON.stringify(backendResponse, null, 2)); // Removed
               if (backendResponse && backendResponse.token && backendResponse.userId) {
                 token.customBackendToken = backendResponse.token;
                 token.customBackendUserId = backendResponse.userId;
                 token.requiresRedirectToAddBasicDetails = backendResponse.isNewUser || true;
-                // console.log('[NextAuth JWT Callback] LinkedIn sign-in successful, backend token stored in JWT.'); // Status log
+                console.log('LinkedIn sign-in successful, backend token stored in JWT.');
               } else {
-                console.error('[NextAuth JWT Callback] LinkedIn sign-in: Backend response missing token or userId.', backendResponse); // Kept error
-                token.error = "LinkedInBackendError";
+                console.error('LinkedIn sign-in: Backend response missing token or userId', backendResponse);
+                token.error = "LinkedInBackendError"; // Specific error
               }
             } else {
-               console.error('[NextAuth JWT Callback] LinkedIn sign-in: authorization code (account.code) missing.'); // Kept error
+               console.error('LinkedIn sign-in: authorization code (account.code) missing.');
                token.error = "LinkedInAuthCodeMissing";
             }
           }
         } catch (error) {
-          console.error(`[NextAuth JWT Callback] Error during ${account.provider} sign-in processing: ${error.message}`, error); // Log message and full error
-          if (account.provider === 'google') {
-            token.error = "GoogleSignInProcessingError";
-          } else if (account.provider === 'linkedin') {
-            token.error = "LinkedInSignInProcessingError";
-          } else {
-            token.error = "OAuthProcessingError"; // Generic for other providers or if provider is unknown
-          }
-
-          // Clear custom fields on error
+          console.error(`Error during ${account.provider} sign-in processing:`, error);
+          token.error = "OAuthProcessingError"; // General error for caught exceptions
+          // Ensure custom fields are cleared if an exception occurred mid-process
           delete token.customBackendToken;
           delete token.customBackendUserId;
           delete token.requiresRedirectToAddBasicDetails;
         }
       }
-      // console.log('[NextAuth JWT Callback] Returning token:', JSON.stringify(token, null, 2)); // Removed
       return token;
     },
     async session({ session, token }) {
-      // console.log('[NextAuth Session Callback] Invoked.');
-      // console.log('[NextAuth Session Callback] Input token:', JSON.stringify(token, null, 2)); // Removed
-      // console.log('[NextAuth Session Callback] Input session:', JSON.stringify(session, null, 2)); // Removed
       if (token) {
         session.user.id = token.id || token.sub; // Standard NextAuth user ID
         session.user.customBackendToken = token.customBackendToken;
@@ -162,59 +136,40 @@ export const authOptions = {
           session.error = token.error;
         }
       }
-      // console.log('[NextAuth Session Callback] Returning session:', JSON.stringify(session, null, 2)); // Removed
       return session;
     },
-async redirect({ url, baseUrl, token }) {
-  // console.log('[NextAuth Redirect Callback] Input URL:', url, 'BaseURL:', baseUrl); // Optional
-  // if(token) {
-  //   console.log('[NextAuth Redirect Callback] Input Token:', JSON.stringify(token, null, 2)); // Removed
-  // } else {
-  //   console.log('[NextAuth Redirect Callback] Input Token: null or undefined'); // Optional
-  // }
+    async redirect({ url, baseUrl, token }) {
+      // url is the intended redirect URL (e.g., to original page user was trying to access)
+      // baseUrl is the base URL of the site
 
-  // If there was an error during JWT processing (as indicated by token.error),
-  // redirect to the login page. The login page should pick up session.error.
-  if (token && token.error) {
-    // console.log('[NextAuth Redirect Callback] Error in token detected:', token.error, 'Redirecting to login page.'); // Status log
-    return `${baseUrl}/login`;
-  }
+      // If token is not available (e.g. on initial load before session is established for this callback context),
+      // or customBackendUserId is missing, or no specific redirect is required,
+      // allow default behavior or redirect to baseUrl.
+      if (!token || !token.customBackendUserId) {
+        // If signing out, url might be baseUrl/login or similar.
+        // If url is already pointing to a valid page after an action (like signout), let it proceed.
+        // If it's an initial login and token isn't fully processed yet for redirect logic, might default to baseUrl.
+        return url.startsWith(baseUrl) ? url : baseUrl;
+      }
 
-  // If token exists and user needs to be redirected to add basic details
-  if (token && token.requiresRedirectToAddBasicDetails && token.customBackendUserId) {
-    const redirectPath = `${baseUrl}/auth/redirect/${token.customBackendUserId}`;
-    // console.log(`[NextAuth Redirect Callback] Redirecting to add basic details flow: ${redirectPath}`); // Status log
-    return redirectPath;
-  }
+      if (token.requiresRedirectToAddBasicDetails && token.customBackendUserId) {
+        const redirectPath = `/auth/redirect/${token.customBackendUserId}`;
+        console.log(`Redirecting to: ${baseUrl}${redirectPath}`);
+        return `${baseUrl}${redirectPath}`;
+      }
 
-  // If the user is already on a page that is part of the auth flow post-login,
-  // or the intended URL is the addBasicDetails page, let them stay.
-  // This helps prevent redirect loops if the user manually navigates or refreshes.
-  if (url.startsWith(`${baseUrl}/auth/add-basic-details`) || url.startsWith(`${baseUrl}/auth/redirect`)) {
-    // console.log('[NextAuth Redirect Callback] Already on an auth flow page or final details page. Returning URL:', url); // Status log
-    return url;
-  }
+      // If already on the addBasicDetails page or the redirect page, don't loop.
+      if (url.includes('/auth/add-basic-details') || url.includes('/auth/redirect/')) {
+        return url;
+      }
 
-  // Default redirect for authenticated users not needing onboarding or without errors.
-  // If the 'url' is the NextAuth callback URL itself (e.g., /api/auth/callback/google),
-  // then redirect to the baseUrl (e.g., dashboard/home).
-  if (url.startsWith(`${baseUrl}/api/auth/callback`)) {
-    // console.log('[NextAuth Redirect Callback] URL is an API callback. Redirecting to baseUrl:', baseUrl); // Status log
-    return baseUrl;
-  }
-
-  // If the 'url' is a valid URL within the application (starts with baseUrl),
-  // allow redirection to that URL. This handles cases where a user was trying to access a protected page.
-  if (url.startsWith(baseUrl)) {
-    // console.log('[NextAuth Redirect Callback] URL is within application. Redirecting to URL:', url); // Status log
-    return url;
-  }
-
-  // Fallback: if the 'url' is external or not what's expected (e.g. '/'), redirect to baseUrl.
-  // This is a safe default for authenticated users.
-  // console.log('[NextAuth Redirect Callback] Default fallback. Redirecting to baseUrl:', baseUrl); // Status log
-  return baseUrl;
-}
+      // Default redirect for logged-in users not needing onboarding
+      // This could be a dashboard or the originally requested URL if appropriate
+      // For now, let's default to baseUrl if no other conditions met.
+      // If 'url' is a relative path from a protected page, it might be the one to go to.
+      // If 'url' is the baseUrl itself (e.g. after login button on homepage), then baseUrl is fine.
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    }
     // We could use the signIn callback for redirection for new social users,
     // but client-side check of session.user.isNewUser is often simpler to manage.
     // async signIn({ user, account, profile, email, credentials }) {
