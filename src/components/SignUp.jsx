@@ -5,8 +5,10 @@ import Link from 'next/link';
 import SpliteScreen from './SpliteScreen';
 import LoadingSpinner from './LoadingSpinner';
 import { useRouter } from 'next/navigation';
-import { signInwithEmail } from '@/utils/AuthApis';
 import { useAppContext } from '@/context/AppContext';
+import { signInwithEmail, handleGoogleSignIn } from '@/utils/AuthApis'; // Import handleGoogleSignIn
+import { useGoogleLogin } from '@react-oauth/google'; // Import useGoogleLogin
+
 
 export default function Signup() {
   const { setUserData } = useAppContext();
@@ -25,9 +27,47 @@ export default function Signup() {
       'Get daily smart recommendations based on your skills and interests.',
   };
 
+ const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      // setLoadingProvider is already set before calling googleLogin()
+      try {
+        const backendResponse = await handleGoogleSignIn(tokenResponse.access_token);
+
+        if (backendResponse?.success) {
+          setUserData(prev => ({
+            ...prev,
+            name: backendResponse.data?.name || '',
+            email: backendResponse.data?.email || '',
+            // authToken: backendResponse.token, // If your backend returns a session token
+            // ... any other user data fields from backendResponse.data
+          }));
+          router.push('/auth/add-basic-details');
+        } else {
+          alert(backendResponse?.message || 'Google Sign-In failed.');
+        }
+      } catch (error) {
+        console.error('Google Sign-In error:', error);
+        alert(error.message || 'An error occurred during Google Sign-In.');
+      } finally {
+        setLoadingProvider('');
+      }
+    },
+    onError: (errorResponse) => {
+      console.error('Google Login Hook onError:', errorResponse);
+      alert('Google Sign-In initialization failed. Please try again.');
+      setLoadingProvider('');
+    }
+  });
+
   const handleSocialSignup = async (provider) => {
-    setLoadingProvider(provider);
-    setTimeout(() => setLoadingProvider(''), 1500); // simulate delay
+    if (provider === 'google') {
+      setLoadingProvider('google');
+      googleLogin();
+    } else if (provider === 'linkedin') {
+      setLoadingProvider('linkedin');
+      // Simulate LinkedIn logic or implement actual LinkedIn sign-in
+      setTimeout(() => setLoadingProvider(''), 1500);
+    }
   };
 
   const handleEmailSignup = async (e) => {
