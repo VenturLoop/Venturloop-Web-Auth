@@ -2,6 +2,7 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import LinkedInProvider from 'next-auth/providers/linkedin';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { handleGoogleSignIn, handleLinkedInSignIn } from '@/utils/AuthApis';
 
 // Initialize in-memory stores if they don't exist
 if (!global.otpStore) {
@@ -57,116 +58,118 @@ export const authOptions = {
     LinkedInProvider({
       clientId: process.env.LINKEDIN_CLIENT_ID,
       clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+      authorization: {
+        params: { scope: 'openid profile email' },
+      },
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
-      // profile and isNewUser (param) are unused
-      // Ensure userStore is initialized (already done at top-level, but good for safety)
-      if (!global.userStore) global.userStore = [];
-
-      // For social logins or initial user setup:
-      if (user) {
-        token.id = user.id; // Persist the user id from provider or authorize function
+    async jwt({ token, user, account, profile }) {
+      // Initial sign-in
+      if (account && user) {
+        token.id = user.id; // Default NextAuth user id
         token.email = user.email;
         token.name = user.name;
-        token.picture = user.image; // Social image
+        token.picture = user.image;
 
-        // Check if this is a new social user
-        if (
-          account &&
-          (account.provider === 'google' || account.provider === 'linkedin')
-        ) {
-          let existingUser = global.userStore.find(
-            (u) => u.email === user.email,
-          );
-          if (!existingUser) {
-            const newSocialUser = {
-              id: user.id, // Use ID from provider
-              email: user.email,
-              name: user.name,
-              profileImageUrl: user.image, // Store social image initially
-              hashedPassword: null, // No password for social login
-              createdAt: new Date().toISOString(),
-              isNewSocialUser: true, // Flag to indicate new user from social provider
-              location: null,
-              birthdate: null,
-              onboardingAnswers: null, // Initialize onboardingAnswers
-              onboardingCompleted: false, // Initialize onboardingCompleted
-            };
-            global.userStore.push(newSocialUser);
-            // console.log('New social user added to userStore:', newSocialUser.email, newSocialUser); // Debug log removed
-            token.isNewUser = true; // Flag for client-side redirection for the very first social sign-in
-            token.profileImageUrl = newSocialUser.profileImageUrl;
-          } else {
-            // User exists in store (could be social or credential)
-            // Update image if social login provides a new one
-            if (
-              account &&
-              (account.provider === 'google' || account.provider === 'linkedin')
-            ) {
-              existingUser.profileImageUrl =
-                user.image || existingUser.profileImageUrl;
+        // Clear any previous custom backend data or errors on new login attempt
+        delete token.customBackendToken;
+        delete token.customBackendUserId;
+        delete token.requiresRedirectToAddBasicDetails;
+        delete token.error;
+
+        try {
+          if (account.provider === 'google') {
+            if (account.id_token) {
+              const backendResponse = await handleGoogleSignIn(account.id_token);
+              if (backendResponse && backendResponse.token && backendResponse.userId) {
+                token.customBackendToken = backendResponse.token;
+                token.customBackendUserId = backendResponse.userId;
+                token.requiresRedirectToAddBasicDetails = backendResponse.isNewUser || true;
+                console.log('Google sign-in successful, backend token stored in JWT.');
+              } else {
+                console.error('Google sign-in: Backend response missing token or userId', backendResponse);
+                token.error = "GoogleBackendError"; // Specific error
+              }
+            } else {
+              console.error('Google sign-in: id_token missing from account object');
+              token.error = "GoogleIdTokenMissing";
             }
-            token.profileImageUrl = existingUser.profileImageUrl;
-            // isNewUser will be set based on isNewSocialUser flag from DB below
+          } else if (account.provider === 'linkedin') {
+            const linkedInRedirectUri = `${process.env.NEXTAUTH_URL}/api/auth/callback/linkedin`;
+            if (account.code) {
+              const backendResponse = await handleLinkedInSignIn(account.code, linkedInRedirectUri);
+              if (backendResponse && backendResponse.token && backendResponse.userId) {
+                token.customBackendToken = backendResponse.token;
+                token.customBackendUserId = backendResponse.userId;
+                token.requiresRedirectToAddBasicDetails = backendResponse.isNewUser || true;
+                console.log('LinkedIn sign-in successful, backend token stored in JWT.');
+              } else {
+                console.error('LinkedIn sign-in: Backend response missing token or userId', backendResponse);
+                token.error = "LinkedInBackendError"; // Specific error
+              }
+            } else {
+               console.error('LinkedIn sign-in: authorization code (account.code) missing.');
+               token.error = "LinkedInAuthCodeMissing";
+            }
           }
-        } else if (account && account.provider === 'credentials') {
-          // For credential users, user object comes from authorize function
-          // We need to ensure token.id is set correctly from this user object
-          // and other fields are populated from what authorize returns.
-          const dbUser = global.userStore.find((u) => u.email === user.email); // user.email should be reliable
-          if (dbUser) {
-            token.id = dbUser.id;
-            token.profileImageUrl = dbUser.profileImageUrl;
-            // isNewUser will be set based on isNewSocialUser flag from DB below
-          }
+        } catch (error) {
+          console.error(`Error during ${account.provider} sign-in processing:`, error);
+          token.error = "OAuthProcessingError"; // General error for caught exceptions
+          // Ensure custom fields are cleared if an exception occurred mid-process
+          delete token.customBackendToken;
+          delete token.customBackendUserId;
+          delete token.requiresRedirectToAddBasicDetails;
         }
       }
-
-      // After user processing, decisively set isNewUser based on the current state in userStore
-      // This covers all cases: new social, existing social, credential user.
-      const currentUserFromStore = global.userStore.find(
-        (u) => u.email === token.email,
-      );
-      if (currentUserFromStore) {
-        token.isNewUser = !!currentUserFromStore.isNewSocialUser;
-        // Also ensure token.id is from store if not already set by new social user branch
-        if (!token.id) token.id = currentUserFromStore.id;
-        // Ensure latest profile image is on token
-        token.picture = currentUserFromStore.profileImageUrl || token.picture; // Prioritize our stored image
-        token.profileImageUrl =
-          currentUserFromStore.profileImageUrl || token.picture;
-      } else if (!account) {
-        // This case handles JWT refreshes for users already authenticated, not during initial sign-in.
-        // token.email should exist from previous session.
-        // No specific 'user' object or 'account' object here.
-        // We need to ensure token.isNewUser is still correctly reflecting the DB state.
-        const refreshedUserFromStore = global.userStore.find(
-          (u) => u.email === token.email,
-        );
-        if (refreshedUserFromStore) {
-          token.isNewUser = !!refreshedUserFromStore.isNewSocialUser;
-          token.id = refreshedUserFromStore.id;
-          token.picture =
-            refreshedUserFromStore.profileImageUrl || token.picture;
-          token.profileImageUrl =
-            refreshedUserFromStore.profileImageUrl || token.picture;
-        }
-      }
-      // token.sub will also be set by NextAuth to user.id
-
       return token;
     },
     async session({ session, token }) {
-      // Send properties to the client, like user id from the token.
       if (token) {
-        session.user.id = token.id || token.sub; // Ensure id is passed to session
-        session.user.isNewUser = token.isNewUser;
-        session.user.image = token.profileImageUrl || token.picture; // Use our updated image if available
+        session.user.id = token.id || token.sub; // Standard NextAuth user ID
+        session.user.customBackendToken = token.customBackendToken;
+        session.user.customBackendUserId = token.customBackendUserId;
+        session.user.requiresRedirectToAddBasicDetails = token.requiresRedirectToAddBasicDetails;
+        session.user.image = token.picture; // Keep original image from provider or update if needed
+
+        if (token.error) {
+          session.error = token.error;
+        }
       }
       return session;
     },
+    async redirect({ url, baseUrl, token }) {
+      // url is the intended redirect URL (e.g., to original page user was trying to access)
+      // baseUrl is the base URL of the site
+
+      // If token is not available (e.g. on initial load before session is established for this callback context),
+      // or customBackendUserId is missing, or no specific redirect is required,
+      // allow default behavior or redirect to baseUrl.
+      if (!token || !token.customBackendUserId) {
+        // If signing out, url might be baseUrl/login or similar.
+        // If url is already pointing to a valid page after an action (like signout), let it proceed.
+        // If it's an initial login and token isn't fully processed yet for redirect logic, might default to baseUrl.
+        return url.startsWith(baseUrl) ? url : baseUrl;
+      }
+
+      if (token.requiresRedirectToAddBasicDetails && token.customBackendUserId) {
+        const redirectPath = `/auth/redirect/${token.customBackendUserId}`;
+        console.log(`Redirecting to: ${baseUrl}${redirectPath}`);
+        return `${baseUrl}${redirectPath}`;
+      }
+
+      // If already on the addBasicDetails page or the redirect page, don't loop.
+      if (url.includes('/auth/add-basic-details') || url.includes('/auth/redirect/')) {
+        return url;
+      }
+
+      // Default redirect for logged-in users not needing onboarding
+      // This could be a dashboard or the originally requested URL if appropriate
+      // For now, let's default to baseUrl if no other conditions met.
+      // If 'url' is a relative path from a protected page, it might be the one to go to.
+      // If 'url' is the baseUrl itself (e.g. after login button on homepage), then baseUrl is fine.
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    }
     // We could use the signIn callback for redirection for new social users,
     // but client-side check of session.user.isNewUser is often simpler to manage.
     // async signIn({ user, account, profile, email, credentials }) {

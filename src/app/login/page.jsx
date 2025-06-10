@@ -14,6 +14,42 @@ const AuthForm = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
+  // const [lastSeenError, setLastSeenError] = useState(null); // Example for more advanced toast control
+
+  useEffect(() => {
+    if (session?.error) {
+      let message = 'Login failed. Please try again.';
+      // This is a simplified approach for the subtask.
+      // In a full app, you might use a state like lastSeenError to prevent duplicate toasts for the same error instance.
+      // Or, the toast library itself might offer de-duplication features.
+      switch (session.error) {
+        case 'GoogleBackendError':
+        case 'LinkedInBackendError':
+          message = 'There was a problem connecting to our authentication service. Please try again later.';
+          break;
+        case 'GoogleIdTokenMissing':
+        case 'LinkedInAuthCodeMissing':
+          message = 'Authentication data from the provider was incomplete. Please try again.';
+          break;
+        case 'OAuthProcessingError':
+          message = 'An unexpected error occurred during login. Please try again.';
+          break;
+        case 'CredentialsLogin': // This error is usually caught by result.error from signIn
+          message = 'Invalid email or password.'; // This case might be redundant if signIn handles it
+          break;
+        default:
+          // Use the error string itself if it's unrecognized but present and a string
+          if (typeof session.error === 'string') {
+            message = `Login failed: ${session.error}`;
+          }
+          break;
+      }
+      toast.error(message);
+      // Clearing session.error is not directly possible as session object from useSession is read-only in this context.
+      // The error will persist in the session until a new session state without an error is received.
+    }
+  }, [session]);
+
   const [loadingProvider, setLoadingProvider] = useState(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
