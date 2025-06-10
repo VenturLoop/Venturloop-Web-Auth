@@ -31,8 +31,9 @@ export default function Signup() {
     onSuccess: async (tokenResponse) => {
       // setLoadingProvider is already set before calling googleLogin()
       try {
+        console.log("tokenResponse",tokenResponse)
         const backendResponse = await handleGoogleSignIn(tokenResponse.access_token);
-
+        console.log("backendResponse", backendResponse)
         if (backendResponse?.success) {
           setUserData(prev => ({
             ...prev,
