@@ -52,7 +52,7 @@ export default function Signup() {
         if (sessionData?.user?.requiresRedirectToAddBasicDetails) {
           router.push('/auth/add-basic-details');
         } else {
-          router.push('/dashboard'); // or your default post-login page
+          router.push('/login'); // or your default post-login page
         }
 
         // Clear form if using credentials
