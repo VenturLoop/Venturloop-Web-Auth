@@ -12,7 +12,7 @@ export async function POST(request) {
     const tokenParams = new URLSearchParams({
       grant_type: 'authorization_code',
       code: authCode,
-      redirect_uri: redirectUri,
+      redirect_uri: redirectUri, 
       client_id: process.env.LINKEDIN_CLIENT_ID,
       client_secret: process.env.LINKEDIN_CLIENT_SECRET,
     });

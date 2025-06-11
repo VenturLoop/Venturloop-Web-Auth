@@ -44,9 +44,7 @@ export default function RootLayout({ children }) {
         <Navbar />
 
         <Providers>
-          <main className="flex-1 w-full">
-            {children}
-          </main>
+          <main className="flex-1 w-full">{children}</main>
           <SpeedInsights />
         </Providers>
 

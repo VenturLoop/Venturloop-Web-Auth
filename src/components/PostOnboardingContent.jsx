@@ -54,7 +54,7 @@ const PostOnboardingContent = () => {
 
         {/* Continue to Web */}
         <button
-          onClick={() => router.push('/')}
+          onClick={() => router.push('https://test.venturloop.com?')}
           className="w-full bg-[#2983DC] hover:bg-[#2270BE] text-white font-semibold py-3 px-6 rounded-lg transition duration-150 shadow-md hover:shadow-xl text-lg"
         >
           Continue to Dashboard

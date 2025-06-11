@@ -177,7 +177,7 @@ const AuthForm = () => {
           </p>
 
           {/* LinkedIn Button */}
-          <button
+          {/* <button
             onClick={() => handleLogIn('linkedin')}
             disabled={loadingProvider === 'linkedin'}
             className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-4 rounded-lg flex items-center justify-center shadow-sm mb-4 disabled:opacity-70"
@@ -192,7 +192,7 @@ const AuthForm = () => {
                 Continue with LinkedIn
               </>
             )}
-          </button>
+          </button> */}
 
           {/* Google Button */}
           <button

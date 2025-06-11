@@ -180,7 +180,7 @@ export default function Signup() {
           </p>
 
           {/* LinkedIn Button */}
-          <button
+          {/* <button
             onClick={() => handleSocialSignup('linkedin')}
             disabled={loadingProvider === 'linkedin' || isEmailLoading}
             className="w-full border border-gray-300 hover:bg-gray-50 text-gray-800 font-medium py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2983DC] transition duration-150 flex items-center justify-center shadow-sm mb-4 disabled:opacity-70"
@@ -200,7 +200,7 @@ export default function Signup() {
                 Continue with LinkedIn
               </>
             )}
-          </button>
+          </button> */}
 
           {/* Google Button */}
           <button
