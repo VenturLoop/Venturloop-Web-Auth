@@ -175,9 +175,7 @@ const BasicDetailsForm = ({ name, email, password }) => {
   useEffect(() => {
     if (status === 'loading') return; // Don't do anything while loading
 
-    if (status === 'unauthenticated') {
-      router.replace('/login');
-    }
+
 
     if (status === 'authenticated' && session?.user) {
       const { location = '', birthdate = '', image } = session.user;
