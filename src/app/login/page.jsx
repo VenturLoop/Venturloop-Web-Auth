@@ -56,11 +56,11 @@ const AuthForm = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    if (status === 'authenticated') {
-      router.push('https://test.venturloop.com');
-    }
-  }, [status, router]);
+  // useEffect(() => {
+  //   if (status === 'authenticated') {
+  //     router.push('https://test.venturloop.com');
+  //   }
+  // }, [status, router]);
 
   const handleLogIn = async (provider, credentials = {}) => {
     setLoadingProvider(provider);
