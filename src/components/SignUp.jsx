@@ -7,7 +7,7 @@ import LoadingSpinner from './LoadingSpinner';
 import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/context/AppContext';
 import { signInwithEmail } from '@/utils/AuthApis'; // Import handleGoogleSignIn
-import { signIn as LogIn } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 
 export default function Signup() {
   const { setUserData } = useAppContext();
@@ -26,32 +26,48 @@ export default function Signup() {
       'Get daily smart recommendations based on your skills and interests.',
   };
 
+  const handleSocialSignup = async (provider, credentials = {}) => {
+    setLoadingProvider(provider);
 
+    try {
+      const result = await signIn(provider, {
+        ...credentials,
+        redirect: false, // We'll manually redirect
+        callbackUrl: `${window.location.origin}/dashboard`, // fallback if needed
+      });
 
-  const handleSocialSignup  = async (provider, credentials = {}) => {
-      setLoadingProvider(provider);
-      try {
-        const result = await LogIn(provider, { ...credentials, redirect: false });
-        if (result?.error) {
-          toast.error(
-            result.error === 'CredentialsLogin'
-              ? 'Invalid email or password'
-              : `Login failed: ${result.error}`
-          );
-        } else if (result?.ok) {
-          toast.success('Logged in successfully!');
-          if (provider === 'credentials') {
-            setEmail('');
-            setPassword('');
-          }
+      if (result?.error) {
+        toast.error(
+          result.error === 'CredentialsLogin'
+            ? 'Invalid email or password'
+            : `Login failed: ${result.error}`,
+        );
+      } else if (result?.ok) {
+        toast.success('Account created successfully!');
+
+        // Now fetch the session to access isNewUser flag
+        const sessionRes = await fetch('/api/auth/session');
+        const sessionData = await sessionRes.json();
+
+        if (sessionData?.user?.requiresRedirectToAddBasicDetails) {
+          router.push('/auth/add-basic-details');
+        } else {
+          router.push('/dashboard'); // or your default post-login page
         }
-      } catch (error) {
-        toast.error('Unexpected login error.');
-        console.error(error);
-      } finally {
-        setLoadingProvider(null);
+
+        // Clear form if using credentials
+        if (provider === 'credentials') {
+          setEmail('');
+          setPassword('');
+        }
       }
-    };
+    } catch (error) {
+      toast.error('Unexpected login error.');
+      console.error(error);
+    } finally {
+      setLoadingProvider(null);
+    }
+  };
 
   const handleEmailSignup = async (e) => {
     e.preventDefault();
