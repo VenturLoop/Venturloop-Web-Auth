@@ -91,6 +91,7 @@ export default function Signup() {
           ...prev,
           name: session?.user?.name,
           email: session?.user?.email,
+          password :'venturloop@2025' ,
           profileImageUrl:
             session?.user?.image ||
             `https://ui-avatars.com/api/?name=${encodeURIComponent(

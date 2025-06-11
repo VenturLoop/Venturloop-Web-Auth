@@ -48,7 +48,7 @@ const BasicDetailsForm = ({ name, email, password }) => {
   const { userData, setUserData } = useAppContext();
   const { data: session, status } = useSession();
   const router = useRouter();
-  
+
   const [location, setLocation] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [profileImageUrl, setProfileImageUrl] = useState('');
