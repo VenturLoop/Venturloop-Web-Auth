@@ -81,42 +81,70 @@ export const authOptions = {
         try {
           if (account.provider === 'google') {
             if (account.id_token) {
-              const backendResponse = await handleGoogleSignIn(account.id_token);
-              console.log("backendResponse", backendResponse)
-              if (backendResponse && backendResponse.token && backendResponse.userId) {
+              const backendResponse = await handleGoogleSignIn(
+                account.id_token,
+              );
+              console.log('backendResponse', backendResponse);
+              if (backendResponse?.success) {
                 token.customBackendToken = backendResponse.token;
                 token.customBackendUserId = backendResponse.userId;
-                token.requiresRedirectToAddBasicDetails = backendResponse.isNewUser || true;
-                console.log('Google sign-in successful, backend token stored in JWT.');
+                token.requiresRedirectToAddBasicDetails =
+                  backendResponse.isNewUser || true;
+                console.log(
+                  'Google sign-in successful, backend token stored in JWT.',
+                );
               } else {
-                console.error('Google sign-in: Backend response missing token or userId', backendResponse);
-                token.error = "GoogleBackendError"; // Specific error
+                console.error(
+                  'Google sign-in: Backend response missing token or userId',
+                  backendResponse,
+                );
+                token.error = 'GoogleBackendError'; // Specific error
               }
             } else {
-              console.error('Google sign-in: id_token missing from account object');
-              token.error = "GoogleIdTokenMissing";
+              console.error(
+                'Google sign-in: id_token missing from account object',
+              );
+              token.error = 'GoogleIdTokenMissing';
             }
           } else if (account.provider === 'linkedin') {
             const linkedInRedirectUri = `${process.env.NEXTAUTH_URL}/api/auth/callback/linkedin`;
             if (account.code) {
-              const backendResponse = await handleLinkedInSignIn(account.code, linkedInRedirectUri);
-              if (backendResponse && backendResponse.token && backendResponse.userId) {
+              const backendResponse = await handleLinkedInSignIn(
+                account.code,
+                linkedInRedirectUri,
+              );
+              if (
+                backendResponse &&
+                backendResponse.token &&
+                backendResponse.userId
+              ) {
                 token.customBackendToken = backendResponse.token;
                 token.customBackendUserId = backendResponse.userId;
-                token.requiresRedirectToAddBasicDetails = backendResponse.isNewUser || true;
-                console.log('LinkedIn sign-in successful, backend token stored in JWT.');
+                token.requiresRedirectToAddBasicDetails =
+                  backendResponse.isNewUser || true;
+                console.log(
+                  'LinkedIn sign-in successful, backend token stored in JWT.',
+                );
               } else {
-                console.error('LinkedIn sign-in: Backend response missing token or userId', backendResponse);
-                token.error = "LinkedInBackendError"; // Specific error
+                console.error(
+                  'LinkedIn sign-in: Backend response missing token or userId',
+                  backendResponse,
+                );
+                token.error = 'LinkedInBackendError'; // Specific error
               }
             } else {
-               console.error('LinkedIn sign-in: authorization code (account.code) missing.');
-               token.error = "LinkedInAuthCodeMissing";
+              console.error(
+                'LinkedIn sign-in: authorization code (account.code) missing.',
+              );
+              token.error = 'LinkedInAuthCodeMissing';
             }
           }
         } catch (error) {
-          console.error(`Error during ${account.provider} sign-in processing:`, error);
-          token.error = "OAuthProcessingError"; // General error for caught exceptions
+          console.error(
+            `Error during ${account.provider} sign-in processing:`,
+            error,
+          );
+          token.error = 'OAuthProcessingError'; // General error for caught exceptions
           // Ensure custom fields are cleared if an exception occurred mid-process
           delete token.customBackendToken;
           delete token.customBackendUserId;
@@ -130,7 +158,8 @@ export const authOptions = {
         session.user.id = token.id || token.sub; // Standard NextAuth user ID
         session.user.customBackendToken = token.customBackendToken;
         session.user.customBackendUserId = token.customBackendUserId;
-        session.user.requiresRedirectToAddBasicDetails = token.requiresRedirectToAddBasicDetails;
+        session.user.requiresRedirectToAddBasicDetails =
+          token.requiresRedirectToAddBasicDetails;
         session.user.image = token.picture; // Keep original image from provider or update if needed
 
         if (token.error) {
@@ -153,14 +182,20 @@ export const authOptions = {
         return url.startsWith(baseUrl) ? url : baseUrl;
       }
 
-      if (token.requiresRedirectToAddBasicDetails && token.customBackendUserId) {
+      if (
+        token.requiresRedirectToAddBasicDetails &&
+        token.customBackendUserId
+      ) {
         const redirectPath = `/auth/redirect/${token.customBackendUserId}`;
         console.log(`Redirecting to: ${baseUrl}${redirectPath}`);
         return `${baseUrl}${redirectPath}`;
       }
 
       // If already on the addBasicDetails page or the redirect page, don't loop.
-      if (url.includes('/auth/add-basic-details') || url.includes('/auth/redirect/')) {
+      if (
+        url.includes('/auth/add-basic-details') ||
+        url.includes('/auth/redirect/')
+      ) {
         return url;
       }
 
@@ -170,7 +205,7 @@ export const authOptions = {
       // If 'url' is a relative path from a protected page, it might be the one to go to.
       // If 'url' is the baseUrl itself (e.g. after login button on homepage), then baseUrl is fine.
       return url.startsWith(baseUrl) ? url : baseUrl;
-    }
+    },
     // We could use the signIn callback for redirection for new social users,
     // but client-side check of session.user.isNewUser is often simpler to manage.
     // async signIn({ user, account, profile, email, credentials }) {
