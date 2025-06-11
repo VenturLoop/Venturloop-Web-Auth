@@ -84,16 +84,16 @@ export const authOptions = {
               const backendResponse = await handleGoogleSignIn(
                 account.id_token,
               );
-              console.log('backendResponse', backendResponse);
               if (
                 backendResponse?.success &&
                 backendResponse.token &&
                 backendResponse.user?._id
               ) {
                 token.customBackendToken = backendResponse.token;
-                token.customBackendUserId = backendResponse.userId;
+                token.customBackendUserId = backendResponse.user._id;
                 token.requiresRedirectToAddBasicDetails =
-                  backendResponse.isNewUser || true;
+                  backendResponse.isNewUser === true;
+
                 console.log(
                   'Google sign-in successful, backend token stored in JWT.',
                 );
@@ -123,9 +123,10 @@ export const authOptions = {
                 backendResponse.userId
               ) {
                 token.customBackendToken = backendResponse.token;
-                token.customBackendUserId = backendResponse.userId;
+                token.customBackendUserId = backendResponse.user._id;
                 token.requiresRedirectToAddBasicDetails =
-                  backendResponse.isNewUser || true;
+                  backendResponse.isNewUser === true;
+
                 console.log(
                   'LinkedIn sign-in successful, backend token stored in JWT.',
                 );
@@ -173,43 +174,19 @@ export const authOptions = {
       return session;
     },
     async redirect({ url, baseUrl, token }) {
-      // url is the intended redirect URL (e.g., to original page user was trying to access)
-      // baseUrl is the base URL of the site
-
-      // If token is not available (e.g. on initial load before session is established for this callback context),
-      // or customBackendUserId is missing, or no specific redirect is required,
-      // allow default behavior or redirect to baseUrl.
       if (!token || !token.customBackendUserId) {
-        // If signing out, url might be baseUrl/login or similar.
-        // If url is already pointing to a valid page after an action (like signout), let it proceed.
-        // If it's an initial login and token isn't fully processed yet for redirect logic, might default to baseUrl.
         return url.startsWith(baseUrl) ? url : baseUrl;
       }
 
-      if (
-        token.requiresRedirectToAddBasicDetails &&
-        token.customBackendUserId
-      ) {
-        const redirectPath = `/auth/redirect/${token.customBackendUserId}`;
-        console.log(`Redirecting to: ${baseUrl}${redirectPath}`);
-        return `${baseUrl}${redirectPath}`;
+      if (token.requiresRedirectToAddBasicDetails) {
+        console.log('Redirecting new user to /auth/addBasicDetails');
+        return `${baseUrl}/auth/addBasicDetails`;
       }
 
-      // If already on the addBasicDetails page or the redirect page, don't loop.
-      if (
-        url.includes('/auth/add-basic-details') ||
-        url.includes('/auth/redirect/')
-      ) {
-        return url;
-      }
-
-      // Default redirect for logged-in users not needing onboarding
-      // This could be a dashboard or the originally requested URL if appropriate
-      // For now, let's default to baseUrl if no other conditions met.
-      // If 'url' is a relative path from a protected page, it might be the one to go to.
-      // If 'url' is the baseUrl itself (e.g. after login button on homepage), then baseUrl is fine.
-      return url.startsWith(baseUrl) ? url : baseUrl;
+      console.log('Redirecting existing user to original URL or /dashboard');
+      return url.startsWith(baseUrl) ? url : `${baseUrl}/dashboard`;
     },
+
     // We could use the signIn callback for redirection for new social users,
     // but client-side check of session.user.isNewUser is often simpler to manage.
     // async signIn({ user, account, profile, email, credentials }) {
