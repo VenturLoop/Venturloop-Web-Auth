@@ -85,7 +85,11 @@ export const authOptions = {
                 account.id_token,
               );
               console.log('backendResponse', backendResponse);
-              if (backendResponse?.success) {
+              if (
+                backendResponse?.success &&
+                backendResponse.token &&
+                backendResponse.user?._id
+              ) {
                 token.customBackendToken = backendResponse.token;
                 token.customBackendUserId = backendResponse.userId;
                 token.requiresRedirectToAddBasicDetails =
