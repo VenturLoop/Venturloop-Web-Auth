@@ -87,6 +87,17 @@ export default function Signup() {
         const redirectToAddDetails =
           sessionData?.user?.requiresRedirectToAddBasicDetails;
 
+        setUserData((prev) => ({
+          ...prev,
+          name: session?.user?.name,
+          email: session?.user?.email,
+          profileImageUrl:
+            session?.user?.image ||
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(
+              session?.user?.name || session?.user?.email || 'User',
+            )}&background=random&color=fff&size=96`,
+        }));
+
         // Start countdown
         countdownInterval = setInterval(() => {
           setCountdown((prev) => {

@@ -229,11 +229,9 @@ export const DeleteUserAccount = async (userId, token) => {
     );
     // It's good practice to check response.ok here
     if (!res.ok) {
-      const errorData = await res
-        .json()
-        .catch(() => ({
-          message: 'Failed to delete user and parse error response',
-        }));
+      const errorData = await res.json().catch(() => ({
+        message: 'Failed to delete user and parse error response',
+      }));
       throw new Error(
         errorData.message || `Failed to delete user: ${res.status}`,
       );
@@ -280,11 +278,9 @@ export const submitProfileApi = async ({
     );
 
     if (!res.ok) {
-      const errorData = await res
-        .json()
-        .catch(() => ({
-          message: 'Failed to save profile and parse error response',
-        }));
+      const errorData = await res.json().catch(() => ({
+        message: 'Failed to save profile and parse error response',
+      }));
       console.error(
         'Backend error (submitProfileApi):',
         errorData.message || res.status,
@@ -317,11 +313,9 @@ export const getUserDataProfile = async (userId, token) => {
     );
     // It's good practice to check response.ok here
     if (!res.ok) {
-      const errorData = await res
-        .json()
-        .catch(() => ({
-          message: 'Failed to get user profile and parse error response',
-        }));
+      const errorData = await res.json().catch(() => ({
+        message: 'Failed to get user profile and parse error response',
+      }));
       throw new Error(
         errorData.message || `Failed to get user profile: ${res.status}`,
       );
