@@ -18,14 +18,10 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [loadingProvider, setLoadingProvider] = useState('');
   const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [countdown, setCountdown] = useState(5);
 
   const router = useRouter();
 
-  const handleLogOut = async () => {
-    setLoadingProvider('LogOut');
-    await signOut({ callbackUrl: '/' }); // optional: route to homepage
-    setLoadingProvider('');
-  };
   const data = {
     imageSrc: '/image/Cofounder_splash_screen.png',
     title: 'Find ideal co-founder for your startup',
@@ -78,8 +74,9 @@ export default function Signup() {
       setLoadingProvider(null);
     }
   };
-
   useEffect(() => {
+    let countdownInterval;
+
     const checkAndRedirect = async () => {
       if (!session) return;
 
@@ -89,20 +86,29 @@ export default function Signup() {
         const isNewUser = sessionData?.user?.isNewUser;
         const redirectToAddDetails =
           sessionData?.user?.requiresRedirectToAddBasicDetails;
-        console.log('isNewUser', isNewUser, redirectToAddDetails);
-        setTimeout(() => {
-          if (isNewUser || redirectToAddDetails) {
-            router.push('/auth/add-basic-details');
-          } else {
-            router.push('/login'); // Or `/dashboard` if that's the destination
-          }
-        }, 5000); // 5-second delay
+
+        // Start countdown
+        countdownInterval = setInterval(() => {
+          setCountdown((prev) => {
+            if (prev === 1) {
+              clearInterval(countdownInterval);
+              if (isNewUser || redirectToAddDetails) {
+                router.push('/auth/add-basic-details');
+              } else {
+                router.push('/login'); // or /dashboard
+              }
+            }
+            return prev - 1;
+          });
+        }, 1000);
       } catch (err) {
         console.error('Failed to fetch session for redirection', err);
       }
     };
 
     checkAndRedirect();
+
+    return () => clearInterval(countdownInterval);
   }, [session]);
 
   const handleEmailSignup = async (e) => {
@@ -147,21 +153,10 @@ export default function Signup() {
             Welcome, {session.user.name || session.user.email}!
           </h2>
           <p className="text-gray-500 mb-6">
-            Your account is created. Redirecting...
+            Your account is created. Redirecting in{' '}
+            <span className="font-semibold text-gray-700">{countdown}</span>{' '}
+            seconds...
           </p>
-
-          <LoadingSpinner size="medium" />
-          <button
-            onClick={handleLogOut}
-            disabled={loadingProvider === 'LogOut'}
-            className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-4 rounded-lg flex items-center justify-center shadow-sm disabled:opacity-70 transition duration-150"
-          >
-            {loadingProvider === 'LogOut' ? (
-              <LoadingSpinner size="small" />
-            ) : (
-              'Log Out'
-            )}
-          </button>
         </div>
       ) : (
         <>
