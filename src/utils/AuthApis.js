@@ -53,35 +53,6 @@ export const handleGoogleSignIn = async (idToken) => {
   }
 };
 
-export const handleLinkedInSignIn = async (authCode, redirectUri) => {
-  try {
-    const response = await fetch('/api/auth/linkedin/exchange', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ authCode, redirectUri }),
-    });
-
-    const data = await response.json();
-    console.log(
-      'Backend Response (LinkedIn Sign-In from /api/auth/linkedin/exchange):',
-      data,
-    );
-    if (!response.ok) {
-      throw new Error(
-        data.message ||
-          `LinkedIn Sign-In failed with status: ${response.status}`,
-      );
-    }
-    return data;
-  } catch (error) {
-    console.error('Error during LinkedIn Sign-In:', error);
-    // Re-throw or return a structured error
-    throw error; // Or return { success: false, message: error.message || 'Error processing LinkedIn Sign-In' };
-  }
-};
-
 export const SentOPT = async ({ email, verificationCode }) => {
   try {
     const res = await fetch(
