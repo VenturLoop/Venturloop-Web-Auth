@@ -36,7 +36,7 @@ export default function Signup() {
         console.log("backendResponse", backendResponse)
         if (backendResponse?.success) {
           setUserData(prev => ({
-            ...prev,
+            ...prev, 
             name: backendResponse.data?.name || '',
             email: backendResponse.data?.email || '',
             // authToken: backendResponse.token, // If your backend returns a session token

@@ -19,6 +19,7 @@ const AuthForm = () => {
   useEffect(() => {
     if (session?.error) {
       let message = 'Login failed. Please try again.';
+      console.log("session?.error", session?.error)
       // This is a simplified approach for the subtask.
       // In a full app, you might use a state like lastSeenError to prevent duplicate toasts for the same error instance.
       // Or, the toast library itself might offer de-duplication features.

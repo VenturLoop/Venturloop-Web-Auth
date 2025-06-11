@@ -20,7 +20,7 @@ const Navbar = () => {
     <>
       <header className="w-full sticky top-0 z-40 bg-white py-3 px-4 md:px-8 flex items-center justify-between">
         {/* Logo + Brand */}
-        <Link href="https://venturloop.com" passHref legacyBehavior>
+        <Link href="https://venturloop.com" passHref >
           <a className="flex items-center space-x-2 cursor-pointer" target="_blank" rel="noopener noreferrer"> {/* Added target and rel for external link */}
             <Image
               src="/image/appLogoT.png"
