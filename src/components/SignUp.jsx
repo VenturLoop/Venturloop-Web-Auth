@@ -33,7 +33,7 @@ export default function Signup() {
       const result = await signIn(provider, {
         ...credentials,
         redirect: false, // We'll manually redirect
-        callbackUrl: `${window.location.origin}/dashboard`, // fallback if needed
+        callbackUrl: `${window.location.origin}/login`, // fallback if needed
       });
 
       if (result?.error) {
