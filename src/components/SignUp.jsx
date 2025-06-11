@@ -48,7 +48,10 @@ export default function Signup() {
         // Now fetch the session to access isNewUser flag
         const sessionRes = await fetch('/api/auth/session');
         const sessionData = await sessionRes.json();
-
+        console.log(
+          'sessionData?.user?.requiresRedirectToAddBasicDetails',
+          sessionData?.user?.requiresRedirectToAddBasicDetails,
+        );
         if (sessionData?.user?.requiresRedirectToAddBasicDetails) {
           router.push('/auth/add-basic-details');
         } else {
