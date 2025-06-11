@@ -32,8 +32,7 @@ export default function Signup() {
     try {
       const result = await signIn(provider, {
         ...credentials,
-        redirect: false, // We'll manually redirect
-        callbackUrl: `${window.location.origin}/login`, // fallback if needed
+        redirect: false, // We'll manually handle the redirect
       });
 
       if (result?.error) {
@@ -43,22 +42,23 @@ export default function Signup() {
             : `Login failed: ${result.error}`,
         );
       } else if (result?.ok) {
-        toast.success('Account created successfully!');
+        toast.success('Login successful!');
 
-        // Now fetch the session to access isNewUser flag
+        // Fetch the session to check if it's a new user
         const sessionRes = await fetch('/api/auth/session');
         const sessionData = await sessionRes.json();
-        console.log(
-          'sessionData?.user?.requiresRedirectToAddBasicDetails',
-          sessionData?.user?.requiresRedirectToAddBasicDetails,
-        );
-        if (sessionData?.user?.requiresRedirectToAddBasicDetails) {
+
+        const isNewUser = sessionData?.user?.isNewUser;
+        const redirectToAddDetails =
+          sessionData?.user?.requiresRedirectToAddBasicDetails;
+
+        if (isNewUser || redirectToAddDetails) {
           router.push('/auth/add-basic-details');
         } else {
-          router.push('/login'); // or your default post-login page
+          router.push('/login'); // Change this to `/dashboard` or other page if needed
         }
 
-        // Clear form if using credentials
+        // Optional cleanup for credentials
         if (provider === 'credentials') {
           setEmail('');
           setPassword('');
