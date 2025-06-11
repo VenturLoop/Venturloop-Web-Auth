@@ -46,6 +46,7 @@ export const uploadProfileImage = async (file) => {
 const BasicDetailsForm = ({ name, email, password }) => {
   const router = useRouter();
   const { userData, setUserData } = useAppContext();
+  const { data: session, status } = useSession();
 
   const [location, setLocation] = useState('');
   const [birthdate, setBirthdate] = useState('');
@@ -96,20 +97,27 @@ const BasicDetailsForm = ({ name, email, password }) => {
           // but Nominatim is fine for this context.
           // Ensure proper error handling for the fetch call itself.
           const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=en`
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=en`,
           );
 
           if (!response.ok) {
             // Handle cases where Nominatim API returns an error (e.g. rate limiting, server error)
             const errorData = await response.json();
-            throw new Error(errorData.error || `Nominatim API request failed with status ${response.status}`);
+            throw new Error(
+              errorData.error ||
+                `Nominatim API request failed with status ${response.status}`,
+            );
           }
 
           const data = await response.json();
-          
-          const city = data?.address?.city || data?.address?.town || data?.address?.village || '';
+
+          const city =
+            data?.address?.city ||
+            data?.address?.town ||
+            data?.address?.village ||
+            '';
           const country = data?.address?.country || '';
-          
+
           let fetchedLocation = '';
           if (city && country) {
             fetchedLocation = `${city}, ${country}`;
@@ -124,41 +132,62 @@ const BasicDetailsForm = ({ name, email, password }) => {
 
           setLocation(fetchedLocation); // Correctly update the location state
           toast.success('Location fetched!');
-
-        } catch (apiError) { // Catch errors from fetch or data processing
-          console.error("Error fetching location details:", apiError);
-          setGeoError('Failed to retrieve location details. Please try again or enter manually.');
+        } catch (apiError) {
+          // Catch errors from fetch or data processing
+          console.error('Error fetching location details:', apiError);
+          setGeoError(
+            'Failed to retrieve location details. Please try again or enter manually.',
+          );
           toast.error('Failed to retrieve location details.');
         } finally {
           setIsLocationLoading(false); // Ensure loading state is turned off
         }
       },
-      (permissionError) => { // Error callback for getCurrentPosition
+      (permissionError) => {
+        // Error callback for getCurrentPosition
         // More specific error messages based on permissionError.code
         if (permissionError.code === permissionError.PERMISSION_DENIED) {
-          setGeoError('Geolocation permission denied. Please enable location services in your browser settings.');
+          setGeoError(
+            'Geolocation permission denied. Please enable location services in your browser settings.',
+          );
           toast.error('Geolocation permission denied.');
-        } else if (permissionError.code === permissionError.POSITION_UNAVAILABLE) {
+        } else if (
+          permissionError.code === permissionError.POSITION_UNAVAILABLE
+        ) {
           setGeoError('Location information is unavailable.');
           toast.error('Location information is unavailable.');
         } else if (permissionError.code === permissionError.TIMEOUT) {
           setGeoError('Geolocation request timed out.');
           toast.error('Geolocation request timed out.');
         } else {
-          setGeoError('Unable to retrieve your location. An unknown error occurred.');
+          setGeoError(
+            'Unable to retrieve your location. An unknown error occurred.',
+          );
           toast.error('Unable to retrieve your location.');
         }
         setIsLocationLoading(false);
       },
-      { timeout: 10000, enableHighAccuracy: true } // Added options for geolocation
+      { timeout: 10000, enableHighAccuracy: true }, // Added options for geolocation
     );
   };
+
   useEffect(() => {
     if (status === 'authenticated' && session?.user) {
-      // Pre-fill form if data already exists (e.g. from social or previous submission)
-      setLocation(session.user.location || '');
-      setBirthdate(session.user.birthdate || ''); // Assuming birthdate is directly on user, might need parsing if stored differently
-      setProfileImageUrl(session.user.image || ''); // session.user.image should be up-to-date
+      const user = session.user;
+
+      // Safely set default values from session
+      if (user.location) setLocation(user.location);
+      if (user.birthdate) setBirthdate(user.birthdate);
+
+      // Prefer the session image if available, fallback to a generated one
+      if (user.image) {
+        setProfileImageUrl(user.image);
+      } else if (user.name || user.email) {
+        const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+          user.name || user.email,
+        )}&background=random&color=fff&size=96`;
+        setProfileImageUrl(fallbackAvatar);
+      }
     } else if (status === 'unauthenticated') {
       router.replace('/login');
     }
@@ -174,7 +203,9 @@ const BasicDetailsForm = ({ name, email, password }) => {
     const finalPassword = password || userData?.password;
 
     if (!finalName || !finalEmail || !finalPassword) {
-      toast.error('Name, email, and password are required from previous steps.');
+      toast.error(
+        'Name, email, and password are required from previous steps.',
+      );
       setFormError('Name, email, and password are required.');
       setIsLoading(false);
       return;
@@ -186,7 +217,7 @@ const BasicDetailsForm = ({ name, email, password }) => {
       toast.info('Skipping basic details. You can update them later.');
       // Navigate to the next step, assuming user data from context/props is sufficient
       // This part of logic depends on how user data is passed to next step
-      setUserData(prev => ({
+      setUserData((prev) => ({
         ...prev,
         // ensure essential identifiers like email, name are carried over
         name: finalName,
@@ -199,17 +230,17 @@ const BasicDetailsForm = ({ name, email, password }) => {
     }
 
     if (birthdate) {
-        const birthDateObj = new Date(birthdate);
-        const today = new Date();
-        // Set hours to 0 to compare dates only
-        birthDateObj.setHours(0,0,0,0);
-        today.setHours(0,0,0,0);
-        if (birthDateObj > today) {
-            setFormError('Birthdate cannot be in the future.');
-            toast.error('Birthdate cannot be in the future.');
-            setIsLoading(false);
-            return;
-        }
+      const birthDateObj = new Date(birthdate);
+      const today = new Date();
+      // Set hours to 0 to compare dates only
+      birthDateObj.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+      if (birthDateObj > today) {
+        setFormError('Birthdate cannot be in the future.');
+        toast.error('Birthdate cannot be in the future.');
+        setIsLoading(false);
+        return;
+      }
     }
 
     try {
@@ -225,11 +256,18 @@ const BasicDetailsForm = ({ name, email, password }) => {
       const response = await createAccount(accountDetails);
 
       if (response?.success) {
-        setUserData((prev) => ({ ...prev, _id: response?.user?.id, ...accountDetails, profileImageUrl: profileImageUrl || prev.profileImageUrl }));
+        setUserData((prev) => ({
+          ...prev,
+          _id: response?.user?.id,
+          ...accountDetails,
+          profileImageUrl: profileImageUrl || prev.profileImageUrl,
+        }));
         toast.success('Account details saved successfully!');
         router.push('/auth/skillset');
       } else {
-        setFormError(response?.message || 'Signup failed. Please check your details.');
+        setFormError(
+          response?.message || 'Signup failed. Please check your details.',
+        );
         toast.error(response?.message || 'Signup failed.');
       }
     } catch (err) {
@@ -256,8 +294,9 @@ const BasicDetailsForm = ({ name, email, password }) => {
         </h2>
 
         <p className="text-center text-base text-gray-600 mb-8">
-          Logged in as <span className="font-semibold">{email || userData?.email}</span>. These
-          details are optional.
+          Logged in as{' '}
+          <span className="font-semibold">{email || userData?.email}</span>.
+          These details are optional.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -299,9 +338,13 @@ const BasicDetailsForm = ({ name, email, password }) => {
               />
               <label
                 htmlFor="profileImageInput"
-                className={`inline-block bg-white hover:bg-blue-50 text-black border border-gray-500 font-semibold text-base px-6 py-2 rounded-full shadow-md transition cursor-pointer ${isLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
+                className={`inline-block bg-white hover:bg-blue-50 text-black border border-gray-500 font-semibold text-base px-6 py-2 rounded-full shadow-md transition cursor-pointer ${
+                  isLoading ? 'opacity-60 cursor-not-allowed' : ''
+                }`}
               >
-                {isLoading && !isLocationLoading ? 'Saving...' : 'Upload Profile Image'}
+                {isLoading && !isLocationLoading
+                  ? 'Saving...'
+                  : 'Upload Profile Image'}
               </label>
             </div>
             <input
@@ -338,7 +381,9 @@ const BasicDetailsForm = ({ name, email, password }) => {
               />
             </div>
 
-            {geoError && <p className="text-sm text-red-600 mt-1">{geoError}</p>}
+            {geoError && (
+              <p className="text-sm text-red-600 mt-1">{geoError}</p>
+            )}
 
             <button
               type="button"
@@ -378,7 +423,13 @@ const BasicDetailsForm = ({ name, email, password }) => {
             disabled={isLoading || isLocationLoading} // Disable if any loading is active
             className="w-full bg-[#2983DC] mt-4 hover:bg-[#2472c1] text-white font-semibold py-3 text-lg px-4 rounded-md shadow transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#2983DC] focus:ring-offset-2 disabled:bg-[#98c3e7] flex items-center justify-center"
           >
-            {isLoading && !isLocationLoading ? <LoadingSpinner size="small" /> : (isLocationLoading ? 'Detecting Location...' : 'Save & Continue')}
+            {isLoading && !isLocationLoading ? (
+              <LoadingSpinner size="small" />
+            ) : isLocationLoading ? (
+              'Detecting Location...'
+            ) : (
+              'Save & Continue'
+            )}
           </button>
         </form>
       </div>
