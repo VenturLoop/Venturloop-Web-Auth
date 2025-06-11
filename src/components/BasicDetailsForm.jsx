@@ -10,6 +10,7 @@ import SpliteScreen from './SpliteScreen';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { createAccount } from '@/utils/AuthApis';
 import { useAppContext } from '@/context/AppContext';
+import { useSession } from 'next-auth/react';
 
 // Your upload function
 export const uploadProfileImage = async (file) => {
@@ -44,10 +45,10 @@ export const uploadProfileImage = async (file) => {
 };
 
 const BasicDetailsForm = ({ name, email, password }) => {
-  const router = useRouter();
   const { userData, setUserData } = useAppContext();
   const { data: session, status } = useSession();
-
+  const router = useRouter();
+  
   const [location, setLocation] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [profileImageUrl, setProfileImageUrl] = useState('');
@@ -172,26 +173,20 @@ const BasicDetailsForm = ({ name, email, password }) => {
   };
 
   useEffect(() => {
-    if (status === 'authenticated' && session?.user) {
-      const user = session.user;
+    if (status === 'loading') return; // Don't do anything while loading
 
-      // Safely set default values from session
-      if (user.location) setLocation(user.location);
-      if (user.birthdate) setBirthdate(user.birthdate);
-
-      // Prefer the session image if available, fallback to a generated one
-      if (user.image) {
-        setProfileImageUrl(user.image);
-      } else if (user.name || user.email) {
-        const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-          user.name || user.email,
-        )}&background=random&color=fff&size=96`;
-        setProfileImageUrl(fallbackAvatar);
-      }
-    } else if (status === 'unauthenticated') {
+    if (status === 'unauthenticated') {
       router.replace('/login');
     }
-  }, [session, status, router]);
+
+    if (status === 'authenticated' && session?.user) {
+      const { location = '', birthdate = '', image } = session.user;
+
+      setLocation(location);
+      setBirthdate(birthdate);
+      setProfileImageUrl(image || '/default-avatar.png');
+    }
+  }, [status, session, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
