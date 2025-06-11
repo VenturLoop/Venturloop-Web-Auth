@@ -93,6 +93,7 @@ export const authOptions = {
                 token.customBackendUserId = backendResponse.user._id;
                 token.requiresRedirectToAddBasicDetails =
                   backendResponse.isNewUser === true;
+                token.isNewUser = backendResponse.isNewUser === true;
 
                 console.log(
                   'Google sign-in successful, backend token stored in JWT.',
@@ -126,6 +127,7 @@ export const authOptions = {
                 token.customBackendUserId = backendResponse.user._id;
                 token.requiresRedirectToAddBasicDetails =
                   backendResponse.isNewUser === true;
+                token.isNewUser = backendResponse.isNewUser === true;
 
                 console.log(
                   'LinkedIn sign-in successful, backend token stored in JWT.',
@@ -166,6 +168,7 @@ export const authOptions = {
         session.user.requiresRedirectToAddBasicDetails =
           token.requiresRedirectToAddBasicDetails;
         session.user.image = token.picture; // Keep original image from provider or update if needed
+        session.user.isNewUser = token.isNewUser;
 
         if (token.error) {
           session.error = token.error;
@@ -177,14 +180,15 @@ export const authOptions = {
       if (!token || !token.customBackendUserId) {
         return url.startsWith(baseUrl) ? url : baseUrl;
       }
-
-      if (token.requiresRedirectToAddBasicDetails) {
-        console.log('Redirecting new user to /auth/addBasicDetails');
-        return `${baseUrl}/auth/addBasicDetails`;
+      if (token.isNewUser || token.requiresRedirectToAddBasicDetails) {
+        console.log(
+          'New user detected. Redirecting to /auth/add-basic-details',
+        );
+        return `${baseUrl}/auth/add-basic-details`;
       }
 
       console.log('Redirecting existing user to original URL or /dashboard');
-      return url.startsWith(baseUrl) ? url : `${baseUrl}/dashboard`;
+      return url.startsWith(baseUrl) ? url : `${baseUrl}/login`;
     },
 
     // We could use the signIn callback for redirection for new social users,
