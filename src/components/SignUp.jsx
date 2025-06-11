@@ -1,18 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import SpliteScreen from './SpliteScreen';
 import LoadingSpinner from './LoadingSpinner';
 import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/context/AppContext';
 import { signInwithEmail } from '@/utils/AuthApis'; // Import handleGoogleSignIn
-import { signIn ,useSession, signOut } from 'next-auth/react';
+import { signIn, useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 
 export default function Signup() {
   const { setUserData } = useAppContext();
-const { data: session } = useSession();
+  const { data: session } = useSession();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -21,11 +21,11 @@ const { data: session } = useSession();
 
   const router = useRouter();
 
-const handleLogOut = async () => {
-  setLoadingProvider('LogOut');
-  await signOut({ callbackUrl: '/' }); // optional: route to homepage
-  setLoadingProvider('');
-};
+  const handleLogOut = async () => {
+    setLoadingProvider('LogOut');
+    await signOut({ callbackUrl: '/' }); // optional: route to homepage
+    setLoadingProvider('');
+  };
   const data = {
     imageSrc: '/image/Cofounder_splash_screen.png',
     title: 'Find ideal co-founder for your startup',
@@ -79,6 +79,32 @@ const handleLogOut = async () => {
     }
   };
 
+  useEffect(() => {
+    const checkAndRedirect = async () => {
+      if (!session) return;
+
+      try {
+        const res = await fetch('/api/auth/session');
+        const sessionData = await res.json();
+        const isNewUser = sessionData?.user?.isNewUser;
+        const redirectToAddDetails =
+          sessionData?.user?.requiresRedirectToAddBasicDetails;
+        console.log('isNewUser', isNewUser, redirectToAddDetails);
+        setTimeout(() => {
+          if (isNewUser || redirectToAddDetails) {
+            router.push('/auth/add-basic-details');
+          } else {
+            router.push('/login'); // Or `/dashboard` if that's the destination
+          }
+        }, 5000); // 5-second delay
+      } catch (err) {
+        console.error('Failed to fetch session for redirection', err);
+      }
+    };
+
+    checkAndRedirect();
+  }, [session]);
+
   const handleEmailSignup = async (e) => {
     e.preventDefault();
     setIsEmailLoading(true);
@@ -120,7 +146,11 @@ const handleLogOut = async () => {
           <h2 className="text-2xl font-semibold text-gray-700 mb-2">
             Welcome, {session.user.name || session.user.email}!
           </h2>
-          <p className="text-gray-500 mb-6">You are currently logged in.</p>
+          <p className="text-gray-500 mb-6">
+            Your account is created. Redirecting...
+          </p>
+
+          <LoadingSpinner size="medium" />
           <button
             onClick={handleLogOut}
             disabled={loadingProvider === 'LogOut'}
