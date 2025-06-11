@@ -22,7 +22,6 @@ export const signInwithEmail = async (formData) => {
   }
 };
 
-// Renamed and adapted from sendTokenToBackend
 export const handleGoogleSignIn = async (idToken) => {
   try {
     const response = await fetch(
@@ -37,17 +36,20 @@ export const handleGoogleSignIn = async (idToken) => {
     );
 
     const data = await response.json();
-    console.log('Backend Response (Google Sign-In):', data); // Keep or adjust logging as needed
+
     if (!response.ok) {
-      // Throw an error or return a specific error structure if the backend response is not OK
-      throw new Error(data.message || `Google Sign-In failed with status: ${response.status}`);
+      console.error('Google Sign-In failed:', data);
+      throw new Error(
+        data?.error || `Google Sign-In failed with status: ${response.status}`,
+      );
     }
-    return data; // Return the parsed JSON response
+
+    console.log('Backend Google Sign-In response:', data);
+
+    return data;
   } catch (error) {
-    console.error('Error sending Google token to backend:', error);
-    // Re-throw the error or return a structured error object
-    // For consistency, let's re-throw if it's an operational error or return a specific structure
-    throw error; // Or return { success: false, message: error.message || 'Error processing Google Sign-In' };
+    console.error('Error sending Google token to backend:', error.message);
+    throw new Error(error.message || 'Failed to sign in with Google');
   }
 };
 
@@ -62,9 +64,15 @@ export const handleLinkedInSignIn = async (authCode, redirectUri) => {
     });
 
     const data = await response.json();
-    console.log('Backend Response (LinkedIn Sign-In from /api/auth/linkedin/exchange):', data);
+    console.log(
+      'Backend Response (LinkedIn Sign-In from /api/auth/linkedin/exchange):',
+      data,
+    );
     if (!response.ok) {
-      throw new Error(data.message || `LinkedIn Sign-In failed with status: ${response.status}`);
+      throw new Error(
+        data.message ||
+          `LinkedIn Sign-In failed with status: ${response.status}`,
+      );
     }
     return data;
   } catch (error) {
@@ -214,15 +222,21 @@ export const DeleteUserAccount = async (userId, token) => {
         method: 'POST', // Or 'DELETE' if appropriate for the backend
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ userId }), // Ensure body is correct, maybe just userId in URL and empty body for DELETE
       },
     );
     // It's good practice to check response.ok here
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ message: 'Failed to delete user and parse error response' }));
-      throw new Error(errorData.message || `Failed to delete user: ${res.status}`);
+      const errorData = await res
+        .json()
+        .catch(() => ({
+          message: 'Failed to delete user and parse error response',
+        }));
+      throw new Error(
+        errorData.message || `Failed to delete user: ${res.status}`,
+      );
     }
     const data = await res.json();
     return data;
@@ -251,7 +265,7 @@ export const submitProfileApi = async ({
         method: 'POST', // Or 'PUT' if it's an update
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Added Authorization header
+          Authorization: `Bearer ${token}`, // Added Authorization header
         },
         body: JSON.stringify({
           skillSet,
@@ -266,9 +280,18 @@ export const submitProfileApi = async ({
     );
 
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ message: 'Failed to save profile and parse error response' }));
-      console.error('Backend error (submitProfileApi):', errorData.message || res.status);
-      throw new Error(`Error saving user profile: ${errorData.message || res.status}`);
+      const errorData = await res
+        .json()
+        .catch(() => ({
+          message: 'Failed to save profile and parse error response',
+        }));
+      console.error(
+        'Backend error (submitProfileApi):',
+        errorData.message || res.status,
+      );
+      throw new Error(
+        `Error saving user profile: ${errorData.message || res.status}`,
+      );
     }
 
     const data = await res.json();
@@ -288,14 +311,20 @@ export const getUserDataProfile = async (userId, token) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Added Authorization header
+          Authorization: `Bearer ${token}`, // Added Authorization header
         },
       },
     );
     // It's good practice to check response.ok here
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ message: 'Failed to get user profile and parse error response' }));
-      throw new Error(errorData.message || `Failed to get user profile: ${res.status}`);
+      const errorData = await res
+        .json()
+        .catch(() => ({
+          message: 'Failed to get user profile and parse error response',
+        }));
+      throw new Error(
+        errorData.message || `Failed to get user profile: ${res.status}`,
+      );
     }
     const data = await res.json();
     return data;
@@ -305,21 +334,20 @@ export const getUserDataProfile = async (userId, token) => {
   }
 };
 
-
 export const getListData = async (title) => {
   try {
     const res = await fetch(
       `https://venturloopbackend-v-1-0-9.onrender.com/admin/get_list_data/${title}`,
       {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-      }
+      },
     );
     const data = await res.json();
     return data;
   } catch (error) {
-    console.log("Error while updating Item: " + error);
+    console.log('Error while updating Item: ' + error);
   }
 };
