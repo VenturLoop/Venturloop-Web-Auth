@@ -82,6 +82,7 @@ export const authOptions = {
           if (account.provider === 'google') {
             if (account.id_token) {
               const backendResponse = await handleGoogleSignIn(account.id_token);
+              console.log("backendResponse", backendResponse)
               if (backendResponse && backendResponse.token && backendResponse.userId) {
                 token.customBackendToken = backendResponse.token;
                 token.customBackendUserId = backendResponse.userId;
