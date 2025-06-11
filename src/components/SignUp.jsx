@@ -6,9 +6,8 @@ import SpliteScreen from './SpliteScreen';
 import LoadingSpinner from './LoadingSpinner';
 import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/context/AppContext';
-import { signInwithEmail, handleGoogleSignIn } from '@/utils/AuthApis'; // Import handleGoogleSignIn
-import { useGoogleLogin } from '@react-oauth/google'; // Import useGoogleLogin
-
+import { signInwithEmail } from '@/utils/AuthApis'; // Import handleGoogleSignIn
+import { signIn as LogIn } from 'next-auth/react';
 
 export default function Signup() {
   const { setUserData } = useAppContext();
@@ -27,49 +26,32 @@ export default function Signup() {
       'Get daily smart recommendations based on your skills and interests.',
   };
 
- const googleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      // setLoadingProvider is already set before calling googleLogin()
+
+
+  const handleSocialSignup  = async (provider, credentials = {}) => {
+      setLoadingProvider(provider);
       try {
-        console.log("tokenResponse",tokenResponse)
-        const backendResponse = await handleGoogleSignIn(tokenResponse.access_token);
-        console.log("backendResponse", backendResponse)
-        if (backendResponse?.success) {
-          setUserData(prev => ({
-            ...prev, 
-            name: backendResponse.data?.name || '',
-            email: backendResponse.data?.email || '',
-            // authToken: backendResponse.token, // If your backend returns a session token
-            // ... any other user data fields from backendResponse.data
-          }));
-          router.push('/auth/add-basic-details');
-        } else {
-          alert(backendResponse?.message || 'Google Sign-In failed.');
+        const result = await LogIn(provider, { ...credentials, redirect: false });
+        if (result?.error) {
+          toast.error(
+            result.error === 'CredentialsLogin'
+              ? 'Invalid email or password'
+              : `Login failed: ${result.error}`
+          );
+        } else if (result?.ok) {
+          toast.success('Logged in successfully!');
+          if (provider === 'credentials') {
+            setEmail('');
+            setPassword('');
+          }
         }
       } catch (error) {
-        console.error('Google Sign-In error:', error);
-        alert(error.message || 'An error occurred during Google Sign-In.');
+        toast.error('Unexpected login error.');
+        console.error(error);
       } finally {
-        setLoadingProvider('');
+        setLoadingProvider(null);
       }
-    },
-    onError: (errorResponse) => {
-      console.error('Google Login Hook onError:', errorResponse);
-      alert('Google Sign-In initialization failed. Please try again.');
-      setLoadingProvider('');
-    }
-  });
-
-  const handleSocialSignup = async (provider) => {
-    if (provider === 'google') {
-      setLoadingProvider('google');
-      googleLogin();
-    } else if (provider === 'linkedin') {
-      setLoadingProvider('linkedin');
-      // Simulate LinkedIn logic or implement actual LinkedIn sign-in
-      setTimeout(() => setLoadingProvider(''), 1500);
-    }
-  };
+    };
 
   const handleEmailSignup = async (e) => {
     e.preventDefault();
