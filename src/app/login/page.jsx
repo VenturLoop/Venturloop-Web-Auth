@@ -25,11 +25,9 @@ const AuthForm = () => {
       // Or, the toast library itself might offer de-duplication features.
       switch (session.error) {
         case 'GoogleBackendError':
-        case 'LinkedInBackendError':
           message = 'There was a problem connecting to our authentication service. Please try again later.';
           break;
         case 'GoogleIdTokenMissing':
-        case 'LinkedInAuthCodeMissing':
           message = 'Authentication data from the provider was incomplete. Please try again.';
           break;
         case 'OAuthProcessingError':
@@ -62,10 +60,10 @@ const AuthForm = () => {
   //   }
   // }, [status, router]);
 
-  const handleLogIn = async (provider, credentials = {}) => {
+  const handleLogIn = async (provider) => {
     setLoadingProvider(provider);
     try {
-      const result = await LogIn(provider, { ...credentials, redirect: false });
+      const result = await LogIn(provider, { redirect: false });
       if (result?.error) {
         toast.error(
           result.error === 'CredentialsLogin'
@@ -74,10 +72,6 @@ const AuthForm = () => {
         );
       } else if (result?.ok) {
         toast.success('Logged in successfully!');
-        if (provider === 'credentials') {
-          setEmail('');
-          setPassword('');
-        }
       }
     } catch (error) {
       toast.error('Unexpected login error.');
@@ -173,26 +167,8 @@ const AuthForm = () => {
         <>
           <h2 className="text-4xl font-bold text-center text-gray-800 mb-4">Login to Venturloop</h2>
           <p className="text-base font-medium text-center text-gray-600 mb-6">
-            Login with Google, LinkedIn or Email for quick access!
+            Login with Google or Email for quick access!
           </p>
-
-          {/* LinkedIn Button */}
-          {/* <button
-            onClick={() => handleLogIn('linkedin')}
-            disabled={loadingProvider === 'linkedin'}
-            className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-4 rounded-lg flex items-center justify-center shadow-sm mb-4 disabled:opacity-70"
-          >
-            {loadingProvider === 'linkedin' ? (
-              <LoadingSpinner size="small" />
-            ) : (
-              <>
-                <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="#2983DC" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.127 2.062 2.062 0 0 1 0 4.127zM7.113 20.452H3.561V9h3.552v11.452z" />
-                </svg>
-                Continue with LinkedIn
-              </>
-            )}
-          </button> */}
 
           {/* Google Button */}
           <button
