@@ -7,7 +7,7 @@ import { useAppContext } from '@/context/AppContext';
 import { getListData } from '@/utils/AuthApis';
 
 const InterestsPage = () => {
-   const { userData, setUserData } = useAppContext();
+  const { userData, setUserData } = useAppContext();
 
   const router = useRouter();
   const [selectedInterests, setSelectedInterests] = useState([]);
@@ -15,67 +15,107 @@ const InterestsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const initailInterestsOptions = [
-    'AI/ML', 'AR/VR', 'Advertising', 'Agritech', 'Analysis', 'AudioTech', 'Auto Tech',
-    'BioTech', 'ClimateTech/CleanTech', 'Cloud Infrastructure', 'ConstructionTech',
-    'Creator/Passion Economy', 'Data Services', 'DeepTech', 'Developer Tools',
-    'AgriTech', 'CleanTech', 'LegalTech', 'GovTech', 'ClimateTech', 'SportsTech',
-    'MarTech', 'PropTech', 'Marketplace Building', 'Community-led Growth',
-    'Cold Outreach Expert', 'Email Marketing', 'Conversion Rate Optimization',
-    'Landing Page Expert', 'UI Performance Optimization', 'Accessibility Expert',
-    'Localization Specialist', 'Translation', 'Investor Relations', 'Startup Advisor',
-    'Startup Consultant', 'Startup Generalist', 'Serial Entrepreneur', 'Startup Evangelist',
-    'Early Stage Specialist', 'Incubator Coach', 'Accelerator Lead', 'Leadership',
-    'Public Speaking', 'Pitching', 'Negotiation', 'Problem Solving', 'Time Management',
-    'Critical Thinking', 'Storytelling', 'Resilience', 'Empathy',
+    'AI/ML',
+    'AR/VR',
+    'Advertising',
+    'Agritech',
+    'Analysis',
+    'AudioTech',
+    'Auto Tech',
+    'BioTech',
+    'ClimateTech/CleanTech',
+    'Cloud Infrastructure',
+    'ConstructionTech',
+    'Creator/Passion Economy',
+    'Data Services',
+    'DeepTech',
+    'Developer Tools',
+    'AgriTech',
+    'CleanTech',
+    'LegalTech',
+    'GovTech',
+    'ClimateTech',
+    'SportsTech',
+    'MarTech',
+    'PropTech',
+    'Marketplace Building',
+    'Community-led Growth',
+    'Cold Outreach Expert',
+    'Email Marketing',
+    'Conversion Rate Optimization',
+    'Landing Page Expert',
+    'UI Performance Optimization',
+    'Accessibility Expert',
+    'Localization Specialist',
+    'Translation',
+    'Investor Relations',
+    'Startup Advisor',
+    'Startup Consultant',
+    'Startup Generalist',
+    'Serial Entrepreneur',
+    'Startup Evangelist',
+    'Early Stage Specialist',
+    'Incubator Coach',
+    'Accelerator Lead',
+    'Leadership',
+    'Public Speaking',
+    'Pitching',
+    'Negotiation',
+    'Problem Solving',
+    'Time Management',
+    'Critical Thinking',
+    'Storytelling',
+    'Resilience',
+    'Empathy',
   ];
-  const [interestsOptions, setInterestsOptions] = useState(initailInterestsOptions || [])
-
+  const [interestsOptions, setInterestsOptions] = useState(
+    initailInterestsOptions || [],
+  );
 
   const handleToggleInterest = (interest) => {
     setSelectedInterests((prev) =>
       prev.includes(interest)
         ? prev.filter((item) => item !== interest)
-        : [...prev, interest]
+        : [...prev, interest],
     );
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (selectedInterests.length === 0) {
-    setError('Please select at least one interest.');
-    return;
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (selectedInterests.length === 0) {
+      setError('Please select at least one interest.');
+      return;
+    }
 
-  setIsLoading(true);
-  setError(null);
+    setIsLoading(true);
+    setError(null);
 
-  try {
-    // ✅ Save interests in global userData
-    setUserData((prev) => ({ ...prev, industries: selectedInterests }));
+    try {
+      // ✅ Save interests in global userData
+      setUserData((prev) => ({ ...prev, industries: selectedInterests }));
 
-    console.log('Selected interests:', selectedInterests);
-    router.push('/auth/commitments');
-  } catch (err) {
-    setError(err.message || 'Something went wrong.');
-  } finally {
-    setIsLoading(false);
-  }
-};
-
+      console.log('Selected interests:', selectedInterests);
+      router.push('/auth/commitments');
+    } catch (err) {
+      setError(err.message || 'Something went wrong.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const filteredInterests = interestsOptions.filter((interest) =>
-    interest.toLowerCase().includes(searchQuery.toLowerCase())
+    interest.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   useEffect(() => {
-  if (userData.industries?.length > 0) {
-    setSelectedInterests(userData.industries);
-  }
-}, [userData]);
+    if (userData.industries?.length > 0) {
+      setSelectedInterests(userData.industries);
+    }
+  }, [userData]);
 
   useEffect(() => {
     const getListIndustrutyData = async () => {
-      const result = await getListData('industries');
+      const result = await getListData('app-industries');
       setInterestsOptions(result?.data);
     };
     getListIndustrutyData();

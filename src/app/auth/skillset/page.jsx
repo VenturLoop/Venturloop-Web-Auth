@@ -5,44 +5,7 @@ import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen';
 import { getListData } from '@/utils/AuthApis';
 import { useAppContext } from '@/context/AppContext';
-const initialSkillsOptions = [
-  'Web Developer',
-  'App Developer',
-  'Frontend Developer',
-  'Backend Developer',
-  'Full Stack Developer',
-  'Mobile Developer',
-  'iOS Developer',
-  'Android Developer',
-  'React Developer',
-  'React Native Developer',
-  'Node.js Developer',
-  'Python Developer',
-  'Java Developer',
-  'C++ Developer',
-  'Software Engineer',
-  'Game Developer',
-  'AR/VR Developer',
-  'Unity Developer',
-  'Web Developer',
-  'App Developer',
-  'Frontend Developer',
-  'Backend Developer',
-  'Full Stack Developer',
-  'Mobile Developer',
-  'iOS Developer',
-  'Android Developer',
-  'React Developer',
-  'React Native Developer',
-  'Node.js Developer',
-  'Python Developer',
-  'Java Developer',
-  'C++ Developer',
-  'Software Engineer',
-  'Game Developer',
-  'AR/VR Developer',
-  'Unity Developer',
-];
+
 const SkillsetPage = () => {
   const { userData, setUserData } = useAppContext();
 
@@ -51,11 +14,9 @@ const SkillsetPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [skillsOptions, setSkillsOptions] = useState(
-    initialSkillsOptions || [],
-  );
+  const [skillsOptions, setSkillsOptions] = useState([]);
 
-  const filteredSkills = skillsOptions.filter((skill) =>
+  const filteredSkills = skillsOptions?.filter((skill) =>
     skill.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
@@ -136,8 +97,8 @@ const SkillsetPage = () => {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 sm:grid-cols-3 w-full md:grid-cols-3 gap-4 max-h-[420px] overflow-y-auto pr-1">
-          {filteredSkills.length > 0 ? (
-            filteredSkills.map((skill, index) => {
+          {filteredSkills?.length > 0 ? (
+            filteredSkills?.map((skill, index) => {
               const selected = selectedSkills.includes(skill);
               return (
                 <button
