@@ -316,3 +316,22 @@ export const getListData = async (title) => {
     console.log('Error while updating Item: ' + error);
   }
 };
+
+export const getUserByEmail = async (email) => {
+  try {
+    const res = await fetch(
+      `https://venturloopbackend-v-1-0-9.onrender.com/auth/get-user-by-email`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      },
+    );
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log('Error while updating Item: ' + error);
+  }
+};

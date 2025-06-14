@@ -11,7 +11,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import { userLogin } from '@/utils/AuthApis';
+import { getUserByEmail, userLogin } from '@/utils/AuthApis';
 import { Eye, EyeOff } from 'lucide-react'; // Optional: add this icon lib
 
 const AuthForm = () => {
@@ -66,20 +66,23 @@ const AuthForm = () => {
       if (status === 'authenticated') {
         let token;
 
-        // If it's from credentials login (your own backend), token is stored in localStorage
         if (typeof window !== 'undefined') {
           token = localStorage.getItem('token');
         }
 
-        const userId =
-          session?.user?.id || session?.user?.sub || session?.user?._id;
+        try {
+          const result = await getUserByEmail(session?.user?.email);
+          const userId = result?.data?._id || result?.data?.id; // ✅ actual user ID
 
-        if (userId && token) {
-          router.push(
-            `https://test.venturloop.com/auth/callback?userId=${userId}&token=${token}`,
-          );
-        } else {
-          console.warn('Missing userId or token for redirection');
+          if (userId && token) {
+            router.push(
+              `https://test.venturloop.com/auth/callback?userId=${userId}&token=${token}`,
+            );
+          } else {
+            console.warn('Missing userId or token for redirection');
+          }
+        } catch (error) {
+          console.error('Error fetching user by email:', error);
         }
       }
     };
@@ -120,11 +123,23 @@ const AuthForm = () => {
     try {
       const result = await userLogin(email, password);
       console.log('login result', result);
-      if (result?.success || result?.token) {
+
+      if (result?.success && result?.token) {
         toast.success('Logged in successfully!');
         localStorage.setItem('token', result.token);
         setEmail('');
         setPassword('');
+
+        const userId = result?.userId || result?.user?.id || result?.user?._id;
+
+        if (userId) {
+          // Direct redirect after successful credentials login
+          router.push(
+            `https://test.venturloop.com/auth/callback?userId=${userId}&token=${result.token}`,
+          );
+        } else {
+          console.warn('Missing userId in login result');
+        }
       } else {
         toast.error(result?.message || 'Invalid credentials');
       }
@@ -132,21 +147,6 @@ const AuthForm = () => {
       toast.error('Unexpected login error.');
       console.error(err);
     } finally {
-      setLoadingProvider(null);
-    }
-  };
-
-  const handleLogOut = async () => {
-    setLoadingProvider('LogOut');
-    toast.loading('Logging out...');
-    try {
-      await LogOut({ redirect: true, callbackUrl: '/login' });
-    } catch (error) {
-      console.log(error);
-      toast.dismiss();
-      toast.error('Unexpected logout error.');
-    } finally {
-      toast.dismiss();
       setLoadingProvider(null);
     }
   };
