@@ -64,15 +64,12 @@ const AuthForm = () => {
   useEffect(() => {
     const redirectUser = async () => {
       if (status === 'authenticated') {
-        let token;
-
-        if (typeof window !== 'undefined') {
-          token = localStorage.getItem('token');
-        }
+        const localToken = localStorage.getItem('token');
 
         try {
           const result = await getUserByEmail(session?.user?.email);
           const userId = result?.data?._id || result?.data?.id; // ✅ actual user ID
+          const token = localToken || result?.data?.uid;
 
           if (userId && token) {
             router.push(
@@ -131,7 +128,7 @@ const AuthForm = () => {
         setPassword('');
 
         const userId = result?.userId || result?.user?.id || result?.user?._id;
-
+        const token = result.token;
         if (userId) {
           // Direct redirect after successful credentials login
           router.push(
