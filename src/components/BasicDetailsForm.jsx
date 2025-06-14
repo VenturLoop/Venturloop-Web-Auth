@@ -175,13 +175,9 @@ const BasicDetailsForm = ({ name, email, password }) => {
   useEffect(() => {
     if (status === 'loading') return; // Don't do anything while loading
 
-
-
     if (status === 'authenticated' && session?.user) {
       const { location = '', birthdate = '', image } = session.user;
 
-      setLocation(location);
-      setBirthdate(birthdate);
       setProfileImageUrl(image || '/default-avatar.png');
     }
   }, [status, session, router]);
@@ -235,7 +231,7 @@ const BasicDetailsForm = ({ name, email, password }) => {
         return;
       }
     }
-
+    
     try {
       const accountDetails = {
         name: finalName,
@@ -245,7 +241,8 @@ const BasicDetailsForm = ({ name, email, password }) => {
         ...(location && { location }), // Only include if not empty
         ...(profileImageUrl && { profileImageUrl }), // Only include if not empty
       };
-
+      
+      console.log("accountDetails", accountDetails)
       const response = await createAccount(accountDetails);
 
       if (response?.success) {
@@ -401,7 +398,10 @@ const BasicDetailsForm = ({ name, email, password }) => {
               name="birthdate"
               type="date"
               value={birthdate}
-              onChange={(e) => setBirthdate(e.target.value)}
+              onChange={(e) => {
+                setBirthdate(e.target.value);
+                console.log('e.target.value', e.target.value);
+              }}
               disabled={isLoading} // General loading state for form
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2983DC] focus:border-[#2983DC] sm:text-base"
             />
