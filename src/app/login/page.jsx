@@ -119,7 +119,7 @@ const AuthForm = () => {
 
     try {
       const result = await userLogin(email, password);
-      console.log("login result", result)
+      console.log('login result', result);
       if (result?.success || result?.token) {
         toast.success('Logged in successfully!');
         localStorage.setItem('token', result.token);
@@ -170,33 +170,10 @@ const AuthForm = () => {
     <SpliteScreen data={data}>
       {session ? (
         <div className="text-center">
-          <Image
-            src={
-              session.user.image ||
-              `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                session.user.name || session.user.email || 'User',
-              )}&background=random&color=fff&size=96`
-            }
-            alt="User avatar"
-            width={96}
-            height={96}
-            className="rounded-full mx-auto mb-4 border-2 border-indigo-500 shadow-sm"
-          />
           <h2 className="text-2xl font-semibold text-gray-700 mb-2">
             Welcome, {session.user.name || session.user.email}!
           </h2>
           <p className="text-gray-500 mb-6">You are currently logged in.</p>
-          <button
-            onClick={handleLogOut}
-            disabled={loadingProvider === 'LogOut'}
-            className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-4 rounded-lg flex items-center justify-center shadow-sm disabled:opacity-70 transition duration-150"
-          >
-            {loadingProvider === 'LogOut' ? (
-              <LoadingSpinner size="small" />
-            ) : (
-              'Log Out'
-            )}
-          </button>
         </div>
       ) : (
         <>
