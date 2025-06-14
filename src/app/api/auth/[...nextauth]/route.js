@@ -87,13 +87,13 @@ export const authOptions = {
           token.requiresRedirectToAddBasicDetails;
         session.user.image = token.picture; // Keep original image from provider or update if needed
         session.user.isNewUser = token.isNewUser;
+        if (user) {
+          session.user.id = user.id; // Add user ID to session
+        }
 
         if (token.error) {
           session.error = token.error;
         }
-      }
-      if (user) {
-        session.user.id = user.id; // Add user ID to session
       }
       return session;
     },

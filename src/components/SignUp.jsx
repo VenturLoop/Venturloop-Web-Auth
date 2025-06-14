@@ -9,10 +9,11 @@ import { useAppContext } from '@/context/AppContext';
 import { signInwithEmail } from '@/utils/AuthApis'; // Import handleGoogleSignIn
 import { signIn, useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 
 export default function Signup() {
   const { setUserData } = useAppContext();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -35,7 +36,7 @@ export default function Signup() {
     try {
       const result = await signIn(provider, {
         ...credentials,
-        redirect: false, // We'll manually handle the redirect
+        redirect: false,
       });
 
       if (result?.error) {
@@ -46,26 +47,7 @@ export default function Signup() {
         );
       } else if (result?.ok) {
         toast.success('Login successful!');
-
-        // Fetch the session to check if it's a new user
-        const sessionRes = await fetch('/api/auth/session');
-        const sessionData = await sessionRes.json();
-
-        const isNewUser = sessionData?.user?.isNewUser;
-        const redirectToAddDetails =
-          sessionData?.user?.requiresRedirectToAddBasicDetails;
-
-        if (isNewUser || redirectToAddDetails) {
-          router.push('/auth/add-basic-details');
-        } else {
-          router.push('/login'); // Change this to `/dashboard` or other page if needed
-        }
-
-        // Optional cleanup for credentials
-        if (provider === 'credentials') {
-          setEmail('');
-          setPassword('');
-        }
+        // Everything else handled in the `useEffect` below
       }
     } catch (error) {
       toast.error('Unexpected login error.');
@@ -74,54 +56,8 @@ export default function Signup() {
       setLoadingProvider(null);
     }
   };
-  useEffect(() => {
-    let countdownInterval;
 
-    const checkAndRedirect = async () => {
-      if (!session) return;
-
-      try {
-        const res = await fetch('/api/auth/session');
-        const sessionData = await res.json();
-        const isNewUser = sessionData?.user?.isNewUser;
-        const redirectToAddDetails =
-          sessionData?.user?.requiresRedirectToAddBasicDetails;
-
-        setUserData((prev) => ({
-          ...prev,
-          name: session?.user?.name,
-          email: session?.user?.email,
-          password :'venturloop@2025' ,
-          profileImageUrl:
-            session?.user?.image ||
-            `https://ui-avatars.com/api/?name=${encodeURIComponent(
-              session?.user?.name || session?.user?.email || 'User',
-            )}&background=random&color=fff&size=96`,
-        }));
-
-        // Start countdown
-        countdownInterval = setInterval(() => {
-          setCountdown((prev) => {
-            if (prev === 1) {
-              clearInterval(countdownInterval);
-              if (isNewUser || redirectToAddDetails) {
-                router.push('/auth/add-basic-details');
-              } else {
-                router.push('/login'); // or /dashboard
-              }
-            }
-            return prev - 1;
-          });
-        }, 1000);
-      } catch (err) {
-        console.error('Failed to fetch session for redirection', err);
-      }
-    };
-
-    checkAndRedirect();
-
-    return () => clearInterval(countdownInterval);
-  }, [session]);
+  useAuthRedirect();
 
   const handleEmailSignup = async (e) => {
     e.preventDefault();

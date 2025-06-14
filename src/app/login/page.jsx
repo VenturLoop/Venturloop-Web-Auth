@@ -13,84 +13,22 @@ import SpliteScreen from '@/components/SpliteScreen';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { getUserByEmail, userLogin } from '@/utils/AuthApis';
 import { Eye, EyeOff } from 'lucide-react'; // Optional: add this icon lib
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 
 const AuthForm = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
-
-  // const [lastSeenError, setLastSeenError] = useState(null); // Example for more advanced toast control
-
-  useEffect(() => {
-    if (session?.error) {
-      let message = 'Login failed. Please try again.';
-      console.log('session?.error', session);
-      // This is a simplified approach for the subtask.
-      // In a full app, you might use a state like lastSeenError to prevent duplicate toasts for the same error instance.
-      // Or, the toast library itself might offer de-duplication features.
-      switch (session.error) {
-        case 'GoogleBackendError':
-          message =
-            'There was a problem connecting to our authentication service. Please try again later.';
-          break;
-        case 'GoogleIdTokenMissing':
-          message =
-            'Authentication data from the provider was incomplete. Please try again.';
-          break;
-        case 'OAuthProcessingError':
-          message =
-            'An unexpected error occurred during login. Please try again.';
-          break;
-        case 'CredentialsLogin': // This error is usually caught by result.error from signIn
-          message = 'Invalid email or password.'; // This case might be redundant if signIn handles it
-          break;
-        default:
-          // Use the error string itself if it's unrecognized but present and a string
-          if (typeof session.error === 'string') {
-            message = `Login failed: ${session.error}`;
-          }
-          break;
-      }
-      toast.error(message);
-      // Clearing session.error is not directly possible as session object from useSession is read-only in this context.
-      // The error will persist in the session until a new session state without an error is received.
-    }
-  }, [session]);
-
-  const [loadingProvider, setLoadingProvider] = useState(null);
+  const [loadingProvider, setLoadingProvider] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    const redirectUser = async () => {
-      if (status === 'authenticated') {
-        const localToken = localStorage.getItem('token');
-
-        try {
-          const result = await getUserByEmail(session?.user?.email);
-          const userId = result?.data?._id || result?.data?.id; // ✅ actual user ID
-          const token = localToken || result?.token;
-
-          if (userId && token) {
-            router.push(
-              `https://test.venturloop.com/auth/callback?userId=${userId}&token=${token}`,
-            );
-          } else {
-            console.warn('Missing userId or token for redirection');
-          }
-        } catch (error) {
-          console.error('Error fetching user by email:', error);
-        }
-      }
-    };
-
-    redirectUser();
-  }, [status, session, router]);
-
+  // const [lastSeenError, setLastSeenError] = useState(null); // Example for more advanced toast control
   const handleLogIn = async (provider) => {
     setLoadingProvider(provider);
     try {
-      const result = await LogIn(provider, { redirect: false });
+      const result = await signIn(provider, { redirect: false });
+
       if (result?.error) {
         toast.error(
           result.error === 'CredentialsLogin'
@@ -99,6 +37,7 @@ const AuthForm = () => {
         );
       } else if (result?.ok) {
         toast.success('Logged in successfully!');
+        // Rest handled in useEffect below
       }
     } catch (error) {
       toast.error('Unexpected login error.');
@@ -107,6 +46,36 @@ const AuthForm = () => {
       setLoadingProvider(null);
     }
   };
+
+  // Show session-related errors
+  useEffect(() => {
+    if (session?.error) {
+      let message = 'Login failed. Please try again.';
+      switch (session.error) {
+        case 'GoogleBackendError':
+          message =
+            'There was a problem connecting to our authentication service.';
+          break;
+        case 'GoogleIdTokenMissing':
+          message = 'Authentication data from the provider was incomplete.';
+          break;
+        case 'OAuthProcessingError':
+          message = 'An unexpected error occurred during login.';
+          break;
+        case 'CredentialsLogin':
+          message = 'Invalid email or password.';
+          break;
+        default:
+          if (typeof session.error === 'string') {
+            message = `Login failed: ${session.error}`;
+          }
+          break;
+      }
+      toast.error(message);
+    }
+  }, [session]);
+
+  useAuthRedirect();
 
   const handleCredentialsLogIn = async (e) => {
     e.preventDefault();
@@ -184,7 +153,7 @@ const AuthForm = () => {
             Welcome, {session.user.name || session.user.email}!
           </h2>
           <p className="text-gray-500 mb-6">You are currently logged in.</p>
-          <button
+          {/* <button
             onClick={handleLogOut}
             disabled={loadingProvider === 'LogOut'}
             className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-4 rounded-lg flex items-center justify-center shadow-sm disabled:opacity-70 transition duration-150"
@@ -194,7 +163,7 @@ const AuthForm = () => {
             ) : (
               'Log Out'
             )}
-          </button>
+          </button> */}
         </div>
       ) : (
         <>
