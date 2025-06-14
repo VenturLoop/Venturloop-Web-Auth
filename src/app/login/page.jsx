@@ -76,7 +76,7 @@ const AuthForm = () => {
 
         if (userId && token) {
           router.push(
-            `https://test.venturloop.com/auth/callback?userId=${userId}&token=${token}`,
+            `https://localhost:3000/auth/callback?userId=${userId}&token=${token}`,
           );
         } else {
           console.warn('Missing userId or token for redirection');
