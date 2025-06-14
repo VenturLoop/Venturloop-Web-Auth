@@ -69,7 +69,7 @@ const AuthForm = () => {
         try {
           const result = await getUserByEmail(session?.user?.email);
           const userId = result?.data?._id || result?.data?.id; // ✅ actual user ID
-          const token = localToken || result?.data?.uid;
+          const token = localToken || result?.token;
 
           if (userId && token) {
             router.push(
