@@ -78,7 +78,7 @@ export const authOptions = {
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token, user }) {
       if (token) {
         session.user.id = token.id || token.sub; // Standard NextAuth user ID
         session.user.customBackendToken = token.customBackendToken;
@@ -91,6 +91,9 @@ export const authOptions = {
         if (token.error) {
           session.error = token.error;
         }
+      }
+      if (user) {
+        session.user.id = user.id; // Add user ID to session
       }
       return session;
     },

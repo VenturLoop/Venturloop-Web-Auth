@@ -119,6 +119,7 @@ const AuthForm = () => {
 
     try {
       const result = await userLogin(email, password);
+      console.log("login result", result)
       if (result?.success || result?.token) {
         toast.success('Logged in successfully!');
         localStorage.setItem('token', result.token);
