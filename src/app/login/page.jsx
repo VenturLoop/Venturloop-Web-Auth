@@ -150,7 +150,20 @@ const AuthForm = () => {
       setLoadingProvider(null);
     }
   };
-
+  const handleLogOut = async () => {
+    setLoadingProvider('LogOut');
+    toast.loading('Logging out...');
+    try {
+      await LogOut({ redirect: true, callbackUrl: '/login' });
+    } catch (error) {
+      console.log(error);
+      toast.dismiss();
+      toast.error('Unexpected logout error.');
+    } finally {
+      toast.dismiss();
+      setLoadingProvider(null);
+    }
+  };
   if (status === 'loading') {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -174,6 +187,17 @@ const AuthForm = () => {
             Welcome, {session.user.name || session.user.email}!
           </h2>
           <p className="text-gray-500 mb-6">You are currently logged in.</p>
+          <button
+            onClick={handleLogOut}
+            disabled={loadingProvider === 'LogOut'}
+            className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-4 rounded-lg flex items-center justify-center shadow-sm disabled:opacity-70 transition duration-150"
+          >
+            {loadingProvider === 'LogOut' ? (
+              <LoadingSpinner size="small" />
+            ) : (
+              'Log Out'
+            )}
+          </button>
         </div>
       ) : (
         <>
