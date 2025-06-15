@@ -1,7 +1,7 @@
 'use client'; // Required if you're using this in Next.js App Router (app/ folder)
 
 import { useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { useAppContext } from '@/context/AppContext';
 import { getUserByEmail } from '@/utils/AuthApis';
 import { useRouter } from 'next/navigation';
@@ -51,10 +51,14 @@ export const useAuthRedirect = () => {
         const result = await getUserByEmail(session.user.email);
         const userId = result?.data?._id || result?.data?.id;
 
-        if (userId && token) {
-          router.push(
-            `https://test.venturloop.com/auth/callback?userId=${userId}&token=${token}`,
-          );
+        if (typeof window !== 'undefined') {
+          const targetDomain = 'test.venturloop.com';
+          if (window.location.hostname !== targetDomain) {
+            await signOut({ redirect: false });
+            localStorage.removeItem('token');
+            window.location.href = `https://${targetDomain}/auth/callback?userId=${userId}&token=${token}`;
+            return;
+          }
         } else {
           console.warn('Missing userId or token for redirection');
         }
