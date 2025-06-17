@@ -11,6 +11,7 @@ import { getUserByEmail, userLogin } from '@/utils/AuthApis';
 import { Eye, EyeOff } from 'lucide-react'; // Optional: add this icon lib
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 import Link from 'next/link';
+import { trackEvent } from '../../utils/analytics';
 
 const AuthForm = () => {
   const { data: session, status } = useSession();
@@ -22,6 +23,9 @@ const AuthForm = () => {
 
   // const [lastSeenError, setLastSeenError] = useState(null); // Example for more advanced toast control
   const handleLogIn = async (provider) => {
+    if (provider === 'google') {
+      trackEvent('Click_Login_Google_Button');
+    }
     setLoadingProvider(provider);
     try {
       const result = await signIn(provider, { redirect: false });
@@ -80,7 +84,7 @@ const AuthForm = () => {
       toast.error('Please enter both email and password.');
       return;
     }
-
+    trackEvent('Click_Login_Email_Button');
     setLoadingProvider('credentials');
 
     try {
@@ -261,7 +265,7 @@ const AuthForm = () => {
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
-            <Link href="/login/forgateEmail">
+            <Link href="/login/forgateEmail" onClick={() => trackEvent('Click_Forgot_Password_Link')}>
               <span className="text-[#2983DC] text-sm font-semibold cursor-pointer hover:underline">
                 Forgate Password
               </span>
@@ -282,7 +286,10 @@ const AuthForm = () => {
           <p className="mt-6 text-center font-medium text-sm text-gray-600">
             Don’t have an account?{' '}
             <button
-              onClick={() => router.push('/auth/signup')}
+              onClick={() => {
+                trackEvent('Click_SignUp_Link_From_Login');
+                router.push('/auth/signup');
+              }}
               className="font-medium text-[#2983DC] hover:text-[#2576c9]"
             >
               Sign Up

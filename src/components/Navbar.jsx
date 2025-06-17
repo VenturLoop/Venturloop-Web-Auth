@@ -4,11 +4,13 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link'; // Import Link from next/link
 import HelpModal from './HelpModal';
+import { trackEvent } from '../utils/analytics';
 
 const Navbar = () => {
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
   const handleHelpClick = () => {
+    trackEvent('Click_Help_Button');
     setIsHelpModalOpen(true);
   };
 

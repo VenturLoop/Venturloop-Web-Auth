@@ -10,6 +10,7 @@ import { signInwithEmail } from '@/utils/AuthApis'; // Import handleGoogleSignIn
 import { signIn, useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
+import { trackEvent } from '../utils/analytics';
 
 export default function Signup() {
   const { setUserData } = useAppContext();
@@ -32,6 +33,12 @@ export default function Signup() {
 
   const handleSocialSignup = async (provider, credentials = {}) => {
     setLoadingProvider(provider);
+
+    if (provider === 'google') {
+      trackEvent('Click_SignUp_Google_Button');
+    } else if (provider === 'linkedin') {
+      trackEvent('Click_SignUp_LinkedIn_Button');
+    }
 
     try {
       const result = await signIn(provider, {
@@ -61,6 +68,7 @@ export default function Signup() {
 
   const handleEmailSignup = async (e) => {
     e.preventDefault();
+    trackEvent('Click_SignUp_Email_Button');
     setIsEmailLoading(true);
 
     try {
@@ -243,6 +251,7 @@ export default function Signup() {
                 <Link
                   href="/terms"
                   className="font-medium text-[#2983DC] hover:text-[#2576c9]"
+                  onClick={() => trackEvent('Click_Terms_of_Service_Link')}
                 >
                   Terms of Service
                 </Link>{' '}
@@ -250,6 +259,7 @@ export default function Signup() {
                 <Link
                   href="/privacy"
                   className="font-medium text-[#2983DC] hover:text-[#2576c9]"
+                  onClick={() => trackEvent('Click_Privacy_Policy_Link')}
                 >
                   Privacy Policy
                 </Link>
@@ -270,6 +280,7 @@ export default function Signup() {
             <Link
               href="/login"
               className="font-medium text-[#2983DC] hover:text-[#2576c9]"
+              onClick={() => trackEvent('Click_Login_Link_From_SignUp')}
             >
               Log In
             </Link>
