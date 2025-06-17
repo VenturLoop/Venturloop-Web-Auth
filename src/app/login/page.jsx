@@ -229,6 +229,7 @@ const AuthForm = () => {
               <input
                 id="email"
                 type="email"
+                placeholder='Enter your Email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loadingProvider === 'credentials'}
@@ -248,6 +249,8 @@ const AuthForm = () => {
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
+                                placeholder='Enter your password'
+
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loadingProvider === 'credentials'}
                 required

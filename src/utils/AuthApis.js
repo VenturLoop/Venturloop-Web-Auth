@@ -1,7 +1,7 @@
 export const signInwithEmail = async (formData) => {
   try {
     const res = await fetch(
-      'https://venturloopbackend-v-1-0-9.onrender.com/auth/verify-email',
+      'https://digitalocean.venturloop.com/auth/verify-email',
       {
         method: 'POST',
         headers: {
@@ -25,7 +25,7 @@ export const signInwithEmail = async (formData) => {
 export const handleGoogleSignIn = async (idToken) => {
   try {
     const response = await fetch(
-      'https://venturloopbackend-v-1-0-9.onrender.com/auth/app-google-signup',
+      'https://digitalocean.venturloop.com/auth/app-google-signup',
       {
         method: 'POST',
         headers: {
@@ -56,7 +56,7 @@ export const handleGoogleSignIn = async (idToken) => {
 export const SentOPT = async ({ email, verificationCode }) => {
   try {
     const res = await fetch(
-      'https://venturloopbackend-v-1-0-9.onrender.com/auth/send-otp',
+      'https://digitalocean.venturloop.com/auth/send-otp',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -73,7 +73,7 @@ export const SentOPT = async ({ email, verificationCode }) => {
 export const ResentOPT = async (email) => {
   try {
     const res = await fetch(
-      'https://venturloopbackend-v-1-0-9.onrender.com/auth/resend',
+      'https://digitalocean.venturloop.com/auth/resend',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -99,7 +99,7 @@ export const createAccount = async ({
   console.log(name, email, password, birthday, location, profilePhoto);
   try {
     const res = await fetch(
-      'https://venturloopbackend-v-1-0-9.onrender.com/auth/signup',
+      'https://digitalocean.venturloop.com/auth/signup',
       {
         method: 'POST',
         headers: {
@@ -128,7 +128,7 @@ export const createAccount = async ({
 export const userLogin = async (email, password) => {
   try {
     const res = await fetch(
-      'https://venturloopbackend-v-1-0-9.onrender.com/auth/login',
+      'https://digitalocean.venturloop.com/auth/login',
       {
         method: 'POST',
         headers: {
@@ -148,7 +148,7 @@ export const userLogin = async (email, password) => {
 export const ForgotPassword = async (email) => {
   try {
     const res = await fetch(
-      'https://venturloopbackend-v-1-0-9.onrender.com/auth/forgot',
+      'https://digitalocean.venturloop.com/auth/forgot',
       {
         method: 'POST',
         headers: {
@@ -168,7 +168,7 @@ export const ForgotPassword = async (email) => {
 export const ConfirmPassword = async (email, newPassword) => {
   try {
     const res = await fetch(
-      'https://venturloopbackend-v-1-0-9.onrender.com/auth/confirm',
+      'https://digitalocean.venturloop.com/auth/confirm',
       {
         method: 'POST',
         headers: {
@@ -188,7 +188,7 @@ export const ConfirmPassword = async (email, newPassword) => {
 export const DeleteUserAccount = async (userId, token) => {
   try {
     const res = await fetch(
-      `https://venturloopbackend-v-1-0-9.onrender.com/auth/delete`, // Ensure this is the correct endpoint for delete
+      `https://digitalocean.venturloop.com/auth/delete`, // Ensure this is the correct endpoint for delete
       {
         method: 'POST', // Or 'DELETE' if appropriate for the backend
         headers: {
@@ -229,7 +229,7 @@ export const submitProfileApi = async ({
 }) => {
   try {
     const res = await fetch(
-      `https://venturloopbackend-v-1-0-9.onrender.com/auth/user/${userId}`,
+      `https://digitalocean.venturloop.com/auth/user/${userId}`,
       {
         method: 'POST', // Or 'PUT' if it's an update
         headers: {
@@ -273,7 +273,7 @@ export const submitProfileApi = async ({
 export const getUserDataProfile = async (userId, token) => {
   try {
     const res = await fetch(
-      `https://venturloopbackend-v-1-0-9.onrender.com/api/user/${userId}`, // Verify this endpoint, might be /auth/user/
+      `https://digitalocean.venturloop.com/api/user/${userId}`, // Verify this endpoint, might be /auth/user/
       {
         method: 'GET',
         headers: {
@@ -302,7 +302,7 @@ export const getUserDataProfile = async (userId, token) => {
 export const getListData = async (title) => {
   try {
     const res = await fetch(
-      `https://venturloopbackend-v-1-0-9.onrender.com/admin/get_list_data/${title}`,
+      `https://digitalocean.venturloop.com/admin/get_list_data/${title}`,
       {
         method: 'GET',
         headers: {
@@ -320,7 +320,7 @@ export const getListData = async (title) => {
 export const getUserByEmail = async (email) => {
   try {
     const res = await fetch(
-      `https://venturloopbackend-v-1-0-9.onrender.com/auth/get-user-by-email`,
+      `https://digitalocean.venturloop.com/auth/get-user-by-email`,
       {
         method: 'POST',
         headers: {

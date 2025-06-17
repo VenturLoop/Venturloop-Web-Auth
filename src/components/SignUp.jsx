@@ -198,6 +198,7 @@ export default function Signup() {
                 id="name"
                 name="name"
                 type="text"
+                placeholder="Enter your full name"
                 autoComplete="name"
                 required
                 value={name}
@@ -220,6 +221,7 @@ export default function Signup() {
                 autoComplete="email"
                 required
                 value={email}
+                placeholder="Enter your Email"
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isEmailLoading || loadingProvider}
                 className="mt-1 block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#2983DC] sm:text-sm disabled:bg-gray-50"

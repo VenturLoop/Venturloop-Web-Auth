@@ -19,7 +19,7 @@ export const uploadProfileImage = async (file) => {
 
   try {
     const response = await fetch(
-      'https://venturloopbackend-v-1-0-9.onrender.com/api/upload/profile',
+      'https://digitalocean.venturloop.com/api/upload/profile',
       {
         method: 'POST',
         body: formData,
