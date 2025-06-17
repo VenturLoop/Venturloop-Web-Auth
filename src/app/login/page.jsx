@@ -1,11 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import {
-  signIn,
-  signOut as LogOut,
-  useSession,
-} from 'next-auth/react';
+import { signIn, signOut as LogOut, useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -14,6 +10,7 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 import { getUserByEmail, userLogin } from '@/utils/AuthApis';
 import { Eye, EyeOff } from 'lucide-react'; // Optional: add this icon lib
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
+import Link from 'next/link';
 
 const AuthForm = () => {
   const { data: session, status } = useSession();
@@ -229,7 +226,7 @@ const AuthForm = () => {
               <input
                 id="email"
                 type="email"
-                placeholder='Enter your Email'
+                placeholder="Enter your Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loadingProvider === 'credentials'}
@@ -249,8 +246,7 @@ const AuthForm = () => {
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
-                                placeholder='Enter your password'
-
+                placeholder="Enter your password"
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loadingProvider === 'credentials'}
                 required
@@ -265,7 +261,11 @@ const AuthForm = () => {
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
-
+            <Link href="/login/forgateEmail">
+              <span className="text-[#2983DC] text-sm font-semibold cursor-pointer hover:underline">
+                Forgate Password
+              </span>
+            </Link>
             <button
               type="submit"
               disabled={loadingProvider === 'credentials'}
