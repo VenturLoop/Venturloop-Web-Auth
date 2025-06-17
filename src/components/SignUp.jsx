@@ -10,6 +10,7 @@ import { signInwithEmail } from '@/utils/AuthApis'; // Import handleGoogleSignIn
 import { signIn, useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
+import { trackEvent } from '../utils/analytics';
 
 export default function Signup() {
   const { setUserData } = useAppContext();
@@ -32,6 +33,10 @@ export default function Signup() {
 
   const handleSocialSignup = async (provider, credentials = {}) => {
     setLoadingProvider(provider);
+
+    if (provider === 'google') {
+      trackEvent('Click_SignUp_Google_Button');
+    }
 
     try {
       const result = await signIn(provider, {
@@ -61,6 +66,7 @@ export default function Signup() {
 
   const handleEmailSignup = async (e) => {
     e.preventDefault();
+    trackEvent('Click_SignUp_Email_Button');
     setIsEmailLoading(true);
 
     try {
@@ -114,29 +120,6 @@ export default function Signup() {
           <p className="text-base font-medium text-center text-gray-600 mb-6">
             Sign up with Google, LinkedIn or Email for quick access!
           </p>
-
-          {/* LinkedIn Button */}
-          {/* <button
-            onClick={() => handleSocialSignup('linkedin')}
-            disabled={loadingProvider === 'linkedin' || isEmailLoading}
-            className="w-full border border-gray-300 hover:bg-gray-50 text-gray-800 font-medium py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2983DC] transition duration-150 flex items-center justify-center shadow-sm mb-4 disabled:opacity-70"
-          >
-            {loadingProvider === 'linkedin' ? (
-              <LoadingSpinner size="small" />
-            ) : (
-              <>
-                <svg
-                  className="w-5 h-5 mr-3"
-                  viewBox="0 0 24 24"
-                  fill="#2983DC"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.127 2.062 2.062 0 0 1 0 4.127zM7.113 20.452H3.561V9h3.552v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
-                </svg>
-                Continue with LinkedIn
-              </>
-            )}
-          </button> */}
 
           {/* Google Button */}
           <button
@@ -243,6 +226,7 @@ export default function Signup() {
                 <Link
                   href="/terms"
                   className="font-medium text-[#2983DC] hover:text-[#2576c9]"
+                  onClick={() => trackEvent('Click_Terms_of_Service_Link')}
                 >
                   Terms of Service
                 </Link>{' '}
@@ -250,6 +234,7 @@ export default function Signup() {
                 <Link
                   href="/privacy"
                   className="font-medium text-[#2983DC] hover:text-[#2576c9]"
+                  onClick={() => trackEvent('Click_Privacy_Policy_Link')}
                 >
                   Privacy Policy
                 </Link>
@@ -270,6 +255,7 @@ export default function Signup() {
             <Link
               href="/login"
               className="font-medium text-[#2983DC] hover:text-[#2576c9]"
+              onClick={() => trackEvent('Click_Login_Link_From_SignUp')}
             >
               Log In
             </Link>
