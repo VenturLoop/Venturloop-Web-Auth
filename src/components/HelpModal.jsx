@@ -19,10 +19,6 @@ const HelpModal = ({ isOpen, onClose }) => {
           <X size={24} />
         </button>
         <div className="flex flex-col items-center text-center">
-          {/* Illustration Placeholder */}
-          <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center mb-6">
-            <span className="text-gray-500">Illustration</span>
-          </div>
 
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">
             Need Help?
@@ -53,7 +49,7 @@ const HelpModal = ({ isOpen, onClose }) => {
 
             {/* WhatsApp Option */}
             <a
-              href="https://wa.me/1234567890" // Replace with actual WhatsApp number
+              href="https://wa.me/917603037718" // Replace with actual WhatsApp number
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-lg transition duration-150"
