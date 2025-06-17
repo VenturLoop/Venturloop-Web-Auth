@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-  signIn as LogIn,
+  signIn,
   signOut as LogOut,
   useSession,
 } from 'next-auth/react';

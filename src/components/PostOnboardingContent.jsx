@@ -11,35 +11,34 @@ const PostOnboardingContent = () => {
   const router = useRouter();
   const { setUserData, userData } = useAppContext();
 
-const handleContinueToWeb = async () => {
-  try {
-    const token = localStorage.getItem('token');
+  const handleContinueToWeb = async () => {
+    try {
+      const token = localStorage.getItem('token');
 
-    if (!userData?.email || !token) {
-      console.warn('Missing user email or token.');
-      return;
+      if (!userData?.email || !token) {
+        console.warn('Missing user email or token.');
+        return;
+      }
+
+      const result = await getUserByEmail(userData.email);
+      const userId = result?.data?._id || result?.data?.id;
+
+      if (userId) {
+        const redirectUrl = `https://test.venturloop.com/auth/callback?userId=${userId}&token=${token}`;
+
+        // Cleanup: clear token and session
+        localStorage.removeItem('token'); // remove token
+        sessionStorage.clear(); // optional - clears sessionStorage too
+
+        // Redirect user
+        window.location.href = redirectUrl;
+      } else {
+        console.warn('User ID not found from getUserByEmail.');
+      }
+    } catch (error) {
+      console.error('Error in handleContinueToWeb:', error);
     }
-
-    const result = await getUserByEmail(userData.email);
-    const userId = result?.data?._id || result?.data?.id;
-
-    if (userId) {
-      const redirectUrl = `https://test.venturloop.com/auth/callback?userId=${userId}&token=${token}`;
-
-      // Cleanup: clear token and session
-      localStorage.removeItem('token'); // remove token
-      sessionStorage.clear(); // optional - clears sessionStorage too
-
-      // Redirect user
-      window.location.href = redirectUrl;
-    } else {
-      console.warn('User ID not found from getUserByEmail.');
-    }
-  } catch (error) {
-    console.error('Error in handleContinueToWeb:', error);
-  }
-};
-
+  };
 
   return (
     <div className="flex flex-col items-center justify-center w-full py-6 px-4">
