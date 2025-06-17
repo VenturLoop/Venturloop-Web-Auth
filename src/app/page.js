@@ -5,33 +5,23 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
-export default function HomePage() {
-  const {  status } = useSession();
-  const router = useRouter();
-  // const [isSigningOut, setIsSigningOut] = useState(false);
+// Basic metadata for the root page
+export const metadata = {
+  title: 'Venturloop Authentication',
+  description: 'Authentication portal for Venturloop applications.',
+  robots: 'noindex, nofollow', // Discourage indexing for this specific redirecting page
+};
 
-  // Redirect unauthenticated users
+export default function HomePage() {
+  const { status } = useSession();
+  const router = useRouter();
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.replace('/login');
     }
   }, [status, router]);
 
-  // const handleSignOut = async () => {
-  //   setIsSigningOut(true);
-  //   toast.loading('Signing out...');
-
-  //   try {
-  //     await signOut({ redirect: true, callbackUrl: '/login' });
-  //   } catch (error) {
-  //     toast.dismiss();
-  //     toast.error('Sign out failed. Please try again.');
-  //     console.error('Sign out error:', error);
-  //     setIsSigningOut(false);
-  //   }
-  // };
-
-  // Show loading while session is being determined
   if (
     status === 'loading' ||
     (status === 'unauthenticated' && typeof window !== 'undefined')
@@ -43,55 +33,33 @@ export default function HomePage() {
     );
   }
 
-  // // Authenticated user dashboard
-  // if (session) {
-  //   const avatarUrl =
-  //     session.user.image ||
-  //     `https://ui-avatars.com/api/?name=${encodeURIComponent(
-  //       session.user.name || session.user.email || 'User',
-  //     )}&background=0D8ABC&color=fff&size=128&bold=true`;
+  // Fallback or authenticated content (most of it is commented out in original)
+  // If authenticated, user sees their content, if not, they are redirected.
+  // If status is 'authenticated' and content were present, this page would be shown.
+  // For now, it just shows a "Preparing" message if not loading and not redirecting yet.
+  // The commented out section showed a welcome message.
 
-  //   return (
-  //     <>
-  //       <Toaster position="top-center" />
-  //       <div className="min-h-screen bg-gradient-to-br from-slate-100 to-sky-100 flex flex-col items-center justify-center p-6">
-  //         <div className="bg-white p-10 md:p-12 rounded-2xl shadow-xl text-center max-w-lg w-full transition-transform hover:scale-[1.03] duration-300">
-  //           <Image
-  //             src={avatarUrl}
-  //             alt="User avatar"
-  //             width={64}
-  //             height={64}
-  //             className="rounded-full mx-auto mb-6 border-4 border-indigo-500 shadow-md"
-  //             priority
-  //           />
-  //           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-  //             Welcome back,
-  //           </h1>
-  //           <p className="text-xl font-medium text-indigo-600 mb-4">
-  //             {session.user?.name || session.user?.email}!
-  //           </p>
-  //           <p className="text-sm text-gray-600 mb-8">
-  //             You’ve successfully accessed your personalized dashboard.
-  //           </p>
+  // If session is authenticated and there was content here, this would be the "dashboard"
+  // For now, if not loading and not unauthenticated (i.e. authenticated)
+  // it will show the "Preparing your page..." message.
+  // This part is reached if status === 'authenticated'
+  if (status === 'authenticated') {
+    // This is where the commented-out authenticated user dashboard was.
+    // For now, we can keep the simple fallback or restore the dashboard if intended.
+    // Given the primary function is auth, and then redirect to a main app,
+    // a complex page here might be unnecessary.
+    // router.replace('https://app.venturloop.com/dashboard'); // Example redirect after login
+    return (
+       <div className="flex items-center justify-center h-screen bg-gray-50">
+        {/* This is where the authenticated user content would go. */}
+        {/* Or a redirect to the main application dashboard. */}
+        <p className="text-gray-500 text-sm">Loading user dashboard...</p>
+        {/* Example: router.replace('https://test.venturloop.com/dashboard'); */}
+      </div>
+    );
+  }
 
-  //           <button
-  //             onClick={handleSignOut}
-  //             disabled={isSigningOut}
-  //             className="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 flex items-center justify-center shadow-md hover:shadow-lg text-lg"
-  //           >
-  //             {isSigningOut ? <LoadingSpinner /> : 'Sign Out'}
-  //           </button>
-  //         </div>
-  //         <p className="mt-6 text-sm text-gray-500">
-  //           Powered by <span className="font-medium">NextAuth.js</span> &{' '}
-  //           <span className="font-medium">Venturloop</span>
-  //         </p>
-  //       </div>
-  //     </>
-  //   );
-  // }
 
-  // Fallback for SSR when session is not available
   return (
     <div className="flex items-center justify-center h-screen bg-gray-50">
       <p className="text-gray-500 text-sm">Preparing your page...</p>
