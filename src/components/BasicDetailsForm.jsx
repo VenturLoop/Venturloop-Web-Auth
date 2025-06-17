@@ -242,7 +242,6 @@ const BasicDetailsForm = ({ name, email, password }) => {
         ...(profileImageUrl && { profileImageUrl }), // Only include if not empty
       };
       
-      console.log("accountDetails", accountDetails)
       const response = await createAccount(accountDetails);
 
       if (response?.success) {
@@ -400,7 +399,6 @@ const BasicDetailsForm = ({ name, email, password }) => {
               value={birthdate}
               onChange={(e) => {
                 setBirthdate(e.target.value);
-                console.log('e.target.value', e.target.value);
               }}
               disabled={isLoading} // General loading state for form
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2983DC] focus:border-[#2983DC] sm:text-base"

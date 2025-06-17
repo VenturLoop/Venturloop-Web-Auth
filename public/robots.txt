@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://auth.venturloop.com
+
+# Sitemaps
+Sitemap: https://auth.venturloop.com/sitemap.xml

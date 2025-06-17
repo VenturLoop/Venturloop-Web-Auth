@@ -1,15 +1,25 @@
-// src/app/auth/create-password/CreatePasswordContent.jsx
+// src/app/login/forgatePassword/page.jsx - Corrected comment
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react'; // Added Suspense
 import { useSearchParams } from 'next/navigation';
-import ForgatePassword from '@/components/ForfatePassword';
+import ForgatePasswordComponent from '@/components/ForfatePassword'; // Renamed import
+import LoadingSpinner from '@/components/LoadingSpinner'; // Assuming a loading spinner
 
-export default function CreatePasswordContent() {
+// Client component that uses useSearchParams
+function ForgatePasswordPageContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
 
-  // CreatePasswordForm is expected to handle null email (e.g., show loading/error)
-  // based on its current implementation.
-  return <ForgatePassword email={email} />;
+  // ForgatePasswordComponent is expected to handle null email
+  return <ForgatePasswordComponent email={email} />;
+}
+
+// Page component that wraps the client component in Suspense
+export default function ForgatePasswordPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}> {/* Or any other fallback UI */}
+      <ForgatePasswordPageContent />
+    </Suspense>
+  );
 }

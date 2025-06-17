@@ -3,12 +3,12 @@
 
 import React, { Suspense } from 'react';
 import AddBasicDetailsContent from './AddBasicDetailsContent';
+import LoadingSpinner from '@/components/LoadingSpinner';
 // Using a simple fallback, replace with <LoadingSpinner /> if available and preferred
-const SimpleLoadingFallback = () => <div className="flex justify-center items-center h-screen w-screen"><p>Loading...</p></div>;
 
 const AddBasicDetailsPage = () => {
   return (
-    <Suspense fallback={<SimpleLoadingFallback />}>
+    <Suspense fallback={<LoadingSpinner />}>
       <AddBasicDetailsContent />
     </Suspense>
   );
