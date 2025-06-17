@@ -22,28 +22,6 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata = {
-  title: {
-    default: 'Venturloop Auth Portal',
-    template: '%s | Venturloop Auth',
-  },
-  description:
-    'Secure and seamless authentication for Venturloop applications. Sign in or create an account to continue.',
-  // viewport removed from here
-  icons: {
-    icon: '/favicon.ico',
-  },
-  verification: {
-    google: 'snd-I258bhB6IOfksIhOgqUy-8AiQJU4hS2J5TnvXIE',
-  },
-};
-
-export const viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-};
-
 export default function RootLayout({ children }) {
   const path = usePathname();
 
