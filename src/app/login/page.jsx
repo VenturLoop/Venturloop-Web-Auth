@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import SpliteScreen from '@/components/SpliteScreen';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import LoadingSpinner from '../../components/LoadingSpinner';
 import { getUserByEmail, userLogin } from '@/utils/AuthApis';
 import { Eye, EyeOff } from 'lucide-react'; // Optional: add this icon lib
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
