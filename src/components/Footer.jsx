@@ -14,25 +14,25 @@ const Footer = () => {
         {/* Increased spacing between links for better touch targets on mobile, and centered them on mobile */}
         <div className="flex flex-wrap justify-center md:justify-end space-x-4 sm:space-x-6">
           <Link
-            href="https://venturloop.com/privacy-policy"
+            href="https://web.venturloop.com/privacy-policy"
             className="hover:underline text-sm font-medium text-gray-700 mb-2 sm:mb-0" // Added margin bottom for wrapped items
           >
             Privacy Policy
           </Link>
           <Link
-            href="https://venturloop.com/terms-conditions"
+            href="https://web.venturloop.com/terms-conditions"
             className="hover:underline text-sm font-medium text-gray-700 mb-2 sm:mb-0" // Added margin bottom for wrapped items
           >
             Terms of Use
           </Link>
           <Link
-            href="https://venturloop.com/community-guidelines"
+            href="https://web.venturloop.com/community-guidelines"
             className="hover:underline text-sm font-medium text-gray-700 mb-2 sm:mb-0" // Added margin bottom for wrapped items
           >
             Community Guidelines
           </Link>
           <Link
-            href="https://venturloop.com/refund-policy"
+            href="https://web.venturloop.com/refund-policy"
             className="hover:underline text-sm font-medium text-gray-700" // Last item doesn't strictly need mb-2
           >
             Refund Policy

@@ -102,7 +102,7 @@ const AuthForm = () => {
         if (userId) {
           // Direct redirect after successful credentials login
           router.push(
-            `https://venturloop.com/auth/callback?userId=${userId}&token=${result.token}`,
+            `https://web.venturloop.com/auth/callback?userId=${userId}&token=${result.token}`,
           );
         } else {
           console.warn('Missing userId in login result');
