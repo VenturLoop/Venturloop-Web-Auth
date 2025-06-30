@@ -266,7 +266,10 @@ const AuthForm = () => {
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
-            <Link href="/login/forgateEmail" onClick={() => trackEvent('Click_Forgot_Password_Link')}>
+            <Link
+              href="/login/forgateEmail"
+              onClick={() => trackEvent('Click_Forgot_Password_Link')}
+            >
               <span className="text-[#2983DC] text-sm font-semibold cursor-pointer hover:underline">
                 Forgate Password
               </span>
@@ -286,16 +289,8 @@ const AuthForm = () => {
 
           <p className="mt-6 text-center font-medium text-sm text-gray-600">
             Don’t have an account?{' '}
-<<<<<<< HEAD
             <Link
               href="/auth/signup"
-=======
-            <button
-              onClick={() => {
-                trackEvent('Click_SignUp_Link_From_Login');
-                router.push('/auth/signup');
-              }}
->>>>>>> 2f11da8ac04b7eb4ab78e73585aeb2f8b9b879fe
               className="font-medium text-[#2983DC] hover:text-[#2576c9]"
             >
               Sign Up
