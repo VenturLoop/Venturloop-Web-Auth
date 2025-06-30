@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import LoadingSpinner from './LoadingSpinner';
 import SpliteScreen from './SpliteScreen';
-import { UpdatePassword } from '@/utils/AuthApis'; // 🔄 Use your actual API method
+import { ConfirmPassword } from '@/utils/AuthApis'; // Changed import
 
 const ForgatePassword = () => {
   const router = useRouter();
@@ -45,8 +45,8 @@ const ForgatePassword = () => {
 
     setIsLoading(true);
     try {
-      // 🔄 Replace with your real password update API
-      const response = await UpdatePassword({ email, password });
+      // Call the corrected API function with appropriate arguments
+      const response = await ConfirmPassword(email, password);
 
       if (response.success) {
         toast.success(response.message || 'Password reset successfully!');

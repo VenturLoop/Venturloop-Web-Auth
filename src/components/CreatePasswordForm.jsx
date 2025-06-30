@@ -38,7 +38,7 @@ const CreatePasswordForm = ({ email }) => {
 
     setIsLoading(true);
     try {
-      toast.success(data.message || 'Password created!');
+      toast.success('Password created!');
       setUserData((prev) => ({
         ...prev,
         password,
