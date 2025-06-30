@@ -122,7 +122,8 @@ const InterestsPage = () => {
   }, []);
 
   const sliderData = {
-    imageSrc: '/image/Cofounder_splash_screen.png',
+    imageSrc:
+      'https://ik.imagekit.io/venturloopimage/miscellaneous/Interested_industries_IJWhsv2JZ.jpg?updatedAt=1751276684828',
     title: 'Share Your Interests',
     description:
       'Let us know what areas you are passionate about. This helps in finding like-minded individuals and projects.',

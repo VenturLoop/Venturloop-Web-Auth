@@ -24,7 +24,7 @@ export default function Signup() {
   const router = useRouter();
 
   const data = {
-    imageSrc: '/image/Cofounder_splash_screen.png',
+    imageSrc: 'https://ik.imagekit.io/venturloopimage/miscellaneous/Create_Account_uBYCGCHoZ.jpg?updatedAt=1751276645019',
     title: 'Find ideal co-founder for your startup',
     description:
       'Get daily smart recommendations based on your skills and interests.',

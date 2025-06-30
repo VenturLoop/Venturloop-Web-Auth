@@ -74,7 +74,7 @@ const EquityExpectationPage = () => {
   };
 
   const sliderData = {
-    imageSrc: '/image/Cofounder_splash_screen.png',
+    imageSrc: 'https://ik.imagekit.io/venturloopimage/miscellaneous/Equity_expectation_GrnuZIeth.jpg?updatedAt=1751276582398',
     title: 'Your Equity Expectations',
     description:
       'Let us know your expectations around equity so we can align you with the right roles or partners.',

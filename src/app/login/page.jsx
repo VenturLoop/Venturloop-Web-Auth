@@ -98,7 +98,7 @@ const AuthForm = () => {
         if (userId) {
           // Direct redirect after successful credentials login
           router.push(
-            `https://test.venturloop.com/auth/callback?userId=${userId}&token=${result.token}`,
+            `https://venturloop.com/auth/callback?userId=${userId}&token=${result.token}`,
           );
         } else {
           console.warn('Missing userId in login result');
@@ -136,7 +136,8 @@ const AuthForm = () => {
   }
 
   const data = {
-    imageSrc: '/image/community_splash_screen.png',
+    imageSrc:
+      'https://ik.imagekit.io/venturloopimage/miscellaneous/Login_Ohaqfa-Rq.jpg?updatedAt=1751276630326',
     title: 'Welcome Back!',
     description:
       'Login to access your account and manage everything in one place.',
@@ -281,12 +282,12 @@ const AuthForm = () => {
 
           <p className="mt-6 text-center font-medium text-sm text-gray-600">
             Don’t have an account?{' '}
-            <button
-              onClick={() => router.push('/auth/signup')}
+            <Link
+              href="/auth/signup"
               className="font-medium text-[#2983DC] hover:text-[#2576c9]"
             >
               Sign Up
-            </button>
+            </Link>
           </p>
         </>
       )}

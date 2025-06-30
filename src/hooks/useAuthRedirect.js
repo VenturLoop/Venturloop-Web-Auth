@@ -52,7 +52,7 @@ export const useAuthRedirect = () => {
         const userId = result?.data?._id || result?.data?.id;
 
         if (typeof window !== 'undefined') {
-          const targetDomain = 'test.venturloop.com';
+          const targetDomain = 'venturloop.com';
           if (window.location.hostname !== targetDomain) {
             await signOut({ redirect: false });
             localStorage.removeItem('token');

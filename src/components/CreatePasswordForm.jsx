@@ -61,7 +61,8 @@ const CreatePasswordForm = ({ email }) => {
   }
 
   const data = {
-    imageSrc: '/image/ai_splash_screen.png',
+    imageSrc:
+      'https://ik.imagekit.io/venturloopimage/miscellaneous/Create_password_Forget_password_QGguGvvWrf.jpg?updatedAt=1751276670520',
     title: 'Create Password',
     description: 'Set a strong password to secure your account and proceed.',
   };

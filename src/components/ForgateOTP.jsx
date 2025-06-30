@@ -25,7 +25,8 @@ const ForgateOTP = () => {
   }, [email, router]);
 
   const screenData = {
-    imageSrc: '/image/ai_splash_screen.png',
+    imageSrc:
+      'https://ik.imagekit.io/venturloopimage/miscellaneous/Create_password_Forget_password_QGguGvvWrf.jpg?updatedAt=1751276670520',
     title: 'OTP Verification',
     description: 'Enter the OTP sent to your email to verify your account.',
   };
@@ -48,7 +49,9 @@ const ForgateOTP = () => {
 
       if (data.success) {
         toast.success(data.message || 'OTP verified successfully!');
-        router.push(`/login/forgatePassword?email=${encodeURIComponent(email)}`);
+        router.push(
+          `/login/forgatePassword?email=${encodeURIComponent(email)}`,
+        );
       } else {
         const message = data.message || 'Failed to verify OTP.';
         setError(message);
@@ -85,15 +88,22 @@ const ForgateOTP = () => {
     <SpliteScreen data={screenData}>
       <div className="w-full px-4 py-6 sm:px-6 lg:px-8 bg-white rounded-xl">
         <div className="text-center mb-6">
-          <h2 className="text-4xl font-bold mb-6 text-gray-800">Verify Your Email</h2>
+          <h2 className="text-4xl font-bold mb-6 text-gray-800">
+            Verify Your Email
+          </h2>
           <p className="mt-2 text-sm text-gray-800 font-medium">
-            We&apos;ve sent a 6-digit code to <span className="font-semibold">{email}</span>. Enter it below to continue.
+            We&apos;ve sent a 6-digit code to{' '}
+            <span className="font-semibold">{email}</span>. Enter it below to
+            continue.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6 w-full">
           <div className="my-12">
-            <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-4">
+            <label
+              htmlFor="otp"
+              className="block text-sm font-medium text-gray-700 mb-4"
+            >
               One-Time Password (OTP)
             </label>
             <OtpInput otp={otp} setOtp={setOtp} isLoading={isLoading} />

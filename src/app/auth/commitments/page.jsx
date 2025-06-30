@@ -51,7 +51,7 @@ const handleSubmit = async (e) => {
 
 
   const sliderData = {
-    imageSrc: '/image/ai_splash_screen.png',
+    imageSrc: 'https://ik.imagekit.io/venturloopimage/miscellaneous/Comitment_level_Y6-4Y-9uUE.jpg?updatedAt=1751276302405',
     title: 'Your Commitment Level',
     description:
       'Let us know how much time you can dedicate. This helps us personalize the opportunities you see.',

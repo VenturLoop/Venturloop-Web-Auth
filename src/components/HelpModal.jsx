@@ -71,7 +71,7 @@ const HelpModal = ({ isOpen, onClose }) => {
 
             {/* Appointment Booking Option */}
             <a
-              href="https://calendly.com/your-venturloop-link" // Replace with actual Calendly or booking link
+              href="https://calendly.com/we-venturloop/business-pro-enquiry" // Replace with actual Calendly or booking link
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center w-full bg-gray-700 hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition duration-150"

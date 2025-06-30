@@ -19,10 +19,15 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'venturloop.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'test.venturloop.com',
         pathname: '/**',
       },
-      
+
       {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',

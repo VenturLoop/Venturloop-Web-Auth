@@ -46,7 +46,8 @@ const PriorExperiencePage = () => {
   };
 
   const sliderData = {
-    imageSrc: '/image/community_splash_screen.png',
+    imageSrc:
+      'https://ik.imagekit.io/venturloopimage/miscellaneous/Prior_startup_experience_rMw_CbXL7.jpg?updatedAt=1751276542554',
     title: 'Any Prior Startup Experience',
     description:
       'Your previous exposure to startups helps us tailor opportunities that match your journey.',

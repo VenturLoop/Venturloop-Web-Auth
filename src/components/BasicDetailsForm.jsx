@@ -270,7 +270,7 @@ const BasicDetailsForm = ({ name, email, password }) => {
   };
 
   const data = {
-    imageSrc: '/image/Cofounder_splash_screen.png',
+    imageSrc: 'https://ik.imagekit.io/venturloopimage/miscellaneous/Add_Basic_Details_O5Ndx1IhDL.png?updatedAt=1751276521791',
     title: 'Complete Your Profile',
     description:
       'Provide these details to enhance your profile. You can skip and add them later.',

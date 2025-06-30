@@ -64,7 +64,7 @@ const SkillsetPage = () => {
   }, [userData]);
 
   const sliderData = {
-    imageSrc: '/image/ai_splash_screen.png',
+    imageSrc: 'https://ik.imagekit.io/venturloopimage/miscellaneous/Skillset_3i5aHNMgc.jpg?updatedAt=1751276570445',
     title: 'Showcase Your Skills',
     description:
       'Highlight your expertise to form well-rounded teams and find complementary co-founders.',

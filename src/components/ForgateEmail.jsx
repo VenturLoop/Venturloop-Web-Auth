@@ -22,7 +22,7 @@ const ForgateEmail = () => {
   };
 
   const data = {
-    imageSrc: '/image/ai_splash_screen.png',
+    imageSrc: 'https://ik.imagekit.io/venturloopimage/miscellaneous/Login_Ohaqfa-Rq.jpg?updatedAt=1751276630326',
     title: 'Forgate Password',
     description: 'Set a strong password to secure your account and proceed.',
   };
