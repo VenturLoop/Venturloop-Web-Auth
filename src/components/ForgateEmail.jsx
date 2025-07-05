@@ -11,8 +11,10 @@ const ForgateEmail = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const emailRegex =
+      /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+(com|org|net|in|co|io|edu)$/;
 
-    if (!email || !email.includes('@')) {
+    if (!email || !email.includes('@') || !emailRegex.test(email)) {
       toast.error('Please enter a valid email address.');
       return;
     }
@@ -22,7 +24,8 @@ const ForgateEmail = () => {
   };
 
   const data = {
-    imageSrc: 'https://ik.imagekit.io/venturloopimage/miscellaneous/Login_Ohaqfa-Rq.jpg?updatedAt=1751276630326',
+    imageSrc:
+      'https://ik.imagekit.io/venturloopimage/miscellaneous/Login_Ohaqfa-Rq.jpg?updatedAt=1751276630326',
     title: 'Forgate Password',
     description: 'Set a strong password to secure your account and proceed.',
   };

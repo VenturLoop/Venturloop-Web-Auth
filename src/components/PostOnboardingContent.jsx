@@ -24,7 +24,7 @@ const PostOnboardingContent = () => {
       const userId = result?.data?._id || result?.data?.id;
 
       if (userId) {
-        const redirectUrl = `https://web.venturloop.com/auth/callback?userId=${userId}&token=${token}`;
+        const redirectUrl = `https://venturloop.com/auth/callback?userId=${userId}&token=${token}`;
 
         // Cleanup: clear token and session
         localStorage.removeItem('token'); // remove token

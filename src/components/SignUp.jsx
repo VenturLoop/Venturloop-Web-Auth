@@ -69,6 +69,14 @@ export default function Signup() {
     trackEvent('Click_SignUp_Email_Button');
     setIsEmailLoading(true);
 
+     const emailRegex =
+      /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+(com|org|net|in|co|io|edu)$/;
+
+    if (!email || !email.includes('@') || !emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
     try {
       const response = await signInwithEmail({ name, email });
 

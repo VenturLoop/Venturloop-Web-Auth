@@ -80,6 +80,14 @@ const AuthForm = () => {
 
   const handleCredentialsLogIn = async (e) => {
     e.preventDefault();
+    const emailRegex =
+      /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+(com|org|net|in|co|io|edu)$/;
+
+    if (!email || !email.includes('@') || !emailRegex.test(email)) {
+      toast.error('Please enter a valid email address.');
+      return;
+    }
+
     if (!email || !password) {
       toast.error('Please enter both email and password.');
       return;
@@ -102,7 +110,7 @@ const AuthForm = () => {
         if (userId) {
           // Direct redirect after successful credentials login
           router.push(
-            `https://web.venturloop.com/auth/callback?userId=${userId}&token=${result.token}`,
+            `https://venturloop.com/auth/callback?userId=${userId}&token=${result.token}`,
           );
         } else {
           console.warn('Missing userId in login result');
